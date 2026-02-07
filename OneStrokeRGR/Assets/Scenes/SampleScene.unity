@@ -14443,8 +14443,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Atk: 0
-  Life: 0
+  Life: 5
   Meat: 0
+  AtkText: {fileID: 1665267464}
+  LifeText: {fileID: 1502300414}
+  MeatText: {fileID: 1983671715}
 --- !u!4 &1870821230
 Transform:
   m_ObjectHideFlags: 0

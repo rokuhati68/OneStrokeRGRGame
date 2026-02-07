@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour,ITileEffect
     public void OnPlayer()
     {
         TakeDamage(player.Atk);
-
+        player.TakeDamage();
 
     }
 
