@@ -2,7 +2,7 @@ using UnityEngine;
 public class PlayerStatus : MonoBehaviour
 {
     [SerializeField]
-    private int Atk;
+    public int Atk;
     [SerializeField]    
     private int Life;
     [SerializeField]

@@ -13,15 +13,13 @@ public class Tile : MonoBehaviour,IPointerEnterHandler
     void Start()
     {
         pathManager = FindFirstObjectByType<PathManager>();
-        GetTileEffect();
-        tileEffect.Create(3,player);
+        
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("On");
+        
         if(Input.GetMouseButton(0))
         {
-            Debug.Log("Add");
             bool isAdd = pathManager.TryAddTile(this);
             if (isAdd)
             {
@@ -29,7 +27,7 @@ public class Tile : MonoBehaviour,IPointerEnterHandler
             }
         }
     }
-    void GetTileEffect()
+    public void GetTileEffect()
     {
         tileEffect = GetComponent<ITileEffect>();
     }
