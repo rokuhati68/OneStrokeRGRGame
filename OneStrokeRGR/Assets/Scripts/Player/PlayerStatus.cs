@@ -43,4 +43,9 @@ public class PlayerStatus : MonoBehaviour
         Atk += addValue;    
         AtkText.text = Atk.ToString();
     }
+    public void Heal()
+    {
+        Life ++;
+        LifeText.text = Life.ToString();
+    }
 }

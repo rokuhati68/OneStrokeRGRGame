@@ -50,4 +50,13 @@ public class Tile : MonoBehaviour,IPointerEnterHandler
         HpText.text = textHp;
         AtkText.text = textAtk;
     }
+    public void SetNormalVisual(Sprite newSprite)
+    {
+        tileImage.sprite = newSprite;
+    }
+    public void SetHealVisual(Sprite newSprite, string textValue)
+    {
+        tileImage.sprite = newSprite;
+        centerText.text = textValue;
+    }
 }

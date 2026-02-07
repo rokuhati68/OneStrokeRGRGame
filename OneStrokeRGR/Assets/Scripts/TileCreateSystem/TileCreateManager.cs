@@ -6,20 +6,30 @@ public class TileCreateManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Sprite AtkSprite;
     public Sprite EnemySprite;
+    public Sprite NormalSprite;
+    public Sprite HealSprite;
     public PlayerStatus player;
     public List<GameObject> tiles;
     void Start()
     {
         foreach(GameObject tileObject in tiles)
         {
-            int rnd = Random.Range(1,10);
-            if(rnd % 3 == 0)
+            int rnd = Random.Range(1,100);
+            if(rnd % 4 == 0)
             {
                 AddEnemyComponent(tileObject);
             }
-            else
+            else if(rnd % 4 == 1)
             {
                 AddAtkComponent(tileObject);
+            }
+            else if(rnd % 4 == 2)
+            {
+                AddHealComponent(tileObject);
+            }
+            else if(rnd % 4 == 3)
+            {
+                AddNormalComponent(tileObject);
             }
             Tile tile = tileObject.GetComponent<Tile>();
             tile.GetTileEffect();
@@ -34,7 +44,15 @@ public class TileCreateManager : MonoBehaviour
         newAtkAddTile.SetUp(addValue,player);
         
     }
-
+    void AddHealComponent(GameObject targetTile)
+    {
+        int addValue = 2;
+        HealTile newHealTile = targetTile.AddComponent<HealTile>();
+        Tile tile = targetTile.GetComponent<Tile>();
+        tile.SetHealVisual(HealSprite,addValue.ToString());
+        newHealTile.SetUp(addValue,player);
+        
+    }
     void AddEnemyComponent(GameObject targetTile)
     {
         int Hp = 4;
@@ -44,5 +62,11 @@ public class TileCreateManager : MonoBehaviour
         tile.SetEnemyVisual(EnemySprite,Hp.ToString(),Atk.ToString());
         newEnemyTile.SetUp(Hp,Atk,player,tile.HpText);
         
+    }
+    void AddNormalComponent(GameObject targetTile)
+    {
+        NormalTile newNormalTile =  targetTile.AddComponent<NormalTile>();
+        Tile tile = targetTile.GetComponent<Tile>();
+        tile.SetNormalVisual(NormalSprite);
     }
 }

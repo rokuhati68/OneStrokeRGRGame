@@ -10102,6 +10102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AtkSprite: {fileID: 4756403912789011177, guid: 774760d15c2cb5a46af94f8c8e49974e, type: 3}
   EnemySprite: {fileID: 7921184317453744328, guid: 563c1369cac7a0f41822e598a4695940, type: 3}
+  NormalSprite: {fileID: 5814425905065316458, guid: 57870869f7469a640b25362ebeb37b1a, type: 3}
+  HealSprite: {fileID: 9217605377945273126, guid: df8f7582436fb7b49afa1f0f9d3173d4, type: 3}
   player: {fileID: 1870821229}
   tiles:
   - {fileID: 1170227695}
