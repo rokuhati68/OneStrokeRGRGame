@@ -1,10 +1,15 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 public class Tile : MonoBehaviour,IPointerEnterHandler
 {
     public int idX;
     public int idY;
-    private bool isVisited = false;
+    [SerializeField] private Image tileImage;
+    [SerializeField] private TextMeshProUGUI centerText;
+    [SerializeField] public TextMeshProUGUI HpText;
+    [SerializeField] private TextMeshProUGUI AtkText;
     public ITileEffect tileEffect;
 
     private PathManager pathManager;
@@ -20,9 +25,11 @@ public class Tile : MonoBehaviour,IPointerEnterHandler
         
         if(Input.GetMouseButton(0))
         {
+            Debug.Log("On");
             bool isAdd = pathManager.TryAddTile(this);
             if (isAdd)
             {
+            Debug.Log("Add");
             tileEffect.OnPlayer();
             }
         }
@@ -30,5 +37,17 @@ public class Tile : MonoBehaviour,IPointerEnterHandler
     public void GetTileEffect()
     {
         tileEffect = GetComponent<ITileEffect>();
+    }
+
+    public void SetAtkVisual(Sprite newSprite, string textValue)
+    {
+        tileImage.sprite = newSprite;
+        centerText.text = textValue;
+    }
+    public void SetEnemyVisual(Sprite newSprite, string textHp, string textAtk)
+    {
+        tileImage.sprite = newSprite;
+        HpText.text = textHp;
+        AtkText.text = textAtk;
     }
 }

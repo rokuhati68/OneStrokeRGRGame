@@ -15,4 +15,5 @@ public class AtkAddTile : MonoBehaviour,ITileEffect
         player.AddAtk(addValue);
     }
 
+    
 }

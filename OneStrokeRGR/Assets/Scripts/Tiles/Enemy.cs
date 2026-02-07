@@ -1,17 +1,20 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 public class Enemy : MonoBehaviour,ITileEffect
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private int Hp;
+    public int Hp;
     private int Atk;
     private PlayerStatus player;
+    private TextMeshProUGUI HpText;
 
-    public void SetUp(int _addValue, PlayerStatus _player)
+    public void SetUp(int _Hp, int _Atk, PlayerStatus _player,TextMeshProUGUI _HpText)
     {
-        Hp = _addValue*2;
-        Atk = _addValue;
+        Hp = _Hp;
+        Atk = _Atk;
         player = _player;
+        HpText = _HpText;
     }
     public void OnPlayer()
     {
@@ -23,5 +26,6 @@ public class Enemy : MonoBehaviour,ITileEffect
     void TakeDamage(int damage)
     {
         Hp -= damage;
+        HpText.text = Hp.ToString();
     }
 }
