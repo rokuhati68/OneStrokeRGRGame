@@ -4,13 +4,14 @@ using UnityEngine.UI;
 public class PathManager: MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private List<Tile> path = new List<Tile>();
+    [SerializeField]
+    private List<Tile> path;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void TryAddTile(Tile tile)
     {
         if(path.Contains(tile))
         {
-            path.Remove(tile);
+            return;
         }        
         if (path.Count == 0 || IsAdjacent(path[path.Count - 1], tile))
         {
@@ -19,11 +20,12 @@ public class PathManager: MonoBehaviour
         }
 
     }
-
     private bool IsAdjacent(Tile lastTile, Tile currentTile)
     {
         // 上下左右に隣接しているか（斜めを許容しない場合）
-        float distance = Vector2.Distance(lastTile.gridPosition, currentTile.gridPosition);
-        return distance <= 100f; // 距離が1なら隣接
+        int diffX = Mathf.Abs(lastTile.idX - currentTile.idX);
+        int diffY = Mathf.Abs(lastTile.idY - currentTile.idY);
+        bool isAdjacent =  (diffX + diffY == 1) ? true : false;
+        return isAdjacent; // 距離が1なら隣接
     }
 }

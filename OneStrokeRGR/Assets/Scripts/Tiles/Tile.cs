@@ -1,8 +1,9 @@
 using UnityEngine;
-
-public class Tile : MonoBehaviour
+using UnityEngine.EventSystems;
+public class Tile : MonoBehaviour,IPointerEnterHandler
 {
-    public Vector2Int gridPosition;
+    public int idX;
+    public int idY;
     private bool isVisited = false;
 
     private PathManager pathManager;
@@ -11,10 +12,12 @@ public class Tile : MonoBehaviour
     {
         pathManager = FindFirstObjectByType<PathManager>();
     }
-    void OnMoouseEnter()
+    public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log("On");
         if(Input.GetMouseButton(0))
         {
+            Debug.Log("Add");
             pathManager.TryAddTile(this);
         }
     }
