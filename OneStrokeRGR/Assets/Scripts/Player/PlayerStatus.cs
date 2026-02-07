@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class PlayerStatus : MonoBehaviour
 {
     [SerializeField]
@@ -18,5 +17,21 @@ public class PlayerStatus : MonoBehaviour
     void Update()
     {
         
+    }
+    public void ResetAtk()
+    {
+        Atk = 0;
+    }
+    public void TakeDamage()
+    {
+        Life --;
+    }
+    public void UseMeat()
+    {
+        Meat --;
+    }
+    public void AddAtk(int addValue)
+    {
+        Atk += addValue;
     }
 }
