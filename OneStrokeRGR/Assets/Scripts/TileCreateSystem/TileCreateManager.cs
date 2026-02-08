@@ -12,6 +12,10 @@ public class TileCreateManager : MonoBehaviour
     public List<GameObject> tiles;
     void Start()
     {
+        
+    }
+    public void CreateStage()
+    {
         foreach(GameObject tileObject in tiles)
         {
             int rnd = Random.Range(1,100);
@@ -61,7 +65,6 @@ public class TileCreateManager : MonoBehaviour
         Tile tile = targetTile.GetComponent<Tile>();
         tile.SetEnemyVisual(EnemySprite,Hp.ToString(),Atk.ToString());
         newEnemyTile.SetUp(Hp,Atk,player,tile.HpText);
-        
     }
     void AddNormalComponent(GameObject targetTile)
     {

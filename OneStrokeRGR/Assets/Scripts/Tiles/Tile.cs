@@ -31,6 +31,7 @@ public class Tile : MonoBehaviour,IPointerEnterHandler
             {
             Debug.Log("Add");
             tileEffect.OnPlayer();
+            player.AddAtk(1);
             }
         }
     }

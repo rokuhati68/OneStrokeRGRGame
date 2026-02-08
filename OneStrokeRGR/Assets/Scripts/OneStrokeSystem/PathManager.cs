@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 public class PathManager: MonoBehaviour
 {
+    public bool IsActive{get;set;}
+    public bool IsPathConfirmed{get; set;}
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField]
     private List<Tile> path;
@@ -22,6 +24,19 @@ public class PathManager: MonoBehaviour
         return false;
 
     }
+
+    void Update()
+    {
+        if(!IsActive) return;
+        if(Input.GetMouseButtonUp(0))
+        {
+            if(path.Count > 0)
+            {
+                IsPathConfirmed = true;
+                IsActive = false;
+            }
+        }
+    }
     private bool IsAdjacent(Tile lastTile, Tile currentTile)
     {
         // 上下左右に隣接しているか（斜めを許容しない場合）
@@ -29,5 +44,14 @@ public class PathManager: MonoBehaviour
         int diffY = Mathf.Abs(lastTile.idY - currentTile.idY);
         bool isAdjacent =  (diffX + diffY == 1) ? true : false;
         return isAdjacent; // 距離が1なら隣接
+    }
+
+    public void ResetManager()
+    {
+        IsPathConfirmed = false;
+    }
+    public void ClearPath()
+    {
+        path = new List<Tile>();
     }
 }
