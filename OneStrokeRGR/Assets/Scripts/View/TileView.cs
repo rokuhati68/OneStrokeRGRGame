@@ -1,0 +1,212 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using DG.Tweening;
+using OneStrokeRGR.Model;
+
+namespace OneStrokeRGR.View
+{
+    /// <summary>
+    /// タイルの視覚表現を管理するView
+    /// 要件: 14.1, 14.2, 14.3
+    /// </summary>
+    public class TileView : MonoBehaviour
+    {
+        [Header("UI要素")]
+        public Image backgroundImage;
+        public TextMeshProUGUI valueText;
+        public Image iconImage;
+
+        [Header("色設定")]
+        public Color emptyColor = Color.gray;
+        public Color attackBoostColor = Color.red;
+        public Color hpRecoveryColor = Color.green;
+        public Color goldColor = Color.yellow;
+        public Color enemyColor = Color.magenta;
+        public Color thornColor = new Color(0.5f, 0f, 0.5f); // 紫
+        public Color wallColor = Color.black;
+        public Color highlightColor = Color.cyan;
+
+        private Tile tileData;
+        private Vector2Int gridPosition;
+        private Color originalColor;
+        private bool isHighlighted = false;
+
+        /// <summary>
+        /// タイルのセットアップ
+        /// </summary>
+        public void Setup(Tile tile, Vector2Int position)
+        {
+            tileData = tile;
+            gridPosition = position;
+            UpdateVisuals();
+        }
+
+        /// <summary>
+        /// タイルの視覚表現を更新
+        /// </summary>
+        public void UpdateVisuals()
+        {
+            if (tileData == null)
+            {
+                SetEmpty();
+                return;
+            }
+
+            // タイプに応じた色を設定
+            switch (tileData.Type)
+            {
+                case TileType.Empty:
+                    originalColor = emptyColor;
+                    valueText.text = "";
+                    break;
+
+                case TileType.AttackBoost:
+                    originalColor = attackBoostColor;
+                    valueText.text = $"+{((AttackBoostTile)tileData).BoostValue}";
+                    break;
+
+                case TileType.HPRecovery:
+                    originalColor = hpRecoveryColor;
+                    valueText.text = $"+{((HPRecoveryTile)tileData).RecoveryValue}HP";
+                    break;
+
+                case TileType.Gold:
+                    originalColor = goldColor;
+                    valueText.text = $"{((GoldTile)tileData).GoldValue}G";
+                    break;
+
+                case TileType.Enemy:
+                    originalColor = enemyColor;
+                    var enemyTile = (EnemyTile)tileData;
+                    if (enemyTile.Enemy.IsBoss)
+                    {
+                        valueText.text = $"BOSS\nHP:{enemyTile.Enemy.CurrentHP}/{enemyTile.Enemy.MaxHP}";
+                    }
+                    else
+                    {
+                        valueText.text = $"HP:{enemyTile.Enemy.CurrentHP}/{enemyTile.Enemy.MaxHP}";
+                    }
+                    break;
+
+                case TileType.Thorn:
+                    originalColor = thornColor;
+                    valueText.text = $"-{((ThornTile)tileData).Damage}HP";
+                    break;
+
+                case TileType.Wall:
+                    originalColor = wallColor;
+                    valueText.text = "■";
+                    break;
+
+                default:
+                    originalColor = emptyColor;
+                    valueText.text = "";
+                    break;
+            }
+
+            if (!isHighlighted)
+            {
+                backgroundImage.color = originalColor;
+            }
+        }
+
+        /// <summary>
+        /// 空のタイルとして設定
+        /// </summary>
+        private void SetEmpty()
+        {
+            originalColor = emptyColor;
+            backgroundImage.color = originalColor;
+            valueText.text = "";
+        }
+
+        /// <summary>
+        /// ハイライト表示を設定
+        /// </summary>
+        public void SetHighlight(bool highlight)
+        {
+            isHighlighted = highlight;
+            backgroundImage.color = highlight ? highlightColor : originalColor;
+        }
+
+        /// <summary>
+        /// 出現アニメーション
+        /// 要件: 14.1
+        /// </summary>
+        public void PlayAppearAnimation()
+        {
+            transform.localScale = Vector3.zero;
+            transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+
+            var canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = 0f;
+                canvasGroup.DOFade(1f, 0.3f);
+            }
+        }
+
+        /// <summary>
+        /// 消失アニメーション
+        /// 要件: 14.2
+        /// </summary>
+        public void PlayDisappearAnimation(System.Action onComplete = null)
+        {
+            transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack);
+
+            var canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+            {
+                canvasGroup.DOFade(0f, 0.2f).OnComplete(() => onComplete?.Invoke());
+            }
+            else
+            {
+                DOVirtual.DelayedCall(0.2f, () => onComplete?.Invoke());
+            }
+        }
+
+        /// <summary>
+        /// 効果発動アニメーション
+        /// 要件: 14.3
+        /// </summary>
+        public void PlayEffectAnimation()
+        {
+            // パンチスケールアニメーション
+            transform.DOPunchScale(Vector3.one * 0.2f, 0.3f, 5, 0.5f);
+
+            // 色のフラッシュ
+            var originalColor = backgroundImage.color;
+            backgroundImage.DOColor(Color.white, 0.1f).SetLoops(2, LoopType.Yoyo).OnComplete(() =>
+            {
+                backgroundImage.color = originalColor;
+            });
+        }
+
+        /// <summary>
+        /// ダメージアニメーション（敵用）
+        /// </summary>
+        public void PlayDamageAnimation()
+        {
+            // 揺れアニメーション
+            transform.DOShakePosition(0.3f, strength: 10f, vibrato: 10, randomness: 90f);
+
+            // 赤フラッシュ
+            var originalColor = backgroundImage.color;
+            backgroundImage.DOColor(Color.red, 0.1f).SetLoops(2, LoopType.Yoyo).OnComplete(() =>
+            {
+                backgroundImage.color = originalColor;
+            });
+        }
+
+        public Tile GetTileData()
+        {
+            return tileData;
+        }
+
+        public Vector2Int GetGridPosition()
+        {
+            return gridPosition;
+        }
+    }
+}
