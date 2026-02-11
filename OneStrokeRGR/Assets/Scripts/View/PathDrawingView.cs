@@ -143,9 +143,21 @@ namespace OneStrokeRGR.View
             // マウスボタンが押された
             if (Input.GetMouseButtonDown(0))
             {
+                Debug.Log($"PathDrawingView: マウスクリック検出 - IsPointerOverUI: {IsPointerOverUI()}");
                 if (!IsPointerOverUI())
                 {
                     StartDrawing();
+                }
+                else
+                {
+                    // UI要素の上なので、タイルをチェック
+                    Vector2Int? tilePos = GetTileAtMousePosition();
+                    Debug.Log($"PathDrawingView: タイル位置検出 - {tilePos}");
+                    if (tilePos.HasValue)
+                    {
+                        // タイルの上なので描画開始
+                        StartDrawing();
+                    }
                 }
             }
 
@@ -172,6 +184,8 @@ namespace OneStrokeRGR.View
 
             // 最初のタイルを追加
             Vector2Int? tilePos = GetTileAtMousePosition();
+            Debug.Log($"PathDrawingView: StartDrawing - タイル位置: {tilePos}, プレイヤー位置: {playerPosition}");
+
             if (tilePos.HasValue)
             {
                 // プレイヤー位置から開始する必要がある
@@ -179,12 +193,18 @@ namespace OneStrokeRGR.View
                 {
                     currentPath.Add(tilePos.Value);
                     UpdatePathVisualization();
+                    Debug.Log($"PathDrawingView: パス描画開始 - {tilePos.Value}");
                 }
                 else
                 {
                     isDrawing = false;
-                    Debug.Log("PathDrawingView: パスはプレイヤー位置から開始してください");
+                    Debug.Log($"PathDrawingView: パスはプレイヤー位置から開始してください (クリック: {tilePos.Value})");
                 }
+            }
+            else
+            {
+                isDrawing = false;
+                Debug.Log("PathDrawingView: タイルが検出されませんでした");
             }
         }
 
@@ -208,6 +228,7 @@ namespace OneStrokeRGR.View
                     {
                         currentPath.Add(tilePos.Value);
                         UpdatePathVisualization();
+                        Debug.Log($"PathDrawingView: タイル追加 - {tilePos.Value}, パス長: {currentPath.Count}");
                     }
                 }
             }
