@@ -14,7 +14,7 @@ public enum TurnState
 public class TurnStateContext : MonoBehaviour
 {
     private ITurnState _currentState;
-    public TileCreateManager tileCreateManager;
+    // public TileCreateManager tileCreateManager; // 旧実装 - 削除済み
     public PathManager pathManager;
     public UIManager uiManager; // ボタンなどのUIを管理する想定
 
