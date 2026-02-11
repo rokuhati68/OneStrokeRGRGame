@@ -1,28 +1,50 @@
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using TMPro;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.Presenter;
 
 namespace OneStrokeRGR.View
 {
     /// <summary>
-    /// パス描画の視覚フィードバックを管理するView（スケルトン）
-    /// 詳細はタスク15で実装
+    /// パス描画の視覚フィードバックを管理するView
+    /// 要件: 14.5, UI仕様
     /// </summary>
     public class PathDrawingView : MonoBehaviour
     {
         [Header("参照")]
         public BoardView boardView;
         public LineRenderer pathLineRenderer;
+        public Camera uiCamera; // UI用カメラ（なければMainCameraを使用）
+
+        [Header("プレビューUI")]
+        public GameObject previewPanel;
+        public TextMeshProUGUI previewAttackText;
+        public TextMeshProUGUI previewGoldText;
+        public TextMeshProUGUI previewHPText;
+
+        [Header("確認ボタン")]
+        public Button confirmButton;
+        public Button cancelButton;
 
         [Header("設定")]
         public Color validPathColor = Color.cyan;
         public Color invalidPathColor = Color.red;
         public float lineWidth = 5f;
+        public LayerMask tileLayerMask; // タイルのレイヤー
 
         private List<Vector2Int> currentPath = new List<Vector2Int>();
-        // private bool isDrawing = false; // TODO: タスク15で使用
+        private bool isDrawing = false;
         private bool isPathValid = false;
+        private bool isWaitingForConfirmation = false;
+        private bool pathConfirmed = false;
+
+        private PathPresenter pathPresenter;
+        private GameState gameState;
+        private Vector2Int playerPosition;
 
         private void Awake()
         {
@@ -34,27 +56,300 @@ namespace OneStrokeRGR.View
                 pathLineRenderer.positionCount = 0;
                 pathLineRenderer.enabled = false;
             }
+
+            // プレビューパネルを非表示
+            if (previewPanel != null)
+                previewPanel.SetActive(false);
+
+            // ボタンイベントの設定
+            if (confirmButton != null)
+            {
+                confirmButton.onClick.AddListener(OnConfirmButtonClicked);
+                confirmButton.gameObject.SetActive(false);
+            }
+
+            if (cancelButton != null)
+            {
+                cancelButton.onClick.AddListener(OnCancelButtonClicked);
+                cancelButton.gameObject.SetActive(false);
+            }
+
+            // カメラの設定
+            if (uiCamera == null)
+            {
+                uiCamera = Camera.main;
+            }
         }
 
         /// <summary>
-        /// パス入力を待機（仮実装）
-        /// タスク15で詳細実装
+        /// 初期化
         /// </summary>
-        public async UniTask<List<Vector2Int>> WaitForPathInput(Vector2Int playerPosition)
+        public void Initialize(PathPresenter presenter, GameState state)
         {
-            Debug.Log("PathDrawingView: パス入力待機（仮実装）");
+            pathPresenter = presenter;
+            gameState = state;
+        }
 
-            // TODO: タスク15でマウス入力検出を実装
-            // TODO: リアルタイムのパス描画を実装
-            // TODO: パス検証とフィードバックを実装
+        /// <summary>
+        /// パス入力を待機
+        /// 要件: 15.1, 15.2, 15.3, 15.4
+        /// </summary>
+        public async UniTask<List<Vector2Int>> WaitForPathInput(Vector2Int startPosition)
+        {
+            playerPosition = startPosition;
+            currentPath.Clear();
+            isDrawing = false;
+            isWaitingForConfirmation = false;
+            pathConfirmed = false;
 
-            // 仮実装: 空のパスを返す
-            await UniTask.Yield();
-            return new List<Vector2Int>();
+            Debug.Log("PathDrawingView: パス入力待機開始");
+
+            // 入力ループ
+            while (!pathConfirmed && !isWaitingForConfirmation)
+            {
+                await UniTask.Yield();
+            }
+
+            // 確認待ち
+            if (isWaitingForConfirmation)
+            {
+                await UniTask.WaitUntil(() => pathConfirmed || currentPath.Count == 0);
+            }
+
+            // クリーンアップ
+            ClearPath();
+            HideConfirmButtons();
+            HidePathPreview();
+
+            Debug.Log($"PathDrawingView: パス入力完了 - {currentPath.Count}マス");
+            return new List<Vector2Int>(currentPath);
+        }
+
+        private void Update()
+        {
+            if (isWaitingForConfirmation)
+                return;
+
+            // マウス入力検出
+            HandleMouseInput();
+        }
+
+        /// <summary>
+        /// マウス入力処理
+        /// 要件: 15.1
+        /// </summary>
+        private void HandleMouseInput()
+        {
+            // マウスボタンが押された
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!IsPointerOverUI())
+                {
+                    StartDrawing();
+                }
+            }
+
+            // マウスドラッグ中
+            if (Input.GetMouseButton(0) && isDrawing)
+            {
+                ContinueDrawing();
+            }
+
+            // マウスボタンが離された
+            if (Input.GetMouseButtonUp(0) && isDrawing)
+            {
+                EndDrawing();
+            }
+        }
+
+        /// <summary>
+        /// 描画開始
+        /// </summary>
+        private void StartDrawing()
+        {
+            currentPath.Clear();
+            isDrawing = true;
+
+            // 最初のタイルを追加
+            Vector2Int? tilePos = GetTileAtMousePosition();
+            if (tilePos.HasValue)
+            {
+                // プレイヤー位置から開始する必要がある
+                if (tilePos.Value == playerPosition)
+                {
+                    currentPath.Add(tilePos.Value);
+                    UpdatePathVisualization();
+                }
+                else
+                {
+                    isDrawing = false;
+                    Debug.Log("PathDrawingView: パスはプレイヤー位置から開始してください");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 描画継続
+        /// </summary>
+        private void ContinueDrawing()
+        {
+            Vector2Int? tilePos = GetTileAtMousePosition();
+            if (tilePos.HasValue)
+            {
+                // 既にパスに含まれている場合はスキップ
+                if (currentPath.Contains(tilePos.Value))
+                    return;
+
+                // パスの最後のタイルと隣接しているかチェック
+                if (currentPath.Count > 0)
+                {
+                    Vector2Int lastPos = currentPath[currentPath.Count - 1];
+                    if (IsAdjacent(lastPos, tilePos.Value))
+                    {
+                        currentPath.Add(tilePos.Value);
+                        UpdatePathVisualization();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 描画終了
+        /// </summary>
+        private void EndDrawing()
+        {
+            isDrawing = false;
+
+            if (currentPath.Count > 1)
+            {
+                // パスが有効か検証
+                ValidateAndShowConfirmation();
+            }
+            else
+            {
+                // パスが短すぎる場合はクリア
+                ClearPath();
+                Debug.Log("PathDrawingView: パスが短すぎます");
+            }
+        }
+
+        /// <summary>
+        /// パスを検証して確認ボタンを表示
+        /// </summary>
+        private void ValidateAndShowConfirmation()
+        {
+            if (pathPresenter == null || gameState == null)
+            {
+                Debug.LogWarning("PathDrawingView: PathPresenterまたはGameStateが設定されていません");
+                return;
+            }
+
+            // パス検証
+            isPathValid = pathPresenter.ValidatePath(currentPath, playerPosition);
+
+            // パスを再描画（色を更新）
+            DrawPath(currentPath, isPathValid);
+
+            if (isPathValid)
+            {
+                // プレビュー情報を計算して表示
+                var preview = pathPresenter.CalculatePathPreview(currentPath, gameState);
+                ShowPathPreview(preview.PredictedAttackPower, preview.PredictedGold, preview.PredictedHP);
+
+                // 確認ボタンを表示
+                ShowConfirmButtons();
+                isWaitingForConfirmation = true;
+            }
+            else
+            {
+                Debug.Log("PathDrawingView: 無効なパスです");
+                // 少し待ってからクリア
+                ClearPathDelayed().Forget();
+            }
+        }
+
+        /// <summary>
+        /// 遅延してパスをクリア
+        /// </summary>
+        private async UniTaskVoid ClearPathDelayed()
+        {
+            await UniTask.Delay(1000);
+            ClearPath();
+        }
+
+        /// <summary>
+        /// マウス位置のタイルを取得
+        /// </summary>
+        private Vector2Int? GetTileAtMousePosition()
+        {
+            if (boardView == null)
+                return null;
+
+            // マウス位置からRayを発射
+            Vector2 mousePos = Input.mousePosition;
+
+            // UI要素のヒットテスト
+            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            {
+                position = mousePos
+            };
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, results);
+
+            // TileViewコンポーネントを持つオブジェクトを探す
+            foreach (var result in results)
+            {
+                TileView tileView = result.gameObject.GetComponentInParent<TileView>();
+                if (tileView != null)
+                {
+                    return tileView.GetGridPosition();
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// 2つの位置が隣接しているかチェック
+        /// </summary>
+        private bool IsAdjacent(Vector2Int pos1, Vector2Int pos2)
+        {
+            int diffX = Mathf.Abs(pos1.x - pos2.x);
+            int diffY = Mathf.Abs(pos1.y - pos2.y);
+            return (diffX + diffY == 1); // 上下左右のみ（斜めは不可）
+        }
+
+        /// <summary>
+        /// UI上にポインタがあるかチェック
+        /// </summary>
+        private bool IsPointerOverUI()
+        {
+            if (EventSystem.current == null)
+                return false;
+
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
+        /// <summary>
+        /// パス視覚化を更新
+        /// 要件: 15.2
+        /// </summary>
+        private void UpdatePathVisualization()
+        {
+            // パスを描画
+            DrawPath(currentPath, true);
+
+            // タイルのハイライト
+            if (boardView != null)
+            {
+                boardView.HighlightPath(currentPath, true);
+            }
         }
 
         /// <summary>
         /// パスを描画
+        /// 要件: 15.2
         /// </summary>
         public void DrawPath(List<Vector2Int> path, bool isValid)
         {
@@ -72,9 +367,14 @@ namespace OneStrokeRGR.View
 
             pathLineRenderer.enabled = true;
             pathLineRenderer.positionCount = path.Count;
-            pathLineRenderer.material.color = isValid ? validPathColor : invalidPathColor;
 
-            // TODO: タスク15で実際の座標変換を実装
+            // マテリアルの色を設定
+            if (pathLineRenderer.material != null)
+            {
+                pathLineRenderer.material.color = isValid ? validPathColor : invalidPathColor;
+            }
+
+            // 各ポイントの座標を設定
             for (int i = 0; i < path.Count; i++)
             {
                 Vector3 worldPos = GetWorldPositionFromGrid(path[i]);
@@ -87,26 +387,26 @@ namespace OneStrokeRGR.View
         /// </summary>
         public void ClearPath()
         {
+            // ハイライトをクリア
+            if (boardView != null && currentPath.Count > 0)
+            {
+                boardView.HighlightPath(currentPath, false);
+            }
+
             currentPath.Clear();
+
             if (pathLineRenderer != null)
             {
                 pathLineRenderer.positionCount = 0;
                 pathLineRenderer.enabled = false;
             }
-
-            // ハイライトをクリア
-            if (boardView != null)
-            {
-                boardView.HighlightPath(currentPath, false);
-            }
         }
 
         /// <summary>
-        /// グリッド座標からワールド座標に変換（仮実装）
+        /// グリッド座標からワールド座標に変換
         /// </summary>
         private Vector3 GetWorldPositionFromGrid(Vector2Int gridPos)
         {
-            // TODO: タスク15で実際の座標変換を実装
             if (boardView != null)
             {
                 TileView tileView = boardView.GetTileView(gridPos);
@@ -120,12 +420,24 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
-        /// パスプレビュー情報を表示（仮実装）
+        /// パスプレビュー情報を表示
+        /// 要件: 15.3
         /// </summary>
         public void ShowPathPreview(int predictedAttack, int predictedGold, int predictedHP)
         {
-            // TODO: タスク15で実装
-            Debug.Log($"PathDrawingView: プレビュー - ATK:{predictedAttack}, Gold:{predictedGold}, HP:{predictedHP}");
+            if (previewPanel != null)
+            {
+                previewPanel.SetActive(true);
+
+                if (previewAttackText != null)
+                    previewAttackText.text = $"攻撃力: {predictedAttack}";
+
+                if (previewGoldText != null)
+                    previewGoldText.text = $"ゴールド: {predictedGold}";
+
+                if (previewHPText != null)
+                    previewHPText.text = $"HP: {predictedHP}";
+            }
         }
 
         /// <summary>
@@ -133,7 +445,65 @@ namespace OneStrokeRGR.View
         /// </summary>
         public void HidePathPreview()
         {
-            // TODO: タスク15で実装
+            if (previewPanel != null)
+                previewPanel.SetActive(false);
+        }
+
+        /// <summary>
+        /// 確認ボタンを表示
+        /// 要件: 15.4
+        /// </summary>
+        private void ShowConfirmButtons()
+        {
+            if (confirmButton != null)
+                confirmButton.gameObject.SetActive(true);
+
+            if (cancelButton != null)
+                cancelButton.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// 確認ボタンを非表示
+        /// </summary>
+        private void HideConfirmButtons()
+        {
+            if (confirmButton != null)
+                confirmButton.gameObject.SetActive(false);
+
+            if (cancelButton != null)
+                cancelButton.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// 確認ボタンクリック
+        /// </summary>
+        private void OnConfirmButtonClicked()
+        {
+            pathConfirmed = true;
+            isWaitingForConfirmation = false;
+            Debug.Log("PathDrawingView: パスが確認されました");
+        }
+
+        /// <summary>
+        /// キャンセルボタンクリック
+        /// </summary>
+        private void OnCancelButtonClicked()
+        {
+            ClearPath();
+            HideConfirmButtons();
+            HidePathPreview();
+            isWaitingForConfirmation = false;
+            Debug.Log("PathDrawingView: パスがキャンセルされました");
+        }
+
+        private void OnDestroy()
+        {
+            // イベントリスナーの解除
+            if (confirmButton != null)
+                confirmButton.onClick.RemoveListener(OnConfirmButtonClicked);
+
+            if (cancelButton != null)
+                cancelButton.onClick.RemoveListener(OnCancelButtonClicked);
         }
     }
 }
