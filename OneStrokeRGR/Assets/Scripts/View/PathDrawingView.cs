@@ -21,7 +21,7 @@ namespace OneStrokeRGR.View
         public float lineWidth = 5f;
 
         private List<Vector2Int> currentPath = new List<Vector2Int>();
-        private bool isDrawing = false;
+        // private bool isDrawing = false; // TODO: タスク15で使用
         private bool isPathValid = false;
 
         private void Awake()

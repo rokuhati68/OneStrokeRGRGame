@@ -1960,6 +1960,7 @@ MonoBehaviour:
   centerText: {fileID: 707269284}
   HpText: {fileID: 202963267}
   AtkText: {fileID: 338993707}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &205529994
 MonoBehaviour:
@@ -2194,6 +2195,7 @@ MonoBehaviour:
   centerText: {fileID: 479881393}
   HpText: {fileID: 1993198040}
   AtkText: {fileID: 1028980174}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &290139299
 MonoBehaviour:
@@ -4473,6 +4475,7 @@ MonoBehaviour:
   centerText: {fileID: 1166336698}
   HpText: {fileID: 829571332}
   AtkText: {fileID: 373562293}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &584610399
 MonoBehaviour:
@@ -4571,6 +4574,7 @@ MonoBehaviour:
   centerText: {fileID: 654447806}
   HpText: {fileID: 9528188}
   AtkText: {fileID: 18304492}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &598235891
 MonoBehaviour:
@@ -4966,6 +4970,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &623567480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 623567482}
+  - component: {fileID: 623567481}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &623567481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623567480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67f8bafa2856a1e46acfb4cb18a1db12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameConfig: {fileID: 11400000, guid: eff5c67a07ef28d41bb61d0dee183449, type: 2}
+  testInitialization: 1
+  testTileGeneration: 1
+  testEnemyGeneration: 1
+  testPlayerOperations: 1
+  testRewardSystem: 1
+--- !u!4 &623567482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623567480}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.79498, y: 497.39563, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &654447804
 GameObject:
   m_ObjectHideFlags: 0
@@ -5161,6 +5215,7 @@ MonoBehaviour:
   centerText: {fileID: 217122100}
   HpText: {fileID: 2133393990}
   AtkText: {fileID: 1165789319}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &676618926
 MonoBehaviour:
@@ -5470,6 +5525,7 @@ MonoBehaviour:
   centerText: {fileID: 1271980502}
   HpText: {fileID: 918801319}
   AtkText: {fileID: 2014992246}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &696596480
 MonoBehaviour:
@@ -5976,6 +6032,7 @@ MonoBehaviour:
   centerText: {fileID: 1339137153}
   HpText: {fileID: 2085944871}
   AtkText: {fileID: 399265510}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &729243078
 MonoBehaviour:
@@ -6110,7 +6167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1607aba80a0ca6c4eb121f12d4dfd307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileCreateManager: {fileID: 1272887174}
   pathManager: {fileID: 1952666329}
   uiManager: {fileID: 896279280}
 --- !u!4 &738069393
@@ -6707,6 +6763,7 @@ MonoBehaviour:
   centerText: {fileID: 983416230}
   HpText: {fileID: 1044506573}
   AtkText: {fileID: 156102534}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &836227433
 MonoBehaviour:
@@ -7213,6 +7270,7 @@ MonoBehaviour:
   centerText: {fileID: 1432219799}
   HpText: {fileID: 934172156}
   AtkText: {fileID: 351759417}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &888550131
 MonoBehaviour:
@@ -7358,6 +7416,7 @@ MonoBehaviour:
   centerText: {fileID: 1975903341}
   HpText: {fileID: 113597795}
   AtkText: {fileID: 14625479}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &899479273
 MonoBehaviour:
@@ -8666,6 +8725,7 @@ MonoBehaviour:
   centerText: {fileID: 837354085}
   HpText: {fileID: 1724838789}
   AtkText: {fileID: 1459632409}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1052420572
 MonoBehaviour:
@@ -8979,6 +9039,7 @@ MonoBehaviour:
   centerText: {fileID: 1260853898}
   HpText: {fileID: 348281798}
   AtkText: {fileID: 126379121}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1144030515
 MonoBehaviour:
@@ -9077,6 +9138,7 @@ MonoBehaviour:
   centerText: {fileID: 611995781}
   HpText: {fileID: 334107064}
   AtkText: {fileID: 409680756}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1164239145
 MonoBehaviour:
@@ -9485,6 +9547,7 @@ MonoBehaviour:
   centerText: {fileID: 341692530}
   HpText: {fileID: 92201762}
   AtkText: {fileID: 1745150505}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!1 &1177985968
 GameObject:
@@ -10028,6 +10091,7 @@ MonoBehaviour:
   centerText: {fileID: 695971621}
   HpText: {fileID: 1708677410}
   AtkText: {fileID: 721383875}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1206131706
 MonoBehaviour:
@@ -10126,6 +10190,7 @@ MonoBehaviour:
   centerText: {fileID: 2131127615}
   HpText: {fileID: 1459821949}
   AtkText: {fileID: 1194648553}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1244960958
 MonoBehaviour:
@@ -11206,6 +11271,7 @@ MonoBehaviour:
   centerText: {fileID: 825854717}
   HpText: {fileID: 1202791624}
   AtkText: {fileID: 68543061}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1404444718
 MonoBehaviour:
@@ -11379,6 +11445,7 @@ MonoBehaviour:
   centerText: {fileID: 887831947}
   HpText: {fileID: 1877661691}
   AtkText: {fileID: 805324820}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1418076644
 MonoBehaviour:
@@ -11885,6 +11952,7 @@ MonoBehaviour:
   centerText: {fileID: 1177985970}
   HpText: {fileID: 96986389}
   AtkText: {fileID: 1580829993}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1463711731
 MonoBehaviour:
@@ -12020,6 +12088,7 @@ MonoBehaviour:
   centerText: {fileID: 846367886}
   HpText: {fileID: 1595467157}
   AtkText: {fileID: 1718924221}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1469987341
 MonoBehaviour:
@@ -12989,6 +13058,7 @@ MonoBehaviour:
   centerText: {fileID: 1684564873}
   HpText: {fileID: 1586229661}
   AtkText: {fileID: 458192527}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1636607051
 MonoBehaviour:
@@ -14179,6 +14249,7 @@ MonoBehaviour:
   centerText: {fileID: 1739232157}
   HpText: {fileID: 725096811}
   AtkText: {fileID: 51274832}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1737517647
 MonoBehaviour:
@@ -14685,6 +14756,7 @@ MonoBehaviour:
   centerText: {fileID: 978472931}
   HpText: {fileID: 1626212653}
   AtkText: {fileID: 1282177940}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1756083598
 MonoBehaviour:
@@ -14941,6 +15013,7 @@ MonoBehaviour:
   centerText: {fileID: 14990515}
   HpText: {fileID: 2045203446}
   AtkText: {fileID: 1747253146}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1803237656
 MonoBehaviour:
@@ -15225,6 +15298,7 @@ MonoBehaviour:
   centerText: {fileID: 1119042866}
   HpText: {fileID: 1729561689}
   AtkText: {fileID: 606899159}
+  pathManager: {fileID: 0}
   player: {fileID: 1870821229}
 --- !u!114 &1882327013
 MonoBehaviour:
@@ -15550,7 +15624,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9311b8c91dbc78040844997d3c2b9000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: []
 --- !u!4 &1952666330
 Transform:
   m_ObjectHideFlags: 0
@@ -17022,3 +17095,4 @@ SceneRoots:
   - {fileID: 1272887175}
   - {fileID: 738069393}
   - {fileID: 896279281}
+  - {fileID: 623567482}

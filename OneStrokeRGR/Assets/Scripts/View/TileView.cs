@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
 
 namespace OneStrokeRGR.View
@@ -68,7 +69,7 @@ namespace OneStrokeRGR.View
 
                 case TileType.HPRecovery:
                     originalColor = hpRecoveryColor;
-                    valueText.text = $"+{((HPRecoveryTile)tileData).RecoveryValue}HP";
+                    valueText.text = "+1HP"; // HP回復は固定で1
                     break;
 
                 case TileType.Gold:
@@ -151,18 +152,18 @@ namespace OneStrokeRGR.View
         /// 消失アニメーション
         /// 要件: 14.2
         /// </summary>
-        public void PlayDisappearAnimation(System.Action onComplete = null)
+        public async UniTask PlayDisappearAnimation()
         {
             transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack);
 
             var canvasGroup = GetComponent<CanvasGroup>();
             if (canvasGroup != null)
             {
-                canvasGroup.DOFade(0f, 0.2f).OnComplete(() => onComplete?.Invoke());
+                await canvasGroup.DOFade(0f, 0.2f).AsyncWaitForCompletion();
             }
             else
             {
-                DOVirtual.DelayedCall(0.2f, () => onComplete?.Invoke());
+                await UniTask.Delay(200);
             }
         }
 
