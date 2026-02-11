@@ -563,7 +563,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -266, y: -24}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &347719057
@@ -1623,6 +1623,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameConfig: {fileID: 11400000, guid: eff5c67a07ef28d41bb61d0dee183449, type: 2}
+  boardView: {fileID: 347719058}
+  uiView: {fileID: 929618311}
+  pathDrawingView: {fileID: 2035162928}
 --- !u!4 &1597955620
 Transform:
   m_ObjectHideFlags: 0
@@ -2231,7 +2234,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 6fca51d206178164ea3cdfdb88c034af, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2328,7 +2331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardView: {fileID: 347719058}
   pathLineRenderer: {fileID: 2035162927}
-  uiCamera: {fileID: 0}
+  uiCamera: {fileID: 529400294}
   previewPanel: {fileID: 1836971669}
   previewAttackText: {fileID: 2140911187}
   previewGoldText: {fileID: 1026817462}

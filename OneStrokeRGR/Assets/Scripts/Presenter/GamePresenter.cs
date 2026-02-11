@@ -3,6 +3,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
 using OneStrokeRGR.Config;
+using OneStrokeRGR.View;
 
 namespace OneStrokeRGR.Presenter
 {
@@ -15,16 +16,16 @@ namespace OneStrokeRGR.Presenter
         [Header("設定")]
         public GameConfig gameConfig;
 
+        [Header("View層")]
+        public BoardView boardView;
+        public UIView uiView;
+        public PathDrawingView pathDrawingView;
+
         private GameState gameState;
         private PathPresenter pathPresenter;
         private CombatPresenter combatPresenter;
         private BossPresenter bossPresenter;
         private RewardPresenter rewardPresenter;
-
-        // View層（後で実装）
-        // private BoardView boardView;
-        // private UIView uiView;
-        // private PathDrawingView pathDrawingView;
 
         private void Awake()
         {
@@ -46,6 +47,12 @@ namespace OneStrokeRGR.Presenter
 
         private async void Start()
         {
+            // View層の初期化
+            if (pathDrawingView != null && pathPresenter != null && gameState != null)
+            {
+                pathDrawingView.Initialize(pathPresenter, gameState);
+            }
+
             await InitializeGame();
         }
 
@@ -86,9 +93,17 @@ namespace OneStrokeRGR.Presenter
             // フェーズをパス描画に設定
             gameState.CurrentPhase = GamePhase.PathDrawing;
 
-            // View層の更新（後で実装）
-            // await boardView.InitializeBoard(gameState.Board);
-            // uiView.UpdateStageNumber(gameState.CurrentStage);
+            // View層の更新
+            if (boardView != null)
+            {
+                await boardView.InitializeBoard(gameState.Board);
+            }
+
+            if (uiView != null)
+            {
+                uiView.UpdateStageNumber(gameState.CurrentStage);
+                uiView.UpdatePlayerInfo(gameState.Player);
+            }
 
             Debug.Log($"GamePresenter: ステージ{gameState.CurrentStage}の準備完了");
 
@@ -219,15 +234,28 @@ namespace OneStrokeRGR.Presenter
             Debug.Log("GamePresenter: パス描画フェーズ");
             gameState.CurrentPhase = GamePhase.PathDrawing;
 
-            // View層での入力待機（後で実装）
-            // await pathDrawingView.WaitForPathInput();
+            List<Vector2Int> path;
 
-            // 仮実装: テスト用の簡単なパスを作成
-            List<Vector2Int> testPath = CreateTestPath();
-
-            if (testPath != null && testPath.Count > 0)
+            // View層での入力待機
+            if (pathDrawingView != null)
             {
-                await HandlePathExecutionPhase(testPath);
+                path = await pathDrawingView.WaitForPathInput(gameState.Player.Position);
+            }
+            else
+            {
+                // View層がない場合: テスト用の簡単なパスを作成
+                Debug.LogWarning("GamePresenter: PathDrawingViewが設定されていません。テストパスを使用します。");
+                path = CreateTestPath();
+            }
+
+            if (path != null && path.Count > 0)
+            {
+                await HandlePathExecutionPhase(path);
+            }
+            else
+            {
+                Debug.Log("GamePresenter: パスが空です。再度パス描画フェーズへ");
+                await HandlePathDrawingPhase();
             }
         }
 
@@ -349,8 +377,11 @@ namespace OneStrokeRGR.Presenter
             Debug.Log("GamePresenter: ゲームオーバーフェーズ");
             gameState.SetGameOver();
 
-            // View層でゲームオーバー表示（後で実装）
-            // uiView.ShowGameOver();
+            // View層でゲームオーバー表示
+            if (uiView != null)
+            {
+                await uiView.ShowGameOver(gameState.CurrentStage);
+            }
 
             await UniTask.Yield();
         }
