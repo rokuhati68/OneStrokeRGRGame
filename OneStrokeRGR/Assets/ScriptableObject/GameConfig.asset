@@ -28,7 +28,19 @@ MonoBehaviour:
       enemyCount: 1
       enemyHP: 10
       enemyAttack: 1
-      bossHP: 30
+      bossHP: 0
+      bossAttack: 1
+    - stageNumber: 5
+      enemyCount: 2
+      enemyHP: 20
+      enemyAttack: 1
+      bossHP: 0
+      bossAttack: 1
+    - stageNumber: 10
+      enemyCount: 1
+      enemyHP: 0
+      enemyAttack: 1
+      bossHP: 50
       bossAttack: 2
   rewardConfig:
     spawnRateIncrement: 0.05

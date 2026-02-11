@@ -87,14 +87,20 @@ namespace OneStrokeRGR.Presenter
         {
             Debug.Log($"GamePresenter: ステージ{gameState.CurrentStage}開始");
 
-            // ボードをクリア
-            gameState.Board.Clear();
+            // ステージ1の場合のみボードをクリア
+            if (gameState.CurrentStage == 1)
+            {
+                gameState.Board.Clear();
+                gameState.Player.Position = new Vector2Int(0, 0);
+                Debug.Log($"GamePresenter: プレイヤー位置を初期位置(0, 0)に設定");
+            }
+            else
+            {
+                Debug.Log($"GamePresenter: プレイヤー位置を前ステージの終了位置{gameState.Player.Position}から継続");
+            }
 
-            // 敵を生成して配置（要件: 10.3, 13.1）
-            await SpawnEnemies();
-
-            // ボードの残りのマスをランダムタイルで埋める
-            InitializeBoard();
+            // 新しいマス生成システムでボードを初期化
+            await InitializeBoardWithNewSystem();
 
             // フェーズをパス描画に設定
             gameState.CurrentPhase = GamePhase.PathDrawing;
@@ -118,7 +124,105 @@ namespace OneStrokeRGR.Presenter
         }
 
         /// <summary>
-        /// 敵を生成して配置
+        /// 新しいマス生成システムでボードを初期化
+        /// </summary>
+        private async UniTask InitializeBoardWithNewSystem()
+        {
+            // ステージに応じた敵データを取得
+            var enemyData = gameConfig.enemySpawnTable.GetEntryForStage(gameState.CurrentStage);
+            if (enemyData == null)
+            {
+                Debug.LogError($"GamePresenter: ステージ{gameState.CurrentStage}の敵データが見つかりません");
+                return;
+            }
+
+            bool isBossStage = gameState.IsBossStage();
+            int enemyCount = enemyData.enemyCount;
+
+            // ① 未決定のマスリストを作成
+            List<Vector2Int> undecidedPositions = new List<Vector2Int>();
+            for (int x = 0; x < Board.BoardSize; x++)
+            {
+                for (int y = 0; y < Board.BoardSize; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+
+                    // ステージ2以降の場合、訪問済みマスのみ処理対象
+                    if (gameState.CurrentStage > 1)
+                    {
+                        if (gameState.IsPositionVisited(pos))
+                        {
+                            undecidedPositions.Add(pos);
+                        }
+                    }
+                    else
+                    {
+                        // ステージ1は全マスが対象
+                        undecidedPositions.Add(pos);
+                    }
+                }
+            }
+
+            // ① プレイヤーの現在位置を効果なしマスに確定し、未決定リストから削除
+            Vector2Int playerPos = gameState.Player.Position;
+            undecidedPositions.Remove(playerPos);
+            Tile playerTile = TileFactory.CreateEmptyTile();
+            gameState.Board.SetTile(playerPos, playerTile);
+            Debug.Log($"GamePresenter: プレイヤー位置{playerPos}を効果なしマスに確定（残り未決定: {undecidedPositions.Count}）");
+
+            // ② 敵を未決定リストからランダムに配置
+            for (int i = 0; i < enemyCount; i++)
+            {
+                if (undecidedPositions.Count == 0)
+                {
+                    Debug.LogWarning("GamePresenter: 敵を配置する未決定マスがありません");
+                    break;
+                }
+
+                // ランダムでインデックスを取得
+                int randomIndex = Random.Range(0, undecidedPositions.Count);
+                Vector2Int enemyPos = undecidedPositions[randomIndex];
+
+                // 敵を生成
+                Enemy enemy;
+                if (isBossStage && i == 0)
+                {
+                    // ボス生成
+                    enemy = new Enemy(enemyData.bossHP, enemyData.bossAttack, true, gameConfig.bossActionInterval);
+                    Debug.Log($"GamePresenter: ボス生成 {enemyPos} (HP={enemy.MaxHP}, 攻撃={enemy.AttackPower})");
+                }
+                else
+                {
+                    // 通常敵生成
+                    enemy = new Enemy(enemyData.enemyHP, enemyData.enemyAttack, false);
+                    Debug.Log($"GamePresenter: 敵生成 {enemyPos} (HP={enemy.MaxHP}, 攻撃={enemy.AttackPower})");
+                }
+
+                enemy.Position = enemyPos;
+                gameState.Board.AddEnemy(enemy);
+
+                EnemyTile enemyTile = TileFactory.CreateEnemyTile(enemy);
+                gameState.Board.SetTile(enemyPos, enemyTile);
+
+                // 未決定リストから削除
+                undecidedPositions.RemoveAt(randomIndex);
+                Debug.Log($"GamePresenter: 敵配置完了（残り未決定: {undecidedPositions.Count}）");
+            }
+
+            // ③ 残りの未決定マスを出現率からランダム生成
+            foreach (var pos in undecidedPositions)
+            {
+                Tile tile = TileFactory.CreateRandomTile(gameState.SpawnConfig);
+                gameState.Board.SetTile(pos, tile);
+            }
+
+            Debug.Log($"GamePresenter: ボード初期化完了（未決定マス{undecidedPositions.Count}個をランダム生成）");
+
+            await UniTask.Yield();
+        }
+
+        /// <summary>
+        /// 敵を生成して配置（旧システム - 非使用）
         /// 要件: 10.3, 13.1, 13.2, 13.3
         /// </summary>
         private async UniTask SpawnEnemies()
@@ -178,8 +282,23 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         private void InitializeBoard()
         {
-            // プレイヤー位置を設定（左下）
-            gameState.Player.Position = new Vector2Int(0, 0);
+            // ステージ1の場合のみプレイヤー位置を左下に設定
+            // ステージ2以降は前のステージの終了位置を保持
+            if (gameState.CurrentStage == 1)
+            {
+                gameState.Player.Position = new Vector2Int(0, 0);
+                Debug.Log($"GamePresenter: プレイヤー位置を初期位置(0, 0)に設定");
+            }
+            else
+            {
+                Debug.Log($"GamePresenter: プレイヤー位置を前ステージの終了位置{gameState.Player.Position}から継続");
+            }
+
+            // プレイヤーの現在位置を最優先で効果なしマスにする（既にタイルがあっても強制的に置き換え）
+            Vector2Int playerPos = gameState.Player.Position;
+            Tile playerTile = TileFactory.CreateEmptyTile();
+            gameState.Board.SetTile(playerPos, playerTile);
+            Debug.Log($"GamePresenter: プレイヤー位置{playerPos}を効果なしマスに強制設定");
 
             // すべてのマスをランダムタイルで埋める
             for (int x = 0; x < Board.BoardSize; x++)
@@ -188,7 +307,7 @@ namespace OneStrokeRGR.Presenter
                 {
                     Vector2Int pos = new Vector2Int(x, y);
 
-                    // 既にタイルがある場合はスキップ（敵マスなど）
+                    // 既にタイルがある場合はスキップ（プレイヤー位置、敵マスなど）
                     if (gameState.Board.GetTile(pos) != null)
                     {
                         continue;
@@ -204,17 +323,26 @@ namespace OneStrokeRGR.Presenter
         }
 
         /// <summary>
-        /// 空いているランダムな位置を検索
+        /// 空いているランダムな位置を検索（プレイヤー位置を除く）
         /// </summary>
         private Vector2Int FindRandomEmptyPosition()
         {
             List<Vector2Int> emptyPositions = new List<Vector2Int>();
+            Vector2Int playerPos = gameState.Player.Position;
 
             for (int x = 0; x < Board.BoardSize; x++)
             {
                 for (int y = 0; y < Board.BoardSize; y++)
                 {
                     Vector2Int pos = new Vector2Int(x, y);
+
+                    // プレイヤー位置は除外
+                    if (pos == playerPos)
+                    {
+                        continue;
+                    }
+
+                    // 空いているマスのみ追加
                     if (gameState.Board.GetTile(pos) == null)
                     {
                         emptyPositions.Add(pos);
@@ -224,11 +352,30 @@ namespace OneStrokeRGR.Presenter
 
             if (emptyPositions.Count == 0)
             {
-                Debug.LogWarning("GamePresenter: 空き位置が見つかりません");
+                Debug.LogWarning("GamePresenter: 空き位置が見つかりません（プレイヤー位置を除く）");
                 return Vector2Int.zero;
             }
 
-            return emptyPositions[Random.Range(0, emptyPositions.Count)];
+            // リストをシャッフルして完全にランダムな位置を取得
+            ShuffleList(emptyPositions);
+            Vector2Int selectedPos = emptyPositions[0];
+            Debug.Log($"GamePresenter: ランダム位置を選択 - {selectedPos} (候補数: {emptyPositions.Count})");
+
+            return selectedPos;
+        }
+
+        /// <summary>
+        /// Fisher-Yatesアルゴリズムでリストをシャッフル
+        /// </summary>
+        private void ShuffleList<T>(List<T> list)
+        {
+            for (int i = list.Count - 1; i > 0; i--)
+            {
+                int randomIndex = Random.Range(0, i + 1);
+                T temp = list[i];
+                list[i] = list[randomIndex];
+                list[randomIndex] = temp;
+            }
         }
 
         /// <summary>
@@ -239,6 +386,13 @@ namespace OneStrokeRGR.Presenter
         {
             Debug.Log("GamePresenter: パス描画フェーズ");
             gameState.CurrentPhase = GamePhase.PathDrawing;
+
+            // プレイヤーの開始位置をハイライト
+            if (boardView != null)
+            {
+                boardView.HighlightTile(gameState.Player.Position, true);
+                Debug.Log($"GamePresenter: プレイヤー開始位置{gameState.Player.Position}をハイライト");
+            }
 
             List<Vector2Int> path;
 
@@ -295,6 +449,12 @@ namespace OneStrokeRGR.Presenter
         {
             Debug.Log("GamePresenter: パス実行フェーズ");
             gameState.CurrentPhase = GamePhase.PathExecution;
+
+            // プレイヤー開始位置のハイライトをクリア
+            if (boardView != null)
+            {
+                boardView.HighlightTile(gameState.Player.Position, false);
+            }
 
             // パス検証
             if (!pathPresenter.ValidatePath(path, gameState.Player.Position))

@@ -109,10 +109,25 @@ namespace OneStrokeRGR.Presenter
             // ターン終了時の処理
             comboTracker.Reset(); // コンボリセット（要件: 4.4）
 
+            // 訪問したマスをGameStateに記録
+            if (visitedPositions.Count > 0)
+            {
+                gameState.MarkPositionsAsVisited(visitedPositions);
+            }
+
             // 訪問したマスを再生成（要件: 7.1, 7.2）
             if (visitedPositions.Count > 0)
             {
                 gameState.Board.RegenerateTiles(visitedPositions, gameState.SpawnConfig);
+
+                // プレイヤーの現在位置を必ず効果なしマスにする
+                Vector2Int playerPos = gameState.Player.Position;
+                if (visitedPositions.Contains(playerPos))
+                {
+                    Tile emptyTile = TileFactory.CreateEmptyTile();
+                    gameState.Board.SetTile(playerPos, emptyTile);
+                    Debug.Log($"CombatPresenter: プレイヤー位置{playerPos}を効果なしマスに設定");
+                }
 
                 // 生き残った敵をランダムな位置に再配置
                 if (survivingEnemies.Count > 0)

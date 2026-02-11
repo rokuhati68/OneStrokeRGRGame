@@ -930,7 +930,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -266, y: -24}
+  m_AnchoredPosition: {x: -400, y: 165}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &347719057
@@ -953,8 +953,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 0, y: 0}
+  m_CellSize: {x: 90, y: 90}
+  m_Spacing: {x: 5, y: 5}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &347719058
@@ -971,8 +971,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileViewPrefab: {fileID: 7754475209310410983, guid: c08d973ba3e24c54984c300b67114eea, type: 3}
   gridLayoutGroup: {fileID: 347719057}
-  tileSpacing: 10
-  tileSize: 100
+  tileSpacing: 5
+  tileSize: 90
 --- !u!1 &362178041
 GameObject:
   m_ObjectHideFlags: 0
@@ -2385,7 +2385,7 @@ MonoBehaviour:
   hpText: {fileID: 676528247}
   goldText: {fileID: 334893201}
   attackPowerText: {fileID: 93694093}
-  stageText: {fileID: 0}
+  stageText: {fileID: 1630194666}
   confirmDialogPanel: {fileID: 540878890}
   confirmMessageText: {fileID: 0}
   confirmButton: {fileID: 0}
@@ -3537,7 +3537,7 @@ MonoBehaviour:
   boardView: {fileID: 347719058}
   uiView: {fileID: 929618311}
   pathDrawingView: {fileID: 2035162928}
-  rewardView: {fileID: 0}
+  rewardView: {fileID: 1728557846}
 --- !u!4 &1597955620
 Transform:
   m_ObjectHideFlags: 0

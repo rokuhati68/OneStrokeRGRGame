@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace OneStrokeRGR.Model
 {
     /// <summary>
@@ -26,6 +29,9 @@ namespace OneStrokeRGR.Model
 
         /// <summary>ボスステージ間隔（デフォルト: 10）</summary>
         public int BossStageInterval { get; set; } = 10;
+
+        /// <summary>ゲーム全体で訪問済みのマス位置（ステージ跨ぎで保持）</summary>
+        public HashSet<Vector2Int> VisitedPositions { get; private set; } = new HashSet<Vector2Int>();
 
         /// <summary>
         /// コンストラクタ
@@ -117,6 +123,33 @@ namespace OneStrokeRGR.Model
         {
             CurrentPhase = GamePhase.StageCleared;
             UnityEngine.Debug.Log($"GameState: ステージ{CurrentStage}クリア");
+        }
+
+        /// <summary>
+        /// マスを訪問済みとしてマーク
+        /// </summary>
+        public void MarkPositionAsVisited(Vector2Int position)
+        {
+            VisitedPositions.Add(position);
+        }
+
+        /// <summary>
+        /// 複数のマスを訪問済みとしてマーク
+        /// </summary>
+        public void MarkPositionsAsVisited(List<Vector2Int> positions)
+        {
+            foreach (var pos in positions)
+            {
+                VisitedPositions.Add(pos);
+            }
+        }
+
+        /// <summary>
+        /// マスが訪問済みか判定
+        /// </summary>
+        public bool IsPositionVisited(Vector2Int position)
+        {
+            return VisitedPositions.Contains(position);
         }
     }
 }

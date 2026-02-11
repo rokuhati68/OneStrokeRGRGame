@@ -62,6 +62,15 @@ namespace OneStrokeRGR.Model
         }
 
         /// <summary>
+        /// 効果なしマスを生成
+        /// </summary>
+        /// <returns>生成された効果なしマス</returns>
+        public static EmptyTile CreateEmptyTile()
+        {
+            return new EmptyTile();
+        }
+
+        /// <summary>
         /// 敵マスを生成
         /// 要件: 10.3, 13.1, 13.2, 13.3, 13.4, 13.5
         /// </summary>
