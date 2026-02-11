@@ -20,6 +20,7 @@ namespace OneStrokeRGR.Presenter
         public BoardView boardView;
         public UIView uiView;
         public PathDrawingView pathDrawingView;
+        public RewardView rewardView;
 
         private GameState gameState;
         private PathPresenter pathPresenter;
@@ -51,6 +52,11 @@ namespace OneStrokeRGR.Presenter
             if (pathDrawingView != null && pathPresenter != null && gameState != null)
             {
                 pathDrawingView.Initialize(pathPresenter, gameState);
+            }
+
+            if (rewardView != null && rewardPresenter != null)
+            {
+                rewardPresenter.SetRewardView(rewardView);
             }
 
             await InitializeGame();

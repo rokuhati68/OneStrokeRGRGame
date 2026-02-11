@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.View;
 
 namespace OneStrokeRGR.Presenter
 {
@@ -13,11 +14,24 @@ namespace OneStrokeRGR.Presenter
     {
         private RewardSystem rewardSystem;
         private GameState gameState;
+        private RewardView rewardView;
 
         public RewardPresenter(GameState state)
         {
             gameState = state;
             rewardSystem = new RewardSystem();
+        }
+
+        /// <summary>
+        /// RewardViewを設定
+        /// </summary>
+        public void SetRewardView(RewardView view)
+        {
+            rewardView = view;
+            if (rewardView != null)
+            {
+                rewardView.Initialize(this);
+            }
         }
 
         /// <summary>
@@ -32,16 +46,22 @@ namespace OneStrokeRGR.Presenter
             // 3つのランダムな報酬を選択（要件: 8.2）
             List<RewardType> rewards = rewardSystem.SelectRandomRewards(3);
 
-            // View層での報酬選択を待つ（実装時にRewardViewと連携）
-            // 仮実装: 最初の報酬を自動選択
-            RewardType selectedReward = rewards[0];
+            RewardType selectedReward;
+
+            // View層での報酬選択を待つ
+            if (rewardView != null)
+            {
+                selectedReward = await rewardView.ShowRewardSelection(rewards);
+            }
+            else
+            {
+                // View層がない場合: 最初の報酬を自動選択
+                Debug.LogWarning("RewardPresenter: RewardViewが設定されていません。最初の報酬を自動選択します。");
+                selectedReward = rewards[0];
+                await UniTask.Delay(100);
+            }
 
             Debug.Log($"RewardPresenter: {selectedReward}が選択されました");
-
-            // TODO: 実際のUI実装時に、ユーザー選択を待つ処理に置き換える
-            // selectedReward = await rewardView.ShowRewardSelection(rewards);
-
-            await UniTask.Delay(100);
 
             return selectedReward;
         }
