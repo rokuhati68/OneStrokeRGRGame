@@ -133,9 +133,8 @@ namespace OneStrokeRGR.Model
                     continue;
                 }
 
-                // 新しいタイルを生成（TileFactoryで生成する想定）
-                // ここでは一時的にEmptyTileを設定
-                var newTile = new EmptyTile();
+                // TileFactoryを使用して新しいタイルを生成（要件: 7.4, 10.4）
+                var newTile = TileFactory.CreateRandomTile(config);
                 SetTile(pos, newTile);
             }
         }
