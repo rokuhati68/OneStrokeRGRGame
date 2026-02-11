@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20aa8735eb642544b89d1fcdb78bcfa5, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  initialHP: 5
+  initialGold: 50
+  initialOneStrokeBonus: 5
+  defaultSpawnConfig:
+    emptyRate: 0.7
+    attackBoostRate: 0.1
+    hpRecoveryRate: 0.1
+    goldRate: 0.1
+    attackBoostRange: {x: 1, y: 2}
+    goldRange: {x: 1, y: 2}
+  enemySpawnTable:
+    entries: []
+  rewardConfig:
+    spawnRateIncrement: 0.05
+    valueIncrement: 1
+    oneStrokeBonusIncrement: 2
+  bossStageInterval: 10
+  bossActionInterval: 3
