@@ -253,8 +253,13 @@ namespace OneStrokeRGR.View
             if (isPathValid)
             {
                 // プレビュー情報を計算して表示
-                var preview = pathPresenter.CalculatePathPreview(currentPath, gameState);
-                ShowPathPreview(preview.PredictedAttackPower, preview.PredictedGold, preview.PredictedHP);
+                var preview = pathPresenter.CalculatePathPreview(currentPath, gameState.Player, gameState.Board);
+
+                // 最終的な値を計算
+                int finalGold = gameState.Player.Gold + preview.PredictedGoldGained - preview.PredictedGoldSpent;
+                int finalHP = gameState.Player.CurrentHP + preview.PredictedHPChange;
+
+                ShowPathPreview(preview.PredictedAttackPower, finalGold, finalHP);
 
                 // 確認ボタンを表示
                 ShowConfirmButtons();
