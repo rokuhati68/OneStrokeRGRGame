@@ -50,6 +50,7 @@ namespace OneStrokeRGR.Presenter
 
             // パス上の各マスを順次処理（要件: 1.5）
             List<Vector2Int> visitedPositions = new List<Vector2Int>();
+            List<Enemy> survivingEnemies = new List<Enemy>(); // 生き残った敵を記録
 
             for (int i = 0; i < path.Count; i++)
             {
@@ -62,11 +63,33 @@ namespace OneStrokeRGR.Presenter
                     continue;
                 }
 
-                // プレイヤー位置を更新
-                gameState.Player.Position = pos;
+                // 敵タイルの場合、処理前に敵を記録
+                if (tile.Type == TileType.Enemy && tile is EnemyTile enemyTile)
+                {
+                    Enemy enemy = enemyTile.Enemy;
+                    int enemyHPBefore = enemy.CurrentHP;
 
-                // タイル効果を処理
-                await ProcessTileEffect(tile, comboTracker);
+                    // プレイヤー位置を更新
+                    gameState.Player.Position = pos;
+
+                    // タイル効果を処理
+                    await ProcessTileEffect(tile, comboTracker);
+
+                    // 敵が生き残った場合、リストに追加
+                    if (enemy.IsAlive())
+                    {
+                        survivingEnemies.Add(enemy);
+                        Debug.Log($"CombatPresenter: 敵が生き残りました (HP: {enemyHPBefore} -> {enemy.CurrentHP})");
+                    }
+                }
+                else
+                {
+                    // プレイヤー位置を更新
+                    gameState.Player.Position = pos;
+
+                    // タイル効果を処理
+                    await ProcessTileEffect(tile, comboTracker);
+                }
 
                 // 訪問済み位置を記録
                 visitedPositions.Add(pos);
@@ -90,6 +113,35 @@ namespace OneStrokeRGR.Presenter
             if (visitedPositions.Count > 0)
             {
                 gameState.Board.RegenerateTiles(visitedPositions, gameState.SpawnConfig);
+
+                // 生き残った敵をランダムな位置に再配置
+                if (survivingEnemies.Count > 0)
+                {
+                    // プレイヤーの最終位置を除外した再配置候補を作成
+                    Vector2Int playerFinalPos = gameState.Player.Position;
+                    List<Vector2Int> availablePositions = visitedPositions.FindAll(pos => pos != playerFinalPos);
+
+                    if (availablePositions.Count == 0)
+                    {
+                        Debug.LogWarning("CombatPresenter: 敵を再配置できる位置がありません");
+                    }
+                    else
+                    {
+                        Debug.Log($"CombatPresenter: {survivingEnemies.Count}体の敵を再配置");
+                        foreach (var enemy in survivingEnemies)
+                        {
+                            // ランダムな再生成マスを選択（プレイヤー位置を除く）
+                            Vector2Int newPos = availablePositions[Random.Range(0, availablePositions.Count)];
+
+                            // 敵を再配置
+                            enemy.Position = newPos;
+                            EnemyTile newEnemyTile = TileFactory.CreateEnemyTile(enemy);
+                            gameState.Board.SetTile(newPos, newEnemyTile);
+
+                            Debug.Log($"CombatPresenter: 敵を再配置 {newPos} (HP: {enemy.CurrentHP}/{enemy.MaxHP})");
+                        }
+                    }
+                }
             }
 
             Debug.Log("CombatPresenter: パス実行完了");

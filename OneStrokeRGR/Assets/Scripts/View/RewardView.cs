@@ -72,8 +72,18 @@ namespace OneStrokeRGR.View
 
             // パネルを表示
             if (rewardPanel != null)
+            {
                 rewardPanel.SetActive(true);
 
+                // CanvasGroupのalphaをリセット（前回のフェードアウトから復帰）
+                var canvasGroup = rewardPanel.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    canvasGroup.alpha = 1f;
+                }
+
+                Debug.Log("表示完了");
+            }
             // タイトルを設定
             if (titleText != null)
                 titleText.text = "報酬を選択してください";

@@ -116,13 +116,16 @@ namespace OneStrokeRGR.View
                 await UniTask.WaitUntil(() => pathConfirmed || currentPath.Count == 0);
             }
 
+            // パスのコピーを作成（クリーンアップ前に！）
+            List<Vector2Int> resultPath = new List<Vector2Int>(currentPath);
+
             // クリーンアップ
             ClearPath();
             HideConfirmButtons();
             HidePathPreview();
 
-            Debug.Log($"PathDrawingView: パス入力完了 - {currentPath.Count}マス");
-            return new List<Vector2Int>(currentPath);
+            Debug.Log($"PathDrawingView: パス入力完了 - {resultPath.Count}マス");
+            return resultPath;
         }
 
         private void Update()

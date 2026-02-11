@@ -306,6 +306,25 @@ namespace OneStrokeRGR.Presenter
             // パスを実行
             await combatPresenter.ExecutePath(path);
 
+            // View層を更新（敵HP、プレイヤー情報、ボード）
+            if (boardView != null)
+            {
+                // ボード全体を更新（敵HPの変更を反映）
+                foreach (var pos in path)
+                {
+                    Tile tile = gameState.Board.GetTile(pos);
+                    if (tile != null)
+                    {
+                        boardView.UpdateTile(pos, tile);
+                    }
+                }
+            }
+
+            if (uiView != null)
+            {
+                uiView.UpdatePlayerInfo(gameState.Player);
+            }
+
             // ゲームオーバーチェック
             if (!gameState.Player.IsAlive())
             {
