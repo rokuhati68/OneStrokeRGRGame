@@ -238,8 +238,15 @@ namespace OneStrokeRGR.View
 
             if (cardObject != null)
             {
-                originalScale = cardObject.transform.localScale;
+                originalScale = Vector3.one;
                 cardObject.transform.localScale = Vector3.zero;
+
+                // 前回の非選択アニメーションで下がったalphaをリセット
+                var canvasGroup = cardObject.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    canvasGroup.alpha = 1f;
+                }
             }
         }
 
