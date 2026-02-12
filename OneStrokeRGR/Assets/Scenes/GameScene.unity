@@ -970,6 +970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileViewPrefab: {fileID: 7754475209310410983, guid: c08d973ba3e24c54984c300b67114eea, type: 3}
+  tileIconConfig: {fileID: 11400000, guid: 8e1fefd7db3e54e4fa131bc6268b2bb1, type: 2}
   gridLayoutGroup: {fileID: 347719057}
   tileSpacing: 5
   tileSize: 90

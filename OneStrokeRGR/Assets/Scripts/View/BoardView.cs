@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.Config;
 
 namespace OneStrokeRGR.View
 {
@@ -14,6 +15,9 @@ namespace OneStrokeRGR.View
     {
         [Header("プレハブ")]
         public GameObject tileViewPrefab;
+
+        [Header("アイコン設定")]
+        public TileIconConfig tileIconConfig;
 
         [Header("レイアウト設定")]
         public GridLayoutGroup gridLayoutGroup;
@@ -63,7 +67,7 @@ namespace OneStrokeRGR.View
 
                     if (tileView != null)
                     {
-                        tileView.Setup(tile, pos);
+                        tileView.Setup(tile, pos, tileIconConfig);
                         tileViews[x, y] = tileView;
 
                         // 出現アニメーション
@@ -96,7 +100,7 @@ namespace OneStrokeRGR.View
             TileView tileView = tileViews[position.x, position.y];
             if (tileView != null)
             {
-                tileView.Setup(newTile, position);
+                tileView.Setup(newTile, position, tileIconConfig);
                 tileView.UpdateVisuals();
             }
         }
@@ -119,7 +123,7 @@ namespace OneStrokeRGR.View
 
                     // 新しいタイルデータをセット
                     Tile newTile = board.GetTile(pos);
-                    tileView.Setup(newTile, pos);
+                    tileView.Setup(newTile, pos, tileIconConfig);
 
                     // 出現アニメーション
                     tileView.PlayAppearAnimation();

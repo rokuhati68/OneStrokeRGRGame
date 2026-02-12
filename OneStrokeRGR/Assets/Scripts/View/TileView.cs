@@ -4,6 +4,7 @@ using TMPro;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.Config;
 
 namespace OneStrokeRGR.View
 {
@@ -32,6 +33,7 @@ namespace OneStrokeRGR.View
         private Vector2Int gridPosition;
         private Color originalColor;
         private bool isHighlighted = false;
+        private TileIconConfig iconConfig;
 
         /// <summary>
         /// タイルのセットアップ
@@ -40,6 +42,17 @@ namespace OneStrokeRGR.View
         {
             tileData = tile;
             gridPosition = position;
+            UpdateVisuals();
+        }
+
+        /// <summary>
+        /// アイコン設定付きのタイルセットアップ
+        /// </summary>
+        public void Setup(Tile tile, Vector2Int position, TileIconConfig config)
+        {
+            tileData = tile;
+            gridPosition = position;
+            iconConfig = config;
             UpdateVisuals();
         }
 
@@ -110,6 +123,9 @@ namespace OneStrokeRGR.View
             {
                 backgroundImage.color = originalColor;
             }
+
+            // アイコン画像の更新
+            UpdateIcon();
         }
 
         /// <summary>
@@ -120,6 +136,34 @@ namespace OneStrokeRGR.View
             originalColor = emptyColor;
             backgroundImage.color = originalColor;
             valueText.text = "";
+            UpdateIcon();
+        }
+
+        /// <summary>
+        /// アイコン画像を更新
+        /// </summary>
+        private void UpdateIcon()
+        {
+            if (iconImage == null) return;
+
+            if (iconConfig == null || tileData == null)
+            {
+                iconImage.enabled = false;
+                return;
+            }
+
+            bool isBoss = tileData.Type == TileType.Enemy && tileData is EnemyTile et && et.Enemy.IsBoss;
+            Sprite icon = iconConfig.GetIcon(tileData.Type, isBoss);
+
+            if (icon != null)
+            {
+                iconImage.sprite = icon;
+                iconImage.enabled = true;
+            }
+            else
+            {
+                iconImage.enabled = false;
+            }
         }
 
         /// <summary>
