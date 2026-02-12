@@ -3064,16 +3064,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05215f11ffbbb694fbd3a599b1cd3572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClips:
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-  bgmMasterVolume: 0.5
-  seClips:
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-  seMasterVolume: 1
+  normalBGM: {fileID: 8300000, guid: f981aad95fe1cc24ba462c5bb0624981, type: 3}
+  bossBGM: {fileID: 8300000, guid: 1c78bebf1434d3f40bff6eef99dac33d, type: 3}
+  bgmVolume: 0.2
+  moveSE: {fileID: 8300000, guid: 48346bc9464f3f7479a16f4aca940dda, type: 3}
+  attackSE: {fileID: 8300000, guid: 031bc411f59d27c4680064b4d4109b62, type: 3}
+  getPowerSE: {fileID: 8300000, guid: d47f115de46e3d0428d91e8697648a9e, type: 3}
+  getGoldSE: {fileID: 8300000, guid: fe8aa2bc03d60a54e9fd35a12d311f32, type: 3}
+  getHealSE: {fileID: 8300000, guid: a8222422c634d284bb3aa5e66870a4cb, type: 3}
+  seVolume: 1
   seSourceCount: 5
 --- !u!4 &905230051
 Transform:
