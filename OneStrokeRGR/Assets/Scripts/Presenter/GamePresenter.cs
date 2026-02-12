@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
 using OneStrokeRGR.Config;
 using OneStrokeRGR.View;
+using OneStrokeRGR.Sound;
 
 namespace OneStrokeRGR.Presenter
 {
@@ -51,6 +52,12 @@ namespace OneStrokeRGR.Presenter
             // CombatPresenterのコールバック設定
             combatPresenter.OnPlayerMoveTo = async (pos) =>
             {
+                // 移動SE
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlayMoveSE();
+                }
+
                 if (boardView != null)
                 {
                     await boardView.MovePlayerTo(pos);
@@ -90,6 +97,28 @@ namespace OneStrokeRGR.Presenter
                 if (battleUIView != null)
                 {
                     battleUIView.PlayEnemyDefeatAnimation(enemy);
+                }
+            };
+
+            // タイル種別SE
+            combatPresenter.OnTileProcessed = (tileType) =>
+            {
+                if (SoundManager.Instance == null) return;
+
+                switch (tileType)
+                {
+                    case TileType.Enemy:
+                        SoundManager.Instance.PlayAttackSE();
+                        break;
+                    case TileType.AttackBoost:
+                        SoundManager.Instance.PlayGetPowerSE();
+                        break;
+                    case TileType.Gold:
+                        SoundManager.Instance.PlayGetGoldSE();
+                        break;
+                    case TileType.HPRecovery:
+                        SoundManager.Instance.PlayGetHealSE();
+                        break;
                 }
             };
         }
@@ -173,6 +202,19 @@ namespace OneStrokeRGR.Presenter
             {
                 var enemies = gameState.Board.GetEnemies();
                 battleUIView.InitializeBattleUI(enemies, currentEnemySprites);
+            }
+
+            // BGM切り替え（ボスがいるステージはBossBGM）
+            if (SoundManager.Instance != null)
+            {
+                if (gameState.IsBossStage())
+                {
+                    SoundManager.Instance.PlayBossBGM();
+                }
+                else
+                {
+                    SoundManager.Instance.PlayNormalBGM();
+                }
             }
 
             Debug.Log($"GamePresenter: ステージ{gameState.CurrentStage}の準備完了");

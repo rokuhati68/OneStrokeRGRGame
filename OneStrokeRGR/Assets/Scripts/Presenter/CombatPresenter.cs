@@ -38,6 +38,12 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public Action<Enemy> OnEnemyDefeated { get; set; }
 
+        /// <summary>
+        /// タイル効果が処理された際に呼ばれるコールバック
+        /// タイル種別に応じたSE再生に使用
+        /// </summary>
+        public Action<TileType> OnTileProcessed { get; set; }
+
         public CombatPresenter(GameState state)
         {
             gameState = state;
@@ -132,6 +138,9 @@ namespace OneStrokeRGR.Presenter
                     // タイル効果を処理
                     await ProcessTileEffect(tile, comboTracker);
                 }
+
+                // タイル種別を通知（SE再生用）
+                OnTileProcessed?.Invoke(tile.Type);
 
                 // View層のUI更新通知
                 if (OnEffectApplied != null)
