@@ -29,31 +29,31 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 10
         attackPower: 0
-        sprite: {fileID: -3803910155647876509, guid: a8accb1ff9aa47a4c9d199310c6ce18a, type: 3}
+        sprite: {fileID: -8669003135698541265, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
     - stageNumber: 2
       enemies:
       - isBoss: 0
         maxHP: 10
         attackPower: 0
-        sprite: {fileID: 940437717804196848, guid: a8accb1ff9aa47a4c9d199310c6ce18a, type: 3}
+        sprite: {fileID: 7512221905083442887, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
       - isBoss: 0
         maxHP: 10
         attackPower: 0
-        sprite: {fileID: -8269566502232828694, guid: a8accb1ff9aa47a4c9d199310c6ce18a, type: 3}
+        sprite: {fileID: 6328198851314851332, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
     - stageNumber: 3
       enemies:
       - isBoss: 0
         maxHP: 10
         attackPower: 2
-        sprite: {fileID: -8269566502232828694, guid: a8accb1ff9aa47a4c9d199310c6ce18a, type: 3}
+        sprite: {fileID: 4918839562675639274, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
       - isBoss: 0
         maxHP: 20
         attackPower: 3
-        sprite: {fileID: -8269566502232828694, guid: a8accb1ff9aa47a4c9d199310c6ce18a, type: 3}
+        sprite: {fileID: 4918839562675639274, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
       - isBoss: 1
         maxHP: 80
         attackPower: 3
-        sprite: {fileID: -8269566502232828694, guid: a8accb1ff9aa47a4c9d199310c6ce18a, type: 3}
+        sprite: {fileID: -2192252896747224195, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
   rewardConfig:
     spawnRateIncrement: 0.05
     valueIncrement: 1
