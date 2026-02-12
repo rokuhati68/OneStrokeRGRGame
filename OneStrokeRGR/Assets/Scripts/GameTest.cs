@@ -123,18 +123,23 @@ public class GameTest : MonoBehaviour
 
         // ステージ1の敵
         var stage1Data = gameConfig.enemySpawnTable.GetEntryForStage(1);
-        if (stage1Data != null)
+        if (stage1Data != null && stage1Data.enemies.Count > 0)
         {
-            Enemy enemy1 = new Enemy(stage1Data.enemyHP, stage1Data.enemyAttack, false);
-            Debug.Log($"✓ ステージ1の敵: HP={enemy1.MaxHP}, 攻撃={enemy1.AttackPower}");
+            var data = stage1Data.enemies[0];
+            Enemy enemy1 = new Enemy(data.maxHP, data.attackPower, data.isBoss);
+            Debug.Log($"✓ ステージ1の敵: HP={enemy1.MaxHP}, 攻撃={enemy1.AttackPower}, ボス={enemy1.IsBoss}");
         }
 
-        // ステージ10のボス
+        // ステージ10の敵
         var stage10Data = gameConfig.enemySpawnTable.GetEntryForStage(10);
-        if (stage10Data != null)
+        if (stage10Data != null && stage10Data.enemies.Count > 0)
         {
-            Enemy boss = new Enemy(stage10Data.bossHP, stage10Data.bossAttack, true);
-            Debug.Log($"✓ ステージ10のボス: HP={boss.MaxHP}, 攻撃={boss.AttackPower}, ボス={boss.IsBoss}\n");
+            foreach (var data in stage10Data.enemies)
+            {
+                Enemy enemy = new Enemy(data.maxHP, data.attackPower, data.isBoss);
+                Debug.Log($"✓ ステージ10の敵: HP={enemy.MaxHP}, 攻撃={enemy.AttackPower}, ボス={enemy.IsBoss}");
+            }
+            Debug.Log("");
         }
     }
 

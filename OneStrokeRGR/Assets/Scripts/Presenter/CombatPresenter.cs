@@ -26,6 +26,18 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public Func<UniTask> OnEffectApplied { get; set; }
 
+        /// <summary>
+        /// 敵がダメージを受けた際に呼ばれるコールバック
+        /// バトルUIのHP更新に使用
+        /// </summary>
+        public Action<Enemy> OnEnemyDamaged { get; set; }
+
+        /// <summary>
+        /// 敵が撃破された際に呼ばれるコールバック
+        /// バトルUIの撃破演出に使用
+        /// </summary>
+        public Action<Enemy> OnEnemyDefeated { get; set; }
+
         public CombatPresenter(GameState state)
         {
             gameState = state;
@@ -94,11 +106,22 @@ namespace OneStrokeRGR.Presenter
                     // タイル効果を処理
                     await ProcessTileEffect(tile, comboTracker);
 
+                    // 敵がダメージを受けた場合、バトルUIに通知
+                    if (enemy.CurrentHP < enemyHPBefore)
+                    {
+                        OnEnemyDamaged?.Invoke(enemy);
+                    }
+
                     // 敵が生き残った場合、リストに追加
                     if (enemy.IsAlive())
                     {
                         survivingEnemies.Add(enemy);
                         Debug.Log($"CombatPresenter: 敵が生き残りました (HP: {enemyHPBefore} -> {enemy.CurrentHP})");
+                    }
+                    else
+                    {
+                        // 敵撃破をバトルUIに通知
+                        OnEnemyDefeated?.Invoke(enemy);
                     }
                 }
                 else

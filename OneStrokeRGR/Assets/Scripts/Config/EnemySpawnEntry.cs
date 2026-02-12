@@ -1,8 +1,29 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace OneStrokeRGR.Config
 {
+    /// <summary>
+    /// 個別の敵データ設定
+    /// </summary>
+    [Serializable]
+    public class EnemyData
+    {
+        [Tooltip("ボスかどうか")]
+        public bool isBoss;
+
+        [Tooltip("最大HP")]
+        public int maxHP = 3;
+
+        [Range(1, 4)]
+        [Tooltip("攻撃力（1-4）")]
+        public int attackPower = 1;
+
+        [Tooltip("バトルUIに表示するスプライト")]
+        public Sprite sprite;
+    }
+
     /// <summary>
     /// ステージごとの敵生成データ
     /// 要件: 13.1, 13.2, 13.3, 13.4, 13.5
@@ -13,21 +34,7 @@ namespace OneStrokeRGR.Config
         [Tooltip("ステージ番号")]
         public int stageNumber;
 
-        [Tooltip("通常敵の数")]
-        public int enemyCount;
-
-        [Tooltip("通常敵のHP")]
-        public int enemyHP;
-
-        [Range(1, 4)]
-        [Tooltip("通常敵の攻撃力（1-4）")]
-        public int enemyAttack;
-
-        [Tooltip("ボスのHP")]
-        public int bossHP;
-
-        [Range(1, 4)]
-        [Tooltip("ボスの攻撃力（1-4）")]
-        public int bossAttack;
+        [Tooltip("敵データリスト（1～3体）")]
+        public List<EnemyData> enemies = new List<EnemyData>();
     }
 }

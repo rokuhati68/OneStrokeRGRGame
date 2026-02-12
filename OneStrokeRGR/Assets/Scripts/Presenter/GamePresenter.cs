@@ -21,6 +21,7 @@ namespace OneStrokeRGR.Presenter
         public UIView uiView;
         public PathDrawingView pathDrawingView;
         public RewardView rewardView;
+        public BattleUIView battleUIView;
 
         private GameState gameState;
         private PathPresenter pathPresenter;
@@ -28,6 +29,7 @@ namespace OneStrokeRGR.Presenter
         private BossPresenter bossPresenter;
         private RewardPresenter rewardPresenter;
         private int pathMoveCount;
+        private List<Sprite> currentEnemySprites = new List<Sprite>();
 
         private void Awake()
         {
@@ -73,6 +75,22 @@ namespace OneStrokeRGR.Presenter
                     boardView.MarkTileAsVisited(pos);
                 }
                 await UniTask.Yield();
+            };
+
+            // バトルUI用コールバック
+            combatPresenter.OnEnemyDamaged = (enemy) =>
+            {
+                if (battleUIView != null)
+                {
+                    battleUIView.AnimateEnemyDamage(enemy);
+                }
+            };
+            combatPresenter.OnEnemyDefeated = (enemy) =>
+            {
+                if (battleUIView != null)
+                {
+                    battleUIView.PlayEnemyDefeatAnimation(enemy);
+                }
             };
         }
 
@@ -150,6 +168,13 @@ namespace OneStrokeRGR.Presenter
                 uiView.UpdatePlayerInfo(gameState.Player);
             }
 
+            // バトルUIの初期化
+            if (battleUIView != null)
+            {
+                var enemies = gameState.Board.GetEnemies();
+                battleUIView.InitializeBattleUI(enemies, currentEnemySprites);
+            }
+
             Debug.Log($"GamePresenter: ステージ{gameState.CurrentStage}の準備完了");
 
             // パス描画フェーズを開始
@@ -162,15 +187,15 @@ namespace OneStrokeRGR.Presenter
         private async UniTask InitializeBoardWithNewSystem()
         {
             // ステージに応じた敵データを取得
-            var enemyData = gameConfig.enemySpawnTable.GetEntryForStage(gameState.CurrentStage);
-            if (enemyData == null)
+            var spawnEntry = gameConfig.enemySpawnTable.GetEntryForStage(gameState.CurrentStage);
+            if (spawnEntry == null || spawnEntry.enemies == null || spawnEntry.enemies.Count == 0)
             {
                 Debug.LogError($"GamePresenter: ステージ{gameState.CurrentStage}の敵データが見つかりません");
                 return;
             }
 
-            bool isBossStage = gameState.IsBossStage();
-            int enemyCount = enemyData.enemyCount;
+            int enemyCount = Mathf.Min(spawnEntry.enemies.Count, 3);
+            currentEnemySprites.Clear();
 
             // ① 未決定のマスリストを作成
             List<Vector2Int> undecidedPositions = new List<Vector2Int>();
@@ -203,7 +228,7 @@ namespace OneStrokeRGR.Presenter
             gameState.Board.SetTile(playerPos, playerTile);
             Debug.Log($"GamePresenter: プレイヤー位置{playerPos}を効果なしマスに確定（残り未決定: {undecidedPositions.Count}）");
 
-            // ② 敵を未決定リストからランダムに配置
+            // ② 各EnemyDataから敵を生成してランダムに配置
             for (int i = 0; i < enemyCount; i++)
             {
                 if (undecidedPositions.Count == 0)
@@ -212,34 +237,28 @@ namespace OneStrokeRGR.Presenter
                     break;
                 }
 
+                EnemyData data = spawnEntry.enemies[i];
+
                 // ランダムでインデックスを取得
                 int randomIndex = Random.Range(0, undecidedPositions.Count);
                 Vector2Int enemyPos = undecidedPositions[randomIndex];
 
-                // 敵を生成
-                Enemy enemy;
-                if (isBossStage && i == 0)
-                {
-                    // ボス生成
-                    enemy = new Enemy(enemyData.bossHP, enemyData.bossAttack, true, gameConfig.bossActionInterval);
-                    Debug.Log($"GamePresenter: ボス生成 {enemyPos} (HP={enemy.MaxHP}, 攻撃={enemy.AttackPower})");
-                }
-                else
-                {
-                    // 通常敵生成
-                    enemy = new Enemy(enemyData.enemyHP, enemyData.enemyAttack, false);
-                    Debug.Log($"GamePresenter: 敵生成 {enemyPos} (HP={enemy.MaxHP}, 攻撃={enemy.AttackPower})");
-                }
-
+                // EnemyDataの設定から敵を生成
+                Enemy enemy = new Enemy(data.maxHP, data.attackPower, data.isBoss, gameConfig.bossActionInterval);
                 enemy.Position = enemyPos;
                 gameState.Board.AddEnemy(enemy);
 
                 EnemyTile enemyTile = TileFactory.CreateEnemyTile(enemy);
                 gameState.Board.SetTile(enemyPos, enemyTile);
 
+                // バトルUI用のスプライトを記録
+                currentEnemySprites.Add(data.sprite);
+
                 // 未決定リストから削除
                 undecidedPositions.RemoveAt(randomIndex);
-                Debug.Log($"GamePresenter: 敵配置完了（残り未決定: {undecidedPositions.Count}）");
+
+                string typeLabel = data.isBoss ? "ボス" : "通常敵";
+                Debug.Log($"GamePresenter: {typeLabel}生成 {enemyPos} (HP={enemy.MaxHP}, 攻撃={enemy.AttackPower})");
             }
 
             // ③ 残りの未決定マスを出現率からランダム生成
@@ -254,60 +273,7 @@ namespace OneStrokeRGR.Presenter
             await UniTask.Yield();
         }
 
-        /// <summary>
-        /// 敵を生成して配置（旧システム - 非使用）
-        /// 要件: 10.3, 13.1, 13.2, 13.3
-        /// </summary>
-        private async UniTask SpawnEnemies()
-        {
-            // ステージに応じた敵データを取得
-            var enemyData = gameConfig.enemySpawnTable.GetEntryForStage(gameState.CurrentStage);
-            if (enemyData == null)
-            {
-                Debug.LogError($"GamePresenter: ステージ{gameState.CurrentStage}の敵データが見つかりません");
-                return;
-            }
-
-            bool isBossStage = gameState.IsBossStage();
-            int enemyCount = enemyData.enemyCount;
-
-            Debug.Log($"敵を{enemyCount}体生成（ボスステージ: {isBossStage}）");
-
-            // 敵を生成
-            for (int i = 0; i < enemyCount; i++)
-            {
-                // ボスステージの場合
-                if (isBossStage && i == 0)
-                {
-                    Enemy boss = new Enemy(enemyData.bossHP, enemyData.bossAttack, true, gameConfig.bossActionInterval);
-                    Vector2Int bossPos = FindRandomEmptyPosition();
-                    boss.Position = bossPos;
-
-                    gameState.Board.AddEnemy(boss);
-
-                    EnemyTile bossTile = TileFactory.CreateEnemyTile(boss);
-                    gameState.Board.SetTile(bossPos, bossTile);
-
-                    Debug.Log($"ボス生成: {bossPos}, HP={boss.MaxHP}, 攻撃={boss.AttackPower}");
-                }
-                else
-                {
-                    // 通常敵
-                    Enemy enemy = new Enemy(enemyData.enemyHP, enemyData.enemyAttack, false);
-                    Vector2Int enemyPos = FindRandomEmptyPosition();
-                    enemy.Position = enemyPos;
-
-                    gameState.Board.AddEnemy(enemy);
-
-                    EnemyTile enemyTile = TileFactory.CreateEnemyTile(enemy);
-                    gameState.Board.SetTile(enemyPos, enemyTile);
-
-                    Debug.Log($"敵生成: {enemyPos}, HP={enemy.MaxHP}, 攻撃={enemy.AttackPower}");
-                }
-            }
-
-            await UniTask.Yield();
-        }
+        // SpawnEnemies は InitializeBoardWithNewSystem に統合されたため削除
 
         /// <summary>
         /// ボードを初期化（ランダムタイルで埋める）
@@ -528,6 +494,12 @@ namespace OneStrokeRGR.Presenter
             if (uiView != null)
             {
                 uiView.UpdatePlayerInfo(gameState.Player);
+            }
+
+            // バトルUIの敵情報を更新
+            if (battleUIView != null)
+            {
+                battleUIView.UpdateAllEnemyDisplays();
             }
 
             // ゲームオーバーチェック

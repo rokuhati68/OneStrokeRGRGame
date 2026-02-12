@@ -27,9 +27,6 @@ namespace OneStrokeRGR.Model
         /// <summary>現在のゲームフェーズ</summary>
         public GamePhase CurrentPhase { get; set; }
 
-        /// <summary>ボスステージ間隔（デフォルト: 10）</summary>
-        public int BossStageInterval { get; set; } = 10;
-
         /// <summary>ゲーム全体で訪問済みのマス位置（ステージ跨ぎで保持）</summary>
         public HashSet<Vector2Int> VisitedPositions { get; private set; } = new HashSet<Vector2Int>();
 
@@ -48,12 +45,13 @@ namespace OneStrokeRGR.Model
 
         /// <summary>
         /// 現在のステージがボスステージか判定
+        /// ボード上にボス敵が存在する場合にtrue
         /// 要件: 6.1
         /// </summary>
         /// <returns>ボスステージの場合true</returns>
         public bool IsBossStage()
         {
-            return CurrentStage % BossStageInterval == 0;
+            return Board.GetEnemies().Exists(e => e.IsBoss);
         }
 
         /// <summary>
@@ -67,9 +65,6 @@ namespace OneStrokeRGR.Model
 
             // プレイヤーの初期化
             Player.Initialize(config.initialGold, config.initialOneStrokeBonus);
-
-            // 設定のコピー
-            BossStageInterval = config.bossStageInterval;
 
             // タイル生成設定のコピー
             SpawnConfig.emptyRate = config.defaultSpawnConfig.emptyRate;
