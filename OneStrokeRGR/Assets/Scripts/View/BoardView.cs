@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using OneStrokeRGR.Model;
 using OneStrokeRGR.Config;
 
@@ -19,12 +20,17 @@ namespace OneStrokeRGR.View
         [Header("アイコン設定")]
         public TileIconConfig tileIconConfig;
 
+        [Header("プレイヤーアイコン")]
+        public Sprite playerIconSprite;
+        public float playerMoveSpeed = 0.25f;
+
         [Header("レイアウト設定")]
         public GridLayoutGroup gridLayoutGroup;
         public float tileSpacing = 10f;
         public float tileSize = 100f;
 
         private TileView[,] tileViews = new TileView[Board.BoardSize, Board.BoardSize];
+        private GameObject playerIconObject;
 
         private void Awake()
         {
@@ -84,6 +90,73 @@ namespace OneStrokeRGR.View
             }
 
             Debug.Log("BoardView: ボード初期化完了");
+        }
+
+        /// <summary>
+        /// プレイヤーアイコンを初期化して指定位置に配置
+        /// </summary>
+        public void InitializePlayerIcon(Vector2Int position)
+        {
+            if (playerIconObject == null)
+            {
+                playerIconObject = new GameObject("PlayerIcon");
+                playerIconObject.transform.SetParent(transform.parent, false);
+
+                var image = playerIconObject.AddComponent<Image>();
+                if (playerIconSprite != null)
+                {
+                    image.sprite = playerIconSprite;
+                }
+                image.raycastTarget = false;
+
+                // タイルと同じサイズに設定
+                var rectTransform = playerIconObject.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(tileSize, tileSize);
+            }
+
+            SetPlayerIconPosition(position);
+            playerIconObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// プレイヤーアイコンの位置を即座に設定
+        /// </summary>
+        public void SetPlayerIconPosition(Vector2Int gridPos)
+        {
+            if (playerIconObject == null || !IsValidPosition(gridPos)) return;
+
+            TileView tileView = tileViews[gridPos.x, gridPos.y];
+            if (tileView != null)
+            {
+                playerIconObject.transform.position = tileView.transform.position;
+            }
+        }
+
+        /// <summary>
+        /// プレイヤーアイコンをアニメーション付きで移動
+        /// </summary>
+        public async UniTask MovePlayerTo(Vector2Int gridPos)
+        {
+            if (playerIconObject == null || !IsValidPosition(gridPos)) return;
+
+            TileView tileView = tileViews[gridPos.x, gridPos.y];
+            if (tileView == null) return;
+
+            Vector3 targetPos = tileView.transform.position;
+            await playerIconObject.transform.DOMove(targetPos, playerMoveSpeed)
+                .SetEase(Ease.InOutQuad)
+                .AsyncWaitForCompletion();
+        }
+
+        /// <summary>
+        /// プレイヤーアイコンの表示・非表示
+        /// </summary>
+        public void SetPlayerIconVisible(bool visible)
+        {
+            if (playerIconObject != null)
+            {
+                playerIconObject.SetActive(visible);
+            }
         }
 
         /// <summary>
@@ -232,6 +305,11 @@ namespace OneStrokeRGR.View
         private void OnDestroy()
         {
             ClearBoard();
+            if (playerIconObject != null)
+            {
+                Destroy(playerIconObject);
+                playerIconObject = null;
+            }
         }
     }
 }

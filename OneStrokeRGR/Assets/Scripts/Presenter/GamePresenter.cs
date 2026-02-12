@@ -44,6 +44,32 @@ namespace OneStrokeRGR.Presenter
             combatPresenter = new CombatPresenter(gameState);
             bossPresenter = new BossPresenter(gameState);
             rewardPresenter = new RewardPresenter(gameState);
+
+            // CombatPresenterのコールバック設定
+            combatPresenter.OnPlayerMoveTo = async (pos) =>
+            {
+                if (boardView != null)
+                {
+                    await boardView.MovePlayerTo(pos);
+                }
+            };
+            combatPresenter.OnEffectApplied = async () =>
+            {
+                if (uiView != null)
+                {
+                    uiView.UpdatePlayerInfo(gameState.Player);
+                }
+                if (boardView != null)
+                {
+                    Vector2Int pos = gameState.Player.Position;
+                    Tile tile = gameState.Board.GetTile(pos);
+                    if (tile != null)
+                    {
+                        boardView.UpdateTile(pos, tile);
+                    }
+                }
+                await UniTask.Yield();
+            };
         }
 
         private async void Start()
@@ -109,6 +135,9 @@ namespace OneStrokeRGR.Presenter
             if (boardView != null)
             {
                 await boardView.InitializeBoard(gameState.Board);
+
+                // プレイヤーアイコンを初期化・配置
+                boardView.InitializePlayerIcon(gameState.Player.Position);
             }
 
             if (uiView != null)

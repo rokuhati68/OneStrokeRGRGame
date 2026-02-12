@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
@@ -12,6 +13,18 @@ namespace OneStrokeRGR.Presenter
     public class CombatPresenter
     {
         private GameState gameState;
+
+        /// <summary>
+        /// プレイヤーが各マスへ移動する際に呼ばれるコールバック
+        /// View層のアニメーションを実行するために使用
+        /// </summary>
+        public Func<Vector2Int, UniTask> OnPlayerMoveTo { get; set; }
+
+        /// <summary>
+        /// タイル効果発動後に呼ばれるコールバック
+        /// View層のUI更新に使用
+        /// </summary>
+        public Func<UniTask> OnEffectApplied { get; set; }
 
         public CombatPresenter(GameState state)
         {
@@ -63,6 +76,12 @@ namespace OneStrokeRGR.Presenter
                     continue;
                 }
 
+                // プレイヤーアイコンを移動（View層のアニメーション）
+                if (OnPlayerMoveTo != null)
+                {
+                    await OnPlayerMoveTo(pos);
+                }
+
                 // 敵タイルの場合、処理前に敵を記録
                 if (tile.Type == TileType.Enemy && tile is EnemyTile enemyTile)
                 {
@@ -91,6 +110,12 @@ namespace OneStrokeRGR.Presenter
                     await ProcessTileEffect(tile, comboTracker);
                 }
 
+                // View層のUI更新通知
+                if (OnEffectApplied != null)
+                {
+                    await OnEffectApplied();
+                }
+
                 // 訪問済み位置を記録
                 visitedPositions.Add(pos);
 
@@ -101,9 +126,6 @@ namespace OneStrokeRGR.Presenter
                     gameState.SetGameOver();
                     break;
                 }
-
-                // アニメーション待機（実装時に調整）
-                await UniTask.Delay(100);
             }
 
             // ターン終了時の処理
@@ -146,7 +168,7 @@ namespace OneStrokeRGR.Presenter
                         foreach (var enemy in survivingEnemies)
                         {
                             // ランダムな再生成マスを選択（プレイヤー位置を除く）
-                            Vector2Int newPos = availablePositions[Random.Range(0, availablePositions.Count)];
+                            Vector2Int newPos = availablePositions[UnityEngine.Random.Range(0, availablePositions.Count)];
 
                             // 敵を再配置
                             enemy.Position = newPos;
