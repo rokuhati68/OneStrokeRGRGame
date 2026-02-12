@@ -3832,7 +3832,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1728557845
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4378,9 +4378,6 @@ MonoBehaviour:
   validPathColor: {r: 0, g: 1, b: 1, a: 1}
   invalidPathColor: {r: 1, g: 0, b: 0, a: 1}
   lineWidth: 5
-  tileLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1 &2052745141
 GameObject:
   m_ObjectHideFlags: 0
