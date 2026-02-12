@@ -30,13 +30,14 @@ namespace OneStrokeRGR.View
         public Button confirmButton;
         public Button cancelButton;
 
-        [Header("設定")]
+        [Header("線描画設定")]
         public Color validPathColor = Color.cyan;
         public Color invalidPathColor = Color.red;
-        public float lineWidth = 5f;
-        public LayerMask tileLayerMask; // タイルのレイヤー
+        public float lineWidth = 8f;
 
         private List<Vector2Int> currentPath = new List<Vector2Int>();
+        private List<GameObject> lineSegments = new List<GameObject>();
+        private Transform lineContainer;
         private bool isDrawing = false;
         private bool isPathValid = false;
         private bool isWaitingForConfirmation = false;
@@ -48,7 +49,7 @@ namespace OneStrokeRGR.View
 
         private void Awake()
         {
-            // LineRendererの初期設定
+            // LineRendererの初期設定（互換性のため残す）
             if (pathLineRenderer != null)
             {
                 pathLineRenderer.startWidth = lineWidth;
@@ -56,6 +57,16 @@ namespace OneStrokeRGR.View
                 pathLineRenderer.positionCount = 0;
                 pathLineRenderer.enabled = false;
             }
+
+            // UI線描画用コンテナの作成
+            var containerObj = new GameObject("PathLineContainer");
+            containerObj.transform.SetParent(boardView != null ? boardView.transform.parent : transform, false);
+            var containerRect = containerObj.AddComponent<RectTransform>();
+            containerRect.anchorMin = Vector2.zero;
+            containerRect.anchorMax = Vector2.one;
+            containerRect.offsetMin = Vector2.zero;
+            containerRect.offsetMax = Vector2.zero;
+            lineContainer = containerObj.transform;
 
             // プレビューパネルを非表示
             if (previewPanel != null)
@@ -119,8 +130,12 @@ namespace OneStrokeRGR.View
             // パスのコピーを作成（クリーンアップ前に！）
             List<Vector2Int> resultPath = new List<Vector2Int>(currentPath);
 
-            // クリーンアップ
-            ClearPath();
+            // クリーンアップ（線は残す — プレイヤー移動中に順次消す）
+            if (boardView != null && currentPath.Count > 0)
+            {
+                boardView.HighlightPath(currentPath, false);
+            }
+            currentPath.Clear();
             HideConfirmButtons();
             HidePathPreview();
 
@@ -377,38 +392,89 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
-        /// パスを描画
+        /// パスを描画（UI Imageベース）
         /// 要件: 15.2
         /// </summary>
         public void DrawPath(List<Vector2Int> path, bool isValid)
         {
-            if (pathLineRenderer == null)
-                return;
-
             currentPath = path;
             isPathValid = isValid;
 
-            if (path == null || path.Count == 0)
-            {
-                pathLineRenderer.enabled = false;
+            // 既存の線分をクリア
+            ClearLineSegments();
+
+            if (path == null || path.Count < 2)
                 return;
-            }
 
-            pathLineRenderer.enabled = true;
-            pathLineRenderer.positionCount = path.Count;
+            Color lineColor = isValid ? validPathColor : invalidPathColor;
 
-            // マテリアルの色を設定
-            if (pathLineRenderer.material != null)
+            // 連続するタイル間に線分を作成
+            for (int i = 0; i < path.Count - 1; i++)
             {
-                pathLineRenderer.material.color = isValid ? validPathColor : invalidPathColor;
+                Vector3 startPos = GetWorldPositionFromGrid(path[i]);
+                Vector3 endPos = GetWorldPositionFromGrid(path[i + 1]);
+                CreateLineSegment(startPos, endPos, lineColor);
             }
+        }
 
-            // 各ポイントの座標を設定
-            for (int i = 0; i < path.Count; i++)
+        /// <summary>
+        /// 2点間にUI Imageで線分を作成
+        /// </summary>
+        private void CreateLineSegment(Vector3 start, Vector3 end, Color color)
+        {
+            if (lineContainer == null) return;
+
+            var lineObj = new GameObject("LineSegment");
+            lineObj.transform.SetParent(lineContainer, false);
+
+            var image = lineObj.AddComponent<Image>();
+            image.color = color;
+            image.raycastTarget = false;
+
+            var rect = lineObj.GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0f, 0.5f);
+
+            // 位置と回転を設定
+            rect.position = start;
+            float distance = Vector3.Distance(start, end);
+            float angle = Mathf.Atan2(end.y - start.y, end.x - start.x) * Mathf.Rad2Deg;
+            rect.sizeDelta = new Vector2(distance, lineWidth);
+            rect.localRotation = Quaternion.Euler(0, 0, angle);
+
+            lineSegments.Add(lineObj);
+        }
+
+        /// <summary>
+        /// 線分をクリア
+        /// </summary>
+        private void ClearLineSegments()
+        {
+            foreach (var seg in lineSegments)
             {
-                Vector3 worldPos = GetWorldPositionFromGrid(path[i]);
-                pathLineRenderer.SetPosition(i, worldPos);
+                if (seg != null) Destroy(seg);
             }
+            lineSegments.Clear();
+        }
+
+        /// <summary>
+        /// 先頭の線分を1本削除（プレイヤーが通過した区間を消す）
+        /// </summary>
+        public void RemoveFirstLineSegment()
+        {
+            if (lineSegments.Count > 0)
+            {
+                if (lineSegments[0] != null)
+                    Destroy(lineSegments[0]);
+                lineSegments.RemoveAt(0);
+            }
+        }
+
+        /// <summary>
+        /// 残りの線分をすべて削除
+        /// </summary>
+        public void ClearRemainingLineSegments()
+        {
+            ClearLineSegments();
         }
 
         /// <summary>
@@ -423,6 +489,9 @@ namespace OneStrokeRGR.View
             }
 
             currentPath.Clear();
+
+            // UI線分をクリア
+            ClearLineSegments();
 
             if (pathLineRenderer != null)
             {
@@ -533,6 +602,10 @@ namespace OneStrokeRGR.View
 
             if (cancelButton != null)
                 cancelButton.onClick.RemoveListener(OnCancelButtonClicked);
+
+            ClearLineSegments();
+            if (lineContainer != null)
+                Destroy(lineContainer.gameObject);
         }
     }
 }

@@ -160,6 +160,20 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
+        /// タイルを使用済み表示に変更
+        /// </summary>
+        public void MarkTileAsVisited(Vector2Int position)
+        {
+            if (!IsValidPosition(position)) return;
+
+            TileView tileView = tileViews[position.x, position.y];
+            if (tileView != null && tileIconConfig != null)
+            {
+                tileView.SetVisited(tileIconConfig.visitedIcon);
+            }
+        }
+
+        /// <summary>
         /// 特定のタイルを更新
         /// </summary>
         public void UpdateTile(Vector2Int position, Tile newTile)

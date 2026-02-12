@@ -28,6 +28,7 @@ namespace OneStrokeRGR.View
         public Color thornColor = new Color(0.5f, 0f, 0.5f); // 紫
         public Color wallColor = Color.black;
         public Color highlightColor = Color.cyan;
+        public Color visitedColor = new Color(0.4f, 0.4f, 0.4f); // 使用済みマスの色
 
         private Tile tileData;
         private Vector2Int gridPosition;
@@ -173,6 +174,35 @@ namespace OneStrokeRGR.View
         {
             isHighlighted = highlight;
             backgroundImage.color = highlight ? highlightColor : originalColor;
+        }
+
+        /// <summary>
+        /// 使用済み表示に変更（プレイヤー通過後）
+        /// BackgroundImageの色とIconImageを使用済み用に変更
+        /// </summary>
+        public void SetVisited(Sprite visitedSprite)
+        {
+            // 背景色を使用済み色に変更
+            originalColor = visitedColor;
+            backgroundImage.color = visitedColor;
+            isHighlighted = false;
+
+            // テキストをクリア
+            valueText.text = "";
+
+            // アイコンを使用済みスプライトに変更
+            if (iconImage != null)
+            {
+                if (visitedSprite != null)
+                {
+                    iconImage.sprite = visitedSprite;
+                    iconImage.enabled = true;
+                }
+                else
+                {
+                    iconImage.enabled = false;
+                }
+            }
         }
 
         /// <summary>

@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emptyIcon: {fileID: 5814425905065316458, guid: 57870869f7469a640b25362ebeb37b1a, type: 3}
   attackBoostIcon: {fileID: 4756403912789011177, guid: 774760d15c2cb5a46af94f8c8e49974e, type: 3}
-  hpRecoveryIcon: {fileID: -8989868336588407693, guid: df8f7582436fb7b49afa1f0f9d3173d4, type: 3}
+  hpRecoveryIcon: {fileID: 9217605377945273126, guid: df8f7582436fb7b49afa1f0f9d3173d4, type: 3}
   goldIcon: {fileID: -3275795418710883572, guid: af37ba85b88339b48915ca67f6a3845e, type: 3}
   enemyIcon: {fileID: 7921184317453744328, guid: 563c1369cac7a0f41822e598a4695940, type: 3}
   bossIcon: {fileID: -6501061358013895594, guid: 3cca12e3bfa378d4f96ca86028560931, type: 3}
   thornIcon: {fileID: 6267565237331904007, guid: 6371b67f01a2ff74cb9186c1ae29d3ff, type: 3}
   wallIcon: {fileID: -2491243545706342185, guid: 1c52d50fb72bbb74786107a1eaa017a4, type: 3}
+  visitedIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}

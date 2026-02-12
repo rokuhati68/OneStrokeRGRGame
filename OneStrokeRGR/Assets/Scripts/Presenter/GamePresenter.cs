@@ -27,6 +27,7 @@ namespace OneStrokeRGR.Presenter
         private CombatPresenter combatPresenter;
         private BossPresenter bossPresenter;
         private RewardPresenter rewardPresenter;
+        private int pathMoveCount;
 
         private void Awake()
         {
@@ -52,6 +53,12 @@ namespace OneStrokeRGR.Presenter
                 {
                     await boardView.MovePlayerTo(pos);
                 }
+                // 2番目以降の移動で、通過済み区間の線を削除
+                if (pathMoveCount > 0 && pathDrawingView != null)
+                {
+                    pathDrawingView.RemoveFirstLineSegment();
+                }
+                pathMoveCount++;
             };
             combatPresenter.OnEffectApplied = async () =>
             {
@@ -61,12 +68,9 @@ namespace OneStrokeRGR.Presenter
                 }
                 if (boardView != null)
                 {
+                    // プレイヤーが通過したタイルを使用済み表示に変更
                     Vector2Int pos = gameState.Player.Position;
-                    Tile tile = gameState.Board.GetTile(pos);
-                    if (tile != null)
-                    {
-                        boardView.UpdateTile(pos, tile);
-                    }
+                    boardView.MarkTileAsVisited(pos);
                 }
                 await UniTask.Yield();
             };
@@ -479,6 +483,9 @@ namespace OneStrokeRGR.Presenter
             Debug.Log("GamePresenter: パス実行フェーズ");
             gameState.CurrentPhase = GamePhase.PathExecution;
 
+            // 移動カウンターをリセット
+            pathMoveCount = 0;
+
             // プレイヤー開始位置のハイライトをクリア
             if (boardView != null)
             {
@@ -489,11 +496,20 @@ namespace OneStrokeRGR.Presenter
             if (!pathPresenter.ValidatePath(path, gameState.Player.Position))
             {
                 Debug.LogWarning("GamePresenter: パスが無効です");
+                // 線分もクリア
+                if (pathDrawingView != null)
+                    pathDrawingView.ClearRemainingLineSegments();
                 return;
             }
 
             // パスを実行
             await combatPresenter.ExecutePath(path);
+
+            // 残りの線分をクリア
+            if (pathDrawingView != null)
+            {
+                pathDrawingView.ClearRemainingLineSegments();
+            }
 
             // View層を更新（敵HP、プレイヤー情報、ボード）
             if (boardView != null)

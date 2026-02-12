@@ -34,6 +34,10 @@ namespace OneStrokeRGR.Config
         [Tooltip("壁マスのアイコン")]
         public Sprite wallIcon;
 
+        [Header("特殊アイコン")]
+        [Tooltip("使用済みマスのアイコン")]
+        public Sprite visitedIcon;
+
         /// <summary>
         /// タイルタイプに対応するSpriteを取得
         /// </summary>
