@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce24c955819dffd41b5e305386a7e3f7, type: 3}
   m_Name: TileIconConfig
   m_EditorClassIdentifier: 
-  emptyIcon: {fileID: 5814425905065316458, guid: 57870869f7469a640b25362ebeb37b1a, type: 3}
+  emptyIcon: {fileID: 0}
   attackBoostIcon: {fileID: 5050543757529588772, guid: 0a7ab5364db385a43bde283df225b5fc, type: 3}
   hpRecoveryIcon: {fileID: -5218930452435059064, guid: 68e73d9e8e5dd4843a57e2ac99e8b844, type: 3}
   goldIcon: {fileID: 2211318171991514223, guid: 7f9865cf6ac20f7468e13d5a5daff8ef, type: 3}

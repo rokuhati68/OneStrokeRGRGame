@@ -31,6 +31,9 @@ namespace OneStrokeRGR.Config
         [Tooltip("報酬効果の設定")]
         public RewardConfig rewardConfig = new RewardConfig();
 
+        [Tooltip("報酬データ一覧（ScriptableObject）")]
+        public RewardData[] rewardDataList;
+
         [Header("ボス設定")]
         [Tooltip("ボスが出現するステージ間隔（デフォルト: 10）")]
         public int bossStageInterval = 10;

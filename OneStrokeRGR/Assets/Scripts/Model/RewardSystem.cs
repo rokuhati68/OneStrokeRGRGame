@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using OneStrokeRGR.Config;
 
 namespace OneStrokeRGR.Model
 {
@@ -10,29 +11,35 @@ namespace OneStrokeRGR.Model
     /// </summary>
     public class RewardSystem
     {
+        private RewardData[] allRewards;
+
+        public RewardSystem(RewardData[] rewards)
+        {
+            allRewards = rewards;
+        }
+
         /// <summary>
         /// ランダムに報酬を選択
         /// 要件: 8.2, 9.3
         /// </summary>
         /// <param name="count">選択する報酬の数（デフォルト: 3）</param>
-        /// <returns>選択された報酬タイプのリスト</returns>
-        public List<RewardType> SelectRandomRewards(int count = 3)
+        /// <returns>選択された報酬データのリスト</returns>
+        public List<RewardData> SelectRandomRewards(int count = 3)
         {
-            // すべての報酬タイプを取得
-            var allRewards = System.Enum.GetValues(typeof(RewardType))
-                .Cast<RewardType>()
-                .ToList();
+            if (allRewards == null || allRewards.Length == 0)
+            {
+                Debug.LogWarning("RewardSystem: 報酬データが設定されていません");
+                return new List<RewardData>();
+            }
 
-            // シャッフル
+            // シャッフルして指定数だけ選択（要件: 9.3 - 3つの異なる報酬）
             var shuffled = allRewards.OrderBy(x => Random.value).ToList();
-
-            // 指定数だけ選択（要件: 9.3 - 3つの異なる報酬タイプ）
             var selected = shuffled.Take(count).ToList();
 
-            Debug.Log($"RewardSystem: {count}個の報酬を選択しました");
+            Debug.Log($"RewardSystem: {selected.Count}個の報酬を選択しました");
             foreach (var reward in selected)
             {
-                Debug.Log($"  - {reward}");
+                Debug.Log($"  - {reward.rewardName}");
             }
 
             return selected;
@@ -42,9 +49,9 @@ namespace OneStrokeRGR.Model
         /// 報酬を適用する
         /// 要件: 8.3, 9.2, 9.4, 9.5
         /// </summary>
-        /// <param name="reward">適用する報酬タイプ</param>
+        /// <param name="rewardData">適用する報酬データ</param>
         /// <param name="gameState">ゲーム状態</param>
-        public void ApplyReward(RewardType reward, GameState gameState)
+        public void ApplyReward(RewardData rewardData, GameState gameState)
         {
             if (gameState == null)
             {
@@ -52,48 +59,54 @@ namespace OneStrokeRGR.Model
                 return;
             }
 
-            Debug.Log($"RewardSystem: 報酬を適用 - {reward}");
+            if (rewardData == null)
+            {
+                Debug.LogError("RewardSystem: rewardDataがnullです");
+                return;
+            }
+
+            Debug.Log($"RewardSystem: 報酬を適用 - {rewardData.rewardName}");
 
             // 報酬設定から増加量を取得
             float rateIncrement = gameState.RewardConfig.spawnRateIncrement;
             int valueIncrement = gameState.RewardConfig.valueIncrement;
             int bonusIncrement = gameState.RewardConfig.oneStrokeBonusIncrement;
 
-            switch (reward)
+            switch (rewardData.rewardType)
             {
                 case RewardType.AttackBoostRateIncrease:
                     // 攻撃力上昇マス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(reward, rateIncrement, 0);
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
                     Debug.Log($"攻撃力上昇マス出現率が{rateIncrement * 100}%増加しました");
                     break;
 
                 case RewardType.AttackBoostValueIncrease:
                     // 攻撃力上昇マス値増加（要件: 9.5）
-                    gameState.SpawnConfig.ApplyReward(reward, 0, valueIncrement);
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, 0, valueIncrement);
                     Debug.Log($"攻撃力上昇マスの値範囲が拡大しました");
                     break;
 
                 case RewardType.HPRecoveryRateIncrease:
                     // HP回復マス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(reward, rateIncrement, 0);
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
                     Debug.Log($"HP回復マス出現率が{rateIncrement * 100}%増加しました");
                     break;
 
                 case RewardType.EmptyRateIncrease:
                     // 効果なしマス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(reward, rateIncrement, 0);
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
                     Debug.Log($"効果なしマス出現率が{rateIncrement * 100}%増加しました");
                     break;
 
                 case RewardType.GoldRateIncrease:
                     // ゴールドマス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(reward, rateIncrement, 0);
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
                     Debug.Log($"ゴールドマス出現率が{rateIncrement * 100}%増加しました");
                     break;
 
                 case RewardType.GoldValueIncrease:
                     // ゴールドマス値増加（要件: 9.5）
-                    gameState.SpawnConfig.ApplyReward(reward, 0, valueIncrement);
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, 0, valueIncrement);
                     Debug.Log($"ゴールドマスの値範囲が拡大しました");
                     break;
 
@@ -102,41 +115,6 @@ namespace OneStrokeRGR.Model
                     gameState.Player.IncreaseOneStrokeBonus(bonusIncrement);
                     Debug.Log($"一筆書きボーナスが{bonusIncrement}増加しました");
                     break;
-            }
-        }
-
-        /// <summary>
-        /// 報酬の説明テキストを取得
-        /// </summary>
-        /// <param name="reward">報酬タイプ</param>
-        /// <returns>説明テキスト</returns>
-        public string GetRewardDescription(RewardType reward)
-        {
-            switch (reward)
-            {
-                case RewardType.AttackBoostRateIncrease:
-                    return "攻撃力上昇マスの出現率が上がる";
-
-                case RewardType.AttackBoostValueIncrease:
-                    return "攻撃力上昇マスの効果が強化される";
-
-                case RewardType.HPRecoveryRateIncrease:
-                    return "HP回復マスの出現率が上がる";
-
-                case RewardType.EmptyRateIncrease:
-                    return "効果なしマスの出現率が上がる";
-
-                case RewardType.GoldRateIncrease:
-                    return "ゴールドマスの出現率が上がる";
-
-                case RewardType.GoldValueIncrease:
-                    return "ゴールドマスの獲得量が増える";
-
-                case RewardType.OneStrokeBonusIncrease:
-                    return "一筆書きボーナスが増加する";
-
-                default:
-                    return "不明な報酬";
             }
         }
     }

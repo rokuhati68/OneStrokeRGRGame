@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.Config;
 using OneStrokeRGR.View;
 
 namespace OneStrokeRGR.Presenter
@@ -16,10 +17,10 @@ namespace OneStrokeRGR.Presenter
         private GameState gameState;
         private RewardView rewardView;
 
-        public RewardPresenter(GameState state)
+        public RewardPresenter(GameState state, RewardData[] rewardDataList)
         {
             gameState = state;
-            rewardSystem = new RewardSystem();
+            rewardSystem = new RewardSystem(rewardDataList);
         }
 
         /// <summary>
@@ -38,15 +39,15 @@ namespace OneStrokeRGR.Presenter
         /// 報酬選択フローを提示
         /// 要件: 8.2
         /// </summary>
-        /// <returns>選択された報酬タイプ</returns>
-        public async UniTask<RewardType> PresentRewardSelection()
+        /// <returns>選択された報酬データ</returns>
+        public async UniTask<RewardData> PresentRewardSelection()
         {
             Debug.Log("RewardPresenter: 報酬選択を開始");
 
             // 3つのランダムな報酬を選択（要件: 8.2）
-            List<RewardType> rewards = rewardSystem.SelectRandomRewards(3);
+            List<RewardData> rewards = rewardSystem.SelectRandomRewards(3);
 
-            RewardType selectedReward;
+            RewardData selectedReward;
 
             // View層での報酬選択を待つ
             if (rewardView != null)
@@ -57,11 +58,11 @@ namespace OneStrokeRGR.Presenter
             {
                 // View層がない場合: 最初の報酬を自動選択
                 Debug.LogWarning("RewardPresenter: RewardViewが設定されていません。最初の報酬を自動選択します。");
-                selectedReward = rewards[0];
+                selectedReward = rewards.Count > 0 ? rewards[0] : null;
                 await UniTask.Delay(100);
             }
 
-            Debug.Log($"RewardPresenter: {selectedReward}が選択されました");
+            Debug.Log($"RewardPresenter: {selectedReward?.rewardName}が選択されました");
 
             return selectedReward;
         }
@@ -70,8 +71,8 @@ namespace OneStrokeRGR.Presenter
         /// 選択された報酬を適用
         /// 要件: 8.3
         /// </summary>
-        /// <param name="reward">適用する報酬タイプ</param>
-        public void ApplySelectedReward(RewardType reward)
+        /// <param name="rewardData">適用する報酬データ</param>
+        public void ApplySelectedReward(RewardData rewardData)
         {
             if (gameState == null)
             {
@@ -79,20 +80,16 @@ namespace OneStrokeRGR.Presenter
                 return;
             }
 
-            Debug.Log($"RewardPresenter: 報酬を適用 - {reward}");
+            if (rewardData == null)
+            {
+                Debug.LogError("RewardPresenter: rewardDataがnullです");
+                return;
+            }
+
+            Debug.Log($"RewardPresenter: 報酬を適用 - {rewardData.rewardName}");
 
             // RewardSystemを使って報酬を適用（要件: 8.3, 9.2）
-            rewardSystem.ApplyReward(reward, gameState);
-        }
-
-        /// <summary>
-        /// 報酬の説明を取得
-        /// </summary>
-        /// <param name="reward">報酬タイプ</param>
-        /// <returns>説明テキスト</returns>
-        public string GetRewardDescription(RewardType reward)
-        {
-            return rewardSystem.GetRewardDescription(reward);
+            rewardSystem.ApplyReward(rewardData, gameState);
         }
 
         /// <summary>
@@ -102,10 +99,13 @@ namespace OneStrokeRGR.Presenter
         public async UniTask ExecuteRewardFlow()
         {
             // 報酬を選択
-            RewardType selectedReward = await PresentRewardSelection();
+            RewardData selectedReward = await PresentRewardSelection();
 
             // 報酬を適用
-            ApplySelectedReward(selectedReward);
+            if (selectedReward != null)
+            {
+                ApplySelectedReward(selectedReward);
+            }
 
             Debug.Log("RewardPresenter: 報酬フロー完了");
         }

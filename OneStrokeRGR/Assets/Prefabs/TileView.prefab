@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 75, y: 75}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &379741286126250965
 CanvasRenderer:
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -149,8 +149,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279900698
-  m_fontColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -382,14 +382,14 @@ MonoBehaviour:
   valueText: {fileID: 4821389548300883443}
   iconImage: {fileID: 2167600619292512851}
   emptyColor: {r: 1, g: 1, b: 1, a: 1}
-  attackBoostColor: {r: 0, g: 1, b: 0, a: 1}
+  attackBoostColor: {r: 0, g: 1, b: 1, a: 1}
   hpRecoveryColor: {r: 1, g: 0, b: 1, a: 1}
   goldColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  enemyColor: {r: 1, g: 0, b: 0, a: 1}
-  thornColor: {r: 0.6627451, g: 0.6627451, b: 0.6627451, a: 1}
-  wallColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+  enemyColor: {r: 0.482353, g: 0.4078432, b: 0.9333334, a: 1}
+  thornColor: {r: 1, g: 1, b: 1, a: 1}
+  wallColor: {r: 1, g: 1, b: 1, a: 1}
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
-  visitedColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+  visitedColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!225 &8175475511614259608
 CanvasGroup:
   m_ObjectHideFlags: 0

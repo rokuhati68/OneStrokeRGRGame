@@ -78,17 +78,17 @@ namespace OneStrokeRGR.View
 
                 case TileType.AttackBoost:
                     originalColor = attackBoostColor;
-                    valueText.text = $"+{((AttackBoostTile)tileData).BoostValue}";
+                    valueText.text = $"{((AttackBoostTile)tileData).BoostValue}";
                     break;
 
                 case TileType.HPRecovery:
                     originalColor = hpRecoveryColor;
-                    valueText.text = "+1HP"; // HP回復は固定で1
+                    valueText.text = "1"; // HP回復は固定で1
                     break;
 
                 case TileType.Gold:
                     originalColor = goldColor;
-                    valueText.text = $"{((GoldTile)tileData).GoldValue}G";
+                    valueText.text = $"{((GoldTile)tileData).GoldValue}";
                     break;
 
                 case TileType.Enemy:

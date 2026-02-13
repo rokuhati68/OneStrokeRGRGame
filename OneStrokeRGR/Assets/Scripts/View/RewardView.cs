@@ -4,7 +4,7 @@ using TMPro;
 using DG.Tweening;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using OneStrokeRGR.Model;
+using OneStrokeRGR.Config;
 using OneStrokeRGR.Presenter;
 
 namespace OneStrokeRGR.View
@@ -27,7 +27,7 @@ namespace OneStrokeRGR.View
         public float cardAppearDuration = 0.5f;
 
         private RewardPresenter rewardPresenter;
-        private RewardType selectedReward;
+        private RewardData selectedReward;
         private bool isWaitingForSelection = false;
         private bool selectionComplete = false;
 
@@ -60,12 +60,12 @@ namespace OneStrokeRGR.View
         /// 報酬選択を表示し、ユーザーの選択を待つ
         /// 要件: 8.2
         /// </summary>
-        public async UniTask<RewardType> ShowRewardSelection(List<RewardType> rewards)
+        public async UniTask<RewardData> ShowRewardSelection(List<RewardData> rewards)
         {
             if (rewards == null || rewards.Count < 3)
             {
                 Debug.LogError("RewardView: 報酬リストが不正です");
-                return RewardType.OneStrokeBonusIncrease;
+                return null;
             }
 
             Debug.Log("RewardView: 報酬選択画面を表示");
@@ -88,13 +88,12 @@ namespace OneStrokeRGR.View
             if (titleText != null)
                 titleText.text = "報酬を選択してください";
 
-            // 各カードに報酬を設定
+            // 各カードに報酬データを設定
             for (int i = 0; i < 3 && i < rewards.Count && i < rewardCards.Length; i++)
             {
-                if (rewardCards[i] != null && rewardPresenter != null)
+                if (rewardCards[i] != null)
                 {
-                    string description = rewardPresenter.GetRewardDescription(rewards[i]);
-                    rewardCards[i].SetReward(rewards[i], GetRewardTitle(rewards[i]), description);
+                    rewardCards[i].SetReward(rewards[i]);
                 }
             }
 
@@ -113,7 +112,7 @@ namespace OneStrokeRGR.View
             if (rewardPanel != null)
                 rewardPanel.SetActive(false);
 
-            Debug.Log($"RewardView: {selectedReward}が選択されました");
+            Debug.Log($"RewardView: {selectedReward.rewardName}が選択されました");
             return selectedReward;
         }
 
@@ -164,7 +163,7 @@ namespace OneStrokeRGR.View
                 return;
 
             // 選択された報酬を記録
-            selectedReward = rewardCards[cardIndex].GetRewardType();
+            selectedReward = rewardCards[cardIndex].GetRewardData();
 
             // 選択アニメーション
             rewardCards[cardIndex].PlaySelectionAnimation();
@@ -181,32 +180,6 @@ namespace OneStrokeRGR.View
             isWaitingForSelection = false;
             selectionComplete = true;
         }
-
-        /// <summary>
-        /// 報酬タイプからタイトルを取得
-        /// </summary>
-        private string GetRewardTitle(RewardType reward)
-        {
-            switch (reward)
-            {
-                case RewardType.OneStrokeBonusIncrease:
-                    return "一筆書きボーナス増加";
-                case RewardType.AttackBoostRateIncrease:
-                    return "攻撃力上昇マス増加";
-                case RewardType.HPRecoveryRateIncrease:
-                    return "HP回復マス増加";
-                case RewardType.GoldRateIncrease:
-                    return "ゴールドマス増加";
-                case RewardType.AttackBoostValueIncrease:
-                    return "攻撃力上昇値増加";
-                case RewardType.GoldValueIncrease:
-                    return "ゴールド獲得量増加";
-                case RewardType.EmptyRateIncrease:
-                    return "効果なしマス増加";
-                default:
-                    return "不明な報酬";
-            }
-        }
     }
 
     /// <summary>
@@ -216,25 +189,39 @@ namespace OneStrokeRGR.View
     public class RewardCardView
     {
         public GameObject cardObject;
+        public Image iconImage;
         public TextMeshProUGUI titleText;
         public TextMeshProUGUI descriptionText;
         public Button selectButton;
 
-        private RewardType rewardType;
+        private RewardData rewardData;
         private Vector3 originalScale;
 
         /// <summary>
-        /// 報酬を設定
+        /// RewardDataを設定して表示を更新
         /// </summary>
-        public void SetReward(RewardType type, string title, string description)
+        public void SetReward(RewardData data)
         {
-            rewardType = type;
+            rewardData = data;
 
             if (titleText != null)
-                titleText.text = title;
+                titleText.text = data.rewardName;
 
             if (descriptionText != null)
-                descriptionText.text = description;
+                descriptionText.text = data.description;
+
+            if (iconImage != null)
+            {
+                if (data.icon != null)
+                {
+                    iconImage.sprite = data.icon;
+                    iconImage.enabled = true;
+                }
+                else
+                {
+                    iconImage.enabled = false;
+                }
+            }
 
             if (cardObject != null)
             {
@@ -287,7 +274,6 @@ namespace OneStrokeRGR.View
                 // 色を変更（ボタンの色を変える）
                 if (selectButton != null)
                 {
-                    var colors = selectButton.colors;
                     selectButton.image.DOColor(Color.green, 0.2f);
                 }
             }
@@ -310,11 +296,11 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
-        /// 報酬タイプを取得
+        /// 報酬データを取得
         /// </summary>
-        public RewardType GetRewardType()
+        public RewardData GetRewardData()
         {
-            return rewardType;
+            return rewardData;
         }
     }
 }
