@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
 
 namespace OneStrokeRGR.View
@@ -27,6 +28,9 @@ namespace OneStrokeRGR.View
 
         [Header("敵ステータス表示（左・中央・右の3スロット）")]
         public EnemyStatusView[] enemyStatusViews = new EnemyStatusView[3];
+
+        [Header("攻撃エフェクト")]
+        public AttackEffectView attackEffectView;
 
         private List<Enemy> trackedEnemies = new List<Enemy>();
 
@@ -169,9 +173,9 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
-        /// 特定の敵のHP変化をアニメーション表示
+        /// 特定の敵に斬撃エフェクト → HPバー更新アニメーションを再生
         /// </summary>
-        public void AnimateEnemyDamage(Enemy enemy)
+        public async UniTask AnimateEnemyDamage(Enemy enemy)
         {
             if (enemy == null) return;
 
@@ -179,6 +183,14 @@ namespace OneStrokeRGR.View
             {
                 if (enemyStatusViews[i] != null && enemyStatusViews[i].GetEnemy() == enemy)
                 {
+                    // 斬撃エフェクトを再生（敵画像の上に表示）
+                    if (attackEffectView != null && enemyStatusViews[i].enemyImage != null)
+                    {
+                        RectTransform target = enemyStatusViews[i].enemyImage.rectTransform;
+                        await attackEffectView.PlaySlashEffect(target);
+                    }
+
+                    // HPバー更新アニメーション
                     enemyStatusViews[i].AnimateHPChange();
                     return;
                 }

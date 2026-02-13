@@ -28,9 +28,9 @@ namespace OneStrokeRGR.Presenter
 
         /// <summary>
         /// 敵がダメージを受けた際に呼ばれるコールバック
-        /// バトルUIのHP更新に使用
+        /// 斬撃エフェクト → HPバー更新を非同期で実行
         /// </summary>
-        public Action<Enemy> OnEnemyDamaged { get; set; }
+        public Func<Enemy, UniTask> OnEnemyDamaged { get; set; }
 
         /// <summary>
         /// 敵が撃破された際に呼ばれるコールバック
@@ -112,10 +112,13 @@ namespace OneStrokeRGR.Presenter
                     // タイル効果を処理
                     await ProcessTileEffect(tile, comboTracker);
 
-                    // 敵がダメージを受けた場合、バトルUIに通知
+                    // 敵がダメージを受けた場合、斬撃エフェクト+HPバー更新
                     if (enemy.CurrentHP < enemyHPBefore)
                     {
-                        OnEnemyDamaged?.Invoke(enemy);
+                        if (OnEnemyDamaged != null)
+                        {
+                            await OnEnemyDamaged(enemy);
+                        }
                     }
 
                     // 敵が生き残った場合、リストに追加

@@ -84,12 +84,12 @@ namespace OneStrokeRGR.Presenter
                 await UniTask.Yield();
             };
 
-            // バトルUI用コールバック
-            combatPresenter.OnEnemyDamaged = (enemy) =>
+            // バトルUI用コールバック（斬撃エフェクト → HPバー更新）
+            combatPresenter.OnEnemyDamaged = async (enemy) =>
             {
                 if (battleUIView != null)
                 {
-                    battleUIView.AnimateEnemyDamage(enemy);
+                    await battleUIView.AnimateEnemyDamage(enemy);
                 }
             };
             combatPresenter.OnEnemyDefeated = (enemy) =>
