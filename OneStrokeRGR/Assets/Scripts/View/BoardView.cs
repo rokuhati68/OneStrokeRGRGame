@@ -112,6 +112,9 @@ namespace OneStrokeRGR.View
                 // タイルと同じサイズに設定
                 var rectTransform = playerIconObject.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(tileSize, tileSize);
+
+                // ボードの直後に配置し、Previewパネルより背面に表示
+                playerIconObject.transform.SetSiblingIndex(transform.GetSiblingIndex() + 1);
             }
 
             SetPlayerIconPosition(position);

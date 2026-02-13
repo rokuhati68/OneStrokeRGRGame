@@ -68,6 +68,12 @@ namespace OneStrokeRGR.View
             containerRect.offsetMax = Vector2.zero;
             lineContainer = containerObj.transform;
 
+            // ボードの直後に配置し、Previewパネルより背面に表示
+            if (boardView != null)
+            {
+                containerObj.transform.SetSiblingIndex(boardView.transform.GetSiblingIndex() + 1);
+            }
+
             // プレビューパネルを非表示
             if (previewPanel != null)
                 previewPanel.SetActive(false);

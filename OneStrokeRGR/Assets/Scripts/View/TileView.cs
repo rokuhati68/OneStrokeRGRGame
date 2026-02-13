@@ -96,11 +96,11 @@ namespace OneStrokeRGR.View
                     var enemyTile = (EnemyTile)tileData;
                     if (enemyTile.Enemy.IsBoss)
                     {
-                        valueText.text = $"BOSS\nHP:{enemyTile.Enemy.CurrentHP}/{enemyTile.Enemy.MaxHP}";
+                        valueText.text = $"";
                     }
                     else
                     {
-                        valueText.text = $"HP:{enemyTile.Enemy.CurrentHP}/{enemyTile.Enemy.MaxHP}";
+                        valueText.text = $"";
                     }
                     break;
 
@@ -111,7 +111,7 @@ namespace OneStrokeRGR.View
 
                 case TileType.Wall:
                     originalColor = wallColor;
-                    valueText.text = "■";
+                    valueText.text = "";
                     break;
 
                 default:
