@@ -24,6 +24,14 @@ namespace OneStrokeRGR.Model
         GoldValueIncrease,
 
         /// <summary>一筆書きボーナス値増加</summary>
-        OneStrokeBonusIncrease
+        OneStrokeBonusIncrease,
+        /// <summary>
+        /// ゴールドを手に入れる
+        /// </summary>
+        GoldGet,
+        /// <summary>
+        /// HPが回復する
+        /// </summary>
+        HPRecover
     }
 }

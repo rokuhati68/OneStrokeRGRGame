@@ -18,9 +18,6 @@ namespace OneStrokeRGR.Model
         /// <summary>ゲームボード</summary>
         public Board Board { get; set; }
 
-        /// <summary>報酬設定</summary>
-        public Config.RewardConfig RewardConfig { get; set; }
-
         /// <summary>タイル生成設定</summary>
         public Config.TileSpawnConfig SpawnConfig { get; set; }
 
@@ -30,6 +27,9 @@ namespace OneStrokeRGR.Model
         /// <summary>ゲーム全体で訪問済みのマス位置（ステージ跨ぎで保持）</summary>
         public HashSet<Vector2Int> VisitedPositions { get; private set; } = new HashSet<Vector2Int>();
 
+        /// <summary>報酬タイプごとの現在レベル（0ベース）</summary>
+        private Dictionary<RewardType, int> rewardLevels = new Dictionary<RewardType, int>();
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -38,7 +38,6 @@ namespace OneStrokeRGR.Model
             CurrentStage = 1;
             Player = new Player();
             Board = new Board();
-            RewardConfig = new Config.RewardConfig();
             SpawnConfig = new Config.TileSpawnConfig();
             CurrentPhase = GamePhase.PathDrawing;
         }
@@ -74,10 +73,8 @@ namespace OneStrokeRGR.Model
             SpawnConfig.attackBoostRange = config.defaultSpawnConfig.attackBoostRange;
             SpawnConfig.goldRange = config.defaultSpawnConfig.goldRange;
 
-            // 報酬設定のコピー
-            RewardConfig.spawnRateIncrement = config.rewardConfig.spawnRateIncrement;
-            RewardConfig.valueIncrement = config.rewardConfig.valueIncrement;
-            RewardConfig.oneStrokeBonusIncrement = config.rewardConfig.oneStrokeBonusIncrement;
+            // 報酬レベルのリセット
+            rewardLevels.Clear();
 
             // ボードのクリア
             Board.Clear();
@@ -145,6 +142,24 @@ namespace OneStrokeRGR.Model
         public bool IsPositionVisited(Vector2Int position)
         {
             return VisitedPositions.Contains(position);
+        }
+
+        /// <summary>
+        /// 報酬の現在レベルを取得（0ベース）
+        /// </summary>
+        public int GetRewardLevel(RewardType type)
+        {
+            return rewardLevels.TryGetValue(type, out int level) ? level : 0;
+        }
+
+        /// <summary>
+        /// 報酬のレベルを1つ上げる
+        /// </summary>
+        public void IncrementRewardLevel(RewardType type)
+        {
+            if (!rewardLevels.ContainsKey(type))
+                rewardLevels[type] = 0;
+            rewardLevels[type]++;
         }
     }
 }

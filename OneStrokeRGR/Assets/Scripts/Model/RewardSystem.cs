@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using OneStrokeRGR.Config;
 
@@ -7,6 +6,7 @@ namespace OneStrokeRGR.Model
 {
     /// <summary>
     /// 報酬の管理と適用を行うクラス
+    /// レベルシステム対応: 各報酬はレベル1~10を持ち、取得するとレベルが上がる
     /// 要件: 8.2, 9.1, 9.2, 9.3, 9.4, 9.5
     /// </summary>
     public class RewardSystem
@@ -19,12 +19,11 @@ namespace OneStrokeRGR.Model
         }
 
         /// <summary>
-        /// ランダムに報酬を選択
+        /// ランダムに報酬を選択（レベル・重み付き）
+        /// 最大レベル到達済みの報酬は除外される
         /// 要件: 8.2, 9.3
         /// </summary>
-        /// <param name="count">選択する報酬の数（デフォルト: 3）</param>
-        /// <returns>選択された報酬データのリスト</returns>
-        public List<RewardData> SelectRandomRewards(int count = 3)
+        public List<RewardData> SelectRandomRewards(GameState gameState, int count = 3)
         {
             if (allRewards == null || allRewards.Length == 0)
             {
@@ -32,90 +31,117 @@ namespace OneStrokeRGR.Model
                 return new List<RewardData>();
             }
 
-            // シャッフルして指定数だけ選択（要件: 9.3 - 3つの異なる報酬）
-            var shuffled = allRewards.OrderBy(x => Random.value).ToList();
-            var selected = shuffled.Take(count).ToList();
+            // 利用可能な報酬とその重みを収集
+            var available = new List<(RewardData data, float weight)>();
+            foreach (var reward in allRewards)
+            {
+                int currentLevel = gameState.GetRewardLevel(reward.rewardType);
+
+                // 最大レベル到達済みは除外
+                if (currentLevel >= reward.MaxLevel) continue;
+
+                var levelData = reward.GetLevel(currentLevel);
+                if (levelData == null) continue;
+
+                available.Add((reward, levelData.appearanceWeight));
+            }
+
+            if (available.Count == 0)
+            {
+                Debug.LogWarning("RewardSystem: 利用可能な報酬がありません");
+                return new List<RewardData>();
+            }
+
+            // 重み付きランダム選択
+            var selected = new List<RewardData>();
+            for (int i = 0; i < count && available.Count > 0; i++)
+            {
+                float totalWeight = 0f;
+                foreach (var item in available)
+                    totalWeight += item.weight;
+
+                float random = Random.Range(0f, totalWeight);
+                float cumulative = 0f;
+                int selectedIndex = 0;
+
+                for (int j = 0; j < available.Count; j++)
+                {
+                    cumulative += available[j].weight;
+                    if (random <= cumulative)
+                    {
+                        selectedIndex = j;
+                        break;
+                    }
+                }
+
+                selected.Add(available[selectedIndex].data);
+                available.RemoveAt(selectedIndex);
+            }
 
             Debug.Log($"RewardSystem: {selected.Count}個の報酬を選択しました");
             foreach (var reward in selected)
             {
-                Debug.Log($"  - {reward.rewardName}");
+                int level = gameState.GetRewardLevel(reward.rewardType);
+                var levelData = reward.GetLevel(level);
+                Debug.Log($"  - {levelData.rewardName} (Lv.{level + 1}/{reward.MaxLevel})");
             }
 
             return selected;
         }
 
         /// <summary>
-        /// 報酬を適用する
+        /// 報酬を適用する（現在レベルの効果を適用し、レベルを上げる）
         /// 要件: 8.3, 9.2, 9.4, 9.5
         /// </summary>
-        /// <param name="rewardData">適用する報酬データ</param>
-        /// <param name="gameState">ゲーム状態</param>
         public void ApplyReward(RewardData rewardData, GameState gameState)
         {
-            if (gameState == null)
+            if (gameState == null || rewardData == null)
             {
-                Debug.LogError("RewardSystem: gameStateがnullです");
+                Debug.LogError("RewardSystem: gameStateまたはrewardDataがnullです");
                 return;
             }
 
-            if (rewardData == null)
+            int currentLevel = gameState.GetRewardLevel(rewardData.rewardType);
+            var levelData = rewardData.GetLevel(currentLevel);
+            if (levelData == null)
             {
-                Debug.LogError("RewardSystem: rewardDataがnullです");
+                Debug.LogWarning($"RewardSystem: レベル{currentLevel}のデータがありません");
                 return;
             }
 
-            Debug.Log($"RewardSystem: 報酬を適用 - {rewardData.rewardName}");
-
-            // 報酬設定から増加量を取得
-            float rateIncrement = gameState.RewardConfig.spawnRateIncrement;
-            int valueIncrement = gameState.RewardConfig.valueIncrement;
-            int bonusIncrement = gameState.RewardConfig.oneStrokeBonusIncrement;
+            Debug.Log($"RewardSystem: 報酬を適用 - {levelData.rewardName} (Lv.{currentLevel + 1})");
 
             switch (rewardData.rewardType)
             {
                 case RewardType.AttackBoostRateIncrease:
-                    // 攻撃力上昇マス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
-                    Debug.Log($"攻撃力上昇マス出現率が{rateIncrement * 100}%増加しました");
+                case RewardType.HPRecoveryRateIncrease:
+                case RewardType.EmptyRateIncrease:
+                case RewardType.GoldRateIncrease:
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, levelData.spawnRateChange, 0);
+                    Debug.Log($"出現率が{levelData.spawnRateChange * 100}%変化しました");
                     break;
 
                 case RewardType.AttackBoostValueIncrease:
-                    // 攻撃力上昇マス値増加（要件: 9.5）
-                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, 0, valueIncrement);
-                    Debug.Log($"攻撃力上昇マスの値範囲が拡大しました");
-                    break;
-
-                case RewardType.HPRecoveryRateIncrease:
-                    // HP回復マス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
-                    Debug.Log($"HP回復マス出現率が{rateIncrement * 100}%増加しました");
-                    break;
-
-                case RewardType.EmptyRateIncrease:
-                    // 効果なしマス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
-                    Debug.Log($"効果なしマス出現率が{rateIncrement * 100}%増加しました");
-                    break;
-
-                case RewardType.GoldRateIncrease:
-                    // ゴールドマス出現率増加（要件: 9.4）
-                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, rateIncrement, 0);
-                    Debug.Log($"ゴールドマス出現率が{rateIncrement * 100}%増加しました");
-                    break;
-
                 case RewardType.GoldValueIncrease:
-                    // ゴールドマス値増加（要件: 9.5）
-                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, 0, valueIncrement);
-                    Debug.Log($"ゴールドマスの値範囲が拡大しました");
+                    gameState.SpawnConfig.ApplyReward(rewardData.rewardType, 0, levelData.valueChange);
+                    Debug.Log($"効果値が{levelData.valueChange}変化しました");
                     break;
 
                 case RewardType.OneStrokeBonusIncrease:
-                    // 一筆書きボーナス値増加（要件: 9.2）
-                    gameState.Player.IncreaseOneStrokeBonus(bonusIncrement);
-                    Debug.Log($"一筆書きボーナスが{bonusIncrement}増加しました");
+                    gameState.Player.IncreaseOneStrokeBonus(levelData.valueChange);
+                    Debug.Log($"一筆書きボーナスが{levelData.valueChange}増加しました");
+                    break;
+                case RewardType.GoldGet:
+                    gameState.Player.AddGold(levelData.valueChange);
+                    break;
+                case RewardType.HPRecover:
+                    gameState.Player.Heal(levelData.valueChange);
                     break;
             }
+
+            // レベルを上げる
+            gameState.IncrementRewardLevel(rewardData.rewardType);
+            Debug.Log($"RewardSystem: {rewardData.rewardType}のレベルが{currentLevel + 1} → {currentLevel + 2}に上昇");
         }
     }
 }

@@ -28,9 +28,6 @@ namespace OneStrokeRGR.Config
         public EnemySpawnTable enemySpawnTable = new EnemySpawnTable();
 
         [Header("報酬設定")]
-        [Tooltip("報酬効果の設定")]
-        public RewardConfig rewardConfig = new RewardConfig();
-
         [Tooltip("報酬データ一覧（ScriptableObject）")]
         public RewardData[] rewardDataList;
 

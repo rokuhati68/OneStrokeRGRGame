@@ -192,34 +192,25 @@ public class GameTest : MonoBehaviour
         GameState gameState = new GameState();
         gameState.Initialize(gameConfig);
 
-        // ランダム報酬選択
-        var rewards = rewardSystem.SelectRandomRewards(3);
-        Debug.Log("✓ ランダム報酬3つを選択:");
+        // ランダム報酬選択（レベル対応）
+        var rewards = rewardSystem.SelectRandomRewards(gameState, 3);
+        Debug.Log("✓ ランダム報酬を選択:");
         foreach (var reward in rewards)
         {
-            Debug.Log($"  - {reward.rewardName}: {reward.description}");
+            int level = gameState.GetRewardLevel(reward.rewardType);
+            var levelData = reward.GetLevel(level);
+            Debug.Log($"  - {levelData.rewardName} (Lv.{level + 1}/{reward.MaxLevel}): {levelData.description}");
         }
 
-        // 報酬適用テスト（OneStrokeBonusIncreaseの報酬を探して適用）
-        OneStrokeRGR.Config.RewardData bonusReward = null;
-        foreach (var r in gameConfig.rewardDataList)
+        // 報酬適用テスト（最初の報酬を適用してレベルアップを確認）
+        if (rewards.Count > 0)
         {
-            if (r.rewardType == RewardType.OneStrokeBonusIncrease)
-            {
-                bonusReward = r;
-                break;
-            }
-        }
-
-        if (bonusReward != null)
-        {
-            Debug.Log($"\n報酬適用前の一筆書きボーナス: {gameState.Player.OneStrokeBonus}");
-            rewardSystem.ApplyReward(bonusReward, gameState);
-            Debug.Log($"✓ 報酬適用後: {gameState.Player.OneStrokeBonus}\n");
-        }
-        else
-        {
-            Debug.Log("✓ OneStrokeBonusIncrease報酬が未設定のため適用テストをスキップ\n");
+            var testReward = rewards[0];
+            int levelBefore = gameState.GetRewardLevel(testReward.rewardType);
+            Debug.Log($"\n報酬適用前レベル: {levelBefore + 1}");
+            rewardSystem.ApplyReward(testReward, gameState);
+            int levelAfter = gameState.GetRewardLevel(testReward.rewardType);
+            Debug.Log($"✓ 報酬適用後レベル: {levelAfter + 1}\n");
         }
     }
 }

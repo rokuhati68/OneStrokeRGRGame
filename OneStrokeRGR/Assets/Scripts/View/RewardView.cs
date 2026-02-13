@@ -33,7 +33,6 @@ namespace OneStrokeRGR.View
 
         private void Awake()
         {
-            // パネルを非表示に
             if (rewardPanel != null)
                 rewardPanel.SetActive(false);
         }
@@ -45,12 +44,11 @@ namespace OneStrokeRGR.View
         {
             rewardPresenter = presenter;
 
-            // 各カードのボタンイベントを設定
             for (int i = 0; i < rewardCards.Length; i++)
             {
                 if (rewardCards[i] != null)
                 {
-                    int index = i; // クロージャのためにローカル変数にコピー
+                    int index = i;
                     rewardCards[i].SetButtonClickListener(() => OnRewardCardClicked(index));
                 }
             }
@@ -60,11 +58,13 @@ namespace OneStrokeRGR.View
         /// 報酬選択を表示し、ユーザーの選択を待つ
         /// 要件: 8.2
         /// </summary>
-        public async UniTask<RewardData> ShowRewardSelection(List<RewardData> rewards)
+        /// <param name="rewards">報酬データリスト</param>
+        /// <param name="levels">各報酬の現在レベル（0ベース）</param>
+        public async UniTask<RewardData> ShowRewardSelection(List<RewardData> rewards, List<int> levels)
         {
-            if (rewards == null || rewards.Count < 3)
+            if (rewards == null || rewards.Count == 0)
             {
-                Debug.LogError("RewardView: 報酬リストが不正です");
+                Debug.LogError("RewardView: 報酬リストが空です");
                 return null;
             }
 
@@ -75,54 +75,55 @@ namespace OneStrokeRGR.View
             {
                 rewardPanel.SetActive(true);
 
-                // CanvasGroupのalphaをリセット（前回のフェードアウトから復帰）
                 var canvasGroup = rewardPanel.GetComponent<CanvasGroup>();
                 if (canvasGroup != null)
                 {
                     canvasGroup.alpha = 1f;
                 }
-
-                Debug.Log("表示完了");
             }
-            // タイトルを設定
+
             if (titleText != null)
                 titleText.text = "報酬を選択してください";
 
-            // 各カードに報酬データを設定
-            for (int i = 0; i < 3 && i < rewards.Count && i < rewardCards.Length; i++)
+            // 各カードに報酬データとレベルを設定
+            int cardCount = Mathf.Min(rewards.Count, rewardCards.Length);
+            for (int i = 0; i < cardCount; i++)
             {
                 if (rewardCards[i] != null)
                 {
-                    rewardCards[i].SetReward(rewards[i]);
+                    int level = (i < levels.Count) ? levels[i] : 0;
+                    rewardCards[i].SetReward(rewards[i], level);
                 }
             }
 
-            // カード出現アニメーション
-            await PlayCardAppearAnimation();
+            // 使用しないカードを非表示
+            for (int i = cardCount; i < rewardCards.Length; i++)
+            {
+                if (rewardCards[i] != null && rewardCards[i].cardObject != null)
+                {
+                    rewardCards[i].cardObject.SetActive(false);
+                }
+            }
 
-            // ユーザーの選択を待つ
+            await PlayCardAppearAnimation(cardCount);
+
             isWaitingForSelection = true;
             selectionComplete = false;
 
             await UniTask.WaitUntil(() => selectionComplete);
 
-            // パネルを非表示
             await PlayPanelDisappearAnimation();
 
             if (rewardPanel != null)
                 rewardPanel.SetActive(false);
 
-            Debug.Log($"RewardView: {selectedReward.rewardName}が選択されました");
             return selectedReward;
         }
 
-        /// <summary>
-        /// カード出現アニメーション
-        /// 要件: 8.2（アニメーション）
-        /// </summary>
-        private async UniTask PlayCardAppearAnimation()
+        private async UniTask PlayCardAppearAnimation(int count = 3)
         {
-            for (int i = 0; i < rewardCards.Length; i++)
+            int cardCount = Mathf.Min(count, rewardCards.Length);
+            for (int i = 0; i < cardCount; i++)
             {
                 if (rewardCards[i] != null)
                 {
@@ -132,9 +133,6 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// パネル消失アニメーション
-        /// </summary>
         private async UniTask PlayPanelDisappearAnimation()
         {
             if (rewardPanel != null)
@@ -151,9 +149,6 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// カードクリック時の処理
-        /// </summary>
         private void OnRewardCardClicked(int cardIndex)
         {
             if (!isWaitingForSelection)
@@ -162,13 +157,10 @@ namespace OneStrokeRGR.View
             if (cardIndex < 0 || cardIndex >= rewardCards.Length || rewardCards[cardIndex] == null)
                 return;
 
-            // 選択された報酬を記録
             selectedReward = rewardCards[cardIndex].GetRewardData();
 
-            // 選択アニメーション
             rewardCards[cardIndex].PlaySelectionAnimation();
 
-            // 他のカードを非選択状態に
             for (int i = 0; i < rewardCards.Length; i++)
             {
                 if (i != cardIndex && rewardCards[i] != null)
@@ -198,23 +190,30 @@ namespace OneStrokeRGR.View
         private Vector3 originalScale;
 
         /// <summary>
-        /// RewardDataを設定して表示を更新
+        /// RewardDataとレベルを設定して表示を更新
         /// </summary>
-        public void SetReward(RewardData data)
+        public void SetReward(RewardData data, int level)
         {
             rewardData = data;
 
+            var levelData = data.GetLevel(level);
+            if (levelData == null)
+            {
+                Debug.LogWarning($"RewardCardView: レベル{level}のデータがありません");
+                return;
+            }
+
             if (titleText != null)
-                titleText.text = data.rewardName;
+                titleText.text = levelData.rewardName;
 
             if (descriptionText != null)
-                descriptionText.text = data.description;
+                descriptionText.text = levelData.description;
 
             if (iconImage != null)
             {
-                if (data.icon != null)
+                if (levelData.icon != null)
                 {
-                    iconImage.sprite = data.icon;
+                    iconImage.sprite = levelData.icon;
                     iconImage.enabled = true;
                 }
                 else
@@ -227,8 +226,8 @@ namespace OneStrokeRGR.View
             {
                 originalScale = Vector3.one;
                 cardObject.transform.localScale = Vector3.zero;
+                cardObject.SetActive(true);
 
-                // 前回の非選択アニメーションで下がったalphaをリセット
                 var canvasGroup = cardObject.GetComponent<CanvasGroup>();
                 if (canvasGroup != null)
                 {
@@ -237,9 +236,6 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// ボタンクリックリスナーを設定
-        /// </summary>
         public void SetButtonClickListener(System.Action onClick)
         {
             if (selectButton != null)
@@ -249,9 +245,6 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// 出現アニメーション
-        /// </summary>
         public void PlayAppearAnimation(float duration)
         {
             if (cardObject != null)
@@ -261,17 +254,12 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// 選択アニメーション
-        /// </summary>
         public void PlaySelectionAnimation()
         {
             if (cardObject != null)
             {
-                // スケールアップ
                 cardObject.transform.DOScale(originalScale * 1.1f, 0.2f).SetEase(Ease.OutQuad);
 
-                // 色を変更（ボタンの色を変える）
                 if (selectButton != null)
                 {
                     selectButton.image.DOColor(Color.green, 0.2f);
@@ -279,14 +267,10 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// 非選択アニメーション
-        /// </summary>
         public void PlayDeselectionAnimation()
         {
             if (cardObject != null)
             {
-                // フェードアウト
                 var canvasGroup = cardObject.GetComponent<CanvasGroup>();
                 if (canvasGroup != null)
                 {
@@ -295,9 +279,6 @@ namespace OneStrokeRGR.View
             }
         }
 
-        /// <summary>
-        /// 報酬データを取得
-        /// </summary>
         public RewardData GetRewardData()
         {
             return rewardData;

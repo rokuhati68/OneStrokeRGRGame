@@ -182,8 +182,8 @@ namespace OneStrokeRGR.Model
                 return;
             }
 
-            oneStrokeBonus += amount;
-            Debug.Log($"Player: 一筆書きボーナス+{amount}。現在: {oneStrokeBonus}");
+            oneStrokeBonus = amount;
+            Debug.Log($"Player: 一筆書きボーナス={amount}。現在: {oneStrokeBonus}");
         }
 
         /// <summary>
