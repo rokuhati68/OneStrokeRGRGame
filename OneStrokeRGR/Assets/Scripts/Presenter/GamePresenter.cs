@@ -47,7 +47,7 @@ namespace OneStrokeRGR.Presenter
             pathPresenter = new PathPresenter(gameState);
             combatPresenter = new CombatPresenter(gameState);
             bossPresenter = new BossPresenter(gameState);
-            rewardPresenter = new RewardPresenter(gameState);
+            rewardPresenter = new RewardPresenter(gameState, gameConfig.rewardDataList);
 
             // CombatPresenterのコールバック設定
             combatPresenter.OnPlayerMoveTo = async (pos) =>

@@ -182,7 +182,13 @@ public class GameTest : MonoBehaviour
     {
         Debug.Log("=== 5. 報酬システムテスト ===");
 
-        RewardSystem rewardSystem = new RewardSystem();
+        if (gameConfig.rewardDataList == null || gameConfig.rewardDataList.Length == 0)
+        {
+            Debug.LogWarning("GameTest: RewardDataListが設定されていません。報酬テストをスキップします。");
+            return;
+        }
+
+        RewardSystem rewardSystem = new RewardSystem(gameConfig.rewardDataList);
         GameState gameState = new GameState();
         gameState.Initialize(gameConfig);
 
@@ -191,12 +197,29 @@ public class GameTest : MonoBehaviour
         Debug.Log("✓ ランダム報酬3つを選択:");
         foreach (var reward in rewards)
         {
-            Debug.Log($"  - {reward}: {rewardSystem.GetRewardDescription(reward)}");
+            Debug.Log($"  - {reward.rewardName}: {reward.description}");
         }
 
-        // 報酬適用テスト
-        Debug.Log($"\n報酬適用前の一筆書きボーナス: {gameState.Player.OneStrokeBonus}");
-        rewardSystem.ApplyReward(RewardType.OneStrokeBonusIncrease, gameState);
-        Debug.Log($"✓ 報酬適用後: {gameState.Player.OneStrokeBonus}\n");
+        // 報酬適用テスト（OneStrokeBonusIncreaseの報酬を探して適用）
+        OneStrokeRGR.Config.RewardData bonusReward = null;
+        foreach (var r in gameConfig.rewardDataList)
+        {
+            if (r.rewardType == RewardType.OneStrokeBonusIncrease)
+            {
+                bonusReward = r;
+                break;
+            }
+        }
+
+        if (bonusReward != null)
+        {
+            Debug.Log($"\n報酬適用前の一筆書きボーナス: {gameState.Player.OneStrokeBonus}");
+            rewardSystem.ApplyReward(bonusReward, gameState);
+            Debug.Log($"✓ 報酬適用後: {gameState.Player.OneStrokeBonus}\n");
+        }
+        else
+        {
+            Debug.Log("✓ OneStrokeBonusIncrease報酬が未設定のため適用テストをスキップ\n");
+        }
     }
 }

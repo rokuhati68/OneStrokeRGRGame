@@ -57,6 +57,14 @@ MonoBehaviour:
   rewardConfig:
     spawnRateIncrement: 0.05
     valueIncrement: 1
-    oneStrokeBonusIncrement: 2
+    oneStrokeBonusIncrement: 5
+  rewardDataList:
+  - {fileID: 11400000, guid: 86100e81b5fc25c47a4e3b3846f04551, type: 2}
+  - {fileID: 11400000, guid: 48bc5a91f1e8ba543848e4e08ec859f0, type: 2}
+  - {fileID: 11400000, guid: 96d1d92c6798ce046882f9f700b7493b, type: 2}
+  - {fileID: 11400000, guid: 290735d6bdd0d714bab2a24d91a2d1fd, type: 2}
+  - {fileID: 11400000, guid: 52dde63bd54746e46ba1438b313285e3, type: 2}
+  - {fileID: 11400000, guid: 907196087bc49634584c548d56226f6b, type: 2}
+  - {fileID: 11400000, guid: 63b43210261de1c4c91da4109df6fc69, type: 2}
   bossStageInterval: 10
   bossActionInterval: 3
