@@ -63,17 +63,17 @@ namespace OneStrokeRGR.View
 
             if (hpText != null)
             {
-                UpdateTextWithAnimation(hpText, $"HP: {player.CurrentHP}/{player.MaxHP}");
+                UpdateTextWithAnimation(hpText, $"{player.CurrentHP}/{player.MaxHP}");
             }
 
             if (goldText != null)
             {
-                UpdateTextWithAnimation(goldText, $"Gold: {player.Gold}");
+                UpdateTextWithAnimation(goldText, $"{player.Gold}");
             }
 
             if (attackPowerText != null)
             {
-                UpdateTextWithAnimation(attackPowerText, $"ATK: {player.AttackPower}");
+                UpdateTextWithAnimation(attackPowerText, $" {player.AttackPower}");
             }
         }
 
@@ -84,7 +84,7 @@ namespace OneStrokeRGR.View
         {
             if (stageText != null)
             {
-                stageText.text = $"Stage {stage}";
+                stageText.text = $"Stage　{stage}";
 
                 // ステージ変更時のアニメーション
                 stageText.transform.DOPunchScale(Vector3.one * 0.2f, 0.5f);
@@ -190,7 +190,7 @@ namespace OneStrokeRGR.View
             float duration = 0.5f;
             await DOVirtual.Float(oldHP, newHP, duration, (value) =>
             {
-                hpText.text = $"HP: {Mathf.RoundToInt(value)}/{maxHP}";
+                hpText.text = $"{Mathf.RoundToInt(value)}/{maxHP}";
             }).AsyncWaitForCompletion();
         }
 
@@ -206,7 +206,7 @@ namespace OneStrokeRGR.View
             float duration = 0.3f;
             await DOVirtual.Float(oldGold, newGold, duration, (value) =>
             {
-                goldText.text = $"Gold: {Mathf.RoundToInt(value)}";
+                goldText.text = $"{Mathf.RoundToInt(value)}";
             }).AsyncWaitForCompletion();
 
             // パンチスケール
@@ -225,7 +225,7 @@ namespace OneStrokeRGR.View
             float duration = 0.3f;
             await DOVirtual.Float(oldAttack, newAttack, duration, (value) =>
             {
-                attackPowerText.text = $"ATK: {Mathf.RoundToInt(value)}";
+                attackPowerText.text = $"{Mathf.RoundToInt(value)}";
             }).AsyncWaitForCompletion();
 
             // 攻撃力上昇時は赤フラッシュ
