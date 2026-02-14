@@ -71,10 +71,6 @@ namespace OneStrokeRGR.Presenter
             };
             combatPresenter.OnEffectApplied = async () =>
             {
-                if (uiView != null)
-                {
-                    uiView.UpdatePlayerInfo(gameState.Player);
-                }
                 if (boardView != null)
                 {
                     // プレイヤーが通過したタイルを使用済み表示に変更
@@ -82,6 +78,28 @@ namespace OneStrokeRGR.Presenter
                     boardView.MarkTileAsVisited(pos);
                 }
                 await UniTask.Yield();
+            };
+
+            // 飛ぶ光エフェクト + UI値更新
+            combatPresenter.OnTileValueEffect = async (pos, tileType) =>
+            {
+                bool shouldFly = tileType == TileType.Empty || tileType == TileType.AttackBoost ||
+                                tileType == TileType.Gold || tileType == TileType.Thorn || tileType == TileType.HPRecovery;
+
+                if (shouldFly && uiView != null && boardView != null)
+                {
+                    TileView tileView = boardView.GetTileView(pos);
+                    if (tileView != null)
+                    {
+                        await uiView.PlayFlyingValueEffect(tileView.transform.position, tileType);
+                    }
+                }
+
+                // UI更新
+                if (uiView != null)
+                {
+                    uiView.UpdatePlayerInfo(gameState.Player);
+                }
             };
 
             // バトルUI用コールバック（斬撃エフェクト → HPバー更新）

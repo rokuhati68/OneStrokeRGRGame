@@ -25,6 +25,11 @@ namespace OneStrokeRGR.View
         public Button confirmButton;
         public Button cancelButton;
 
+        [Header("飛ぶ光エフェクト")]
+        public Sprite flyingOrbSprite;
+        public float flyingDuration = 0.4f;
+        public float orbSize = 30f;
+
         [Header("ゲームオーバー画面")]
         public GameObject gameOverPanel;
         public TextMeshProUGUI gameOverText;
@@ -236,6 +241,88 @@ namespace OneStrokeRGR.View
                 {
                     attackPowerText.color = originalColor;
                 });
+            }
+        }
+
+        /// <summary>
+        /// タイル位置からUIテキストへ飛ぶ光エフェクトを再生
+        /// </summary>
+        public async UniTask PlayFlyingValueEffect(Vector3 sourceWorldPos, TileType tileType)
+        {
+            RectTransform targetRect = GetTargetRectForTileType(tileType);
+            if (targetRect == null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+
+            // 光のオーブを生成
+            GameObject orb = new GameObject("FlyingOrb");
+            orb.transform.SetParent(canvas.transform, false);
+
+            Image orbImage = orb.AddComponent<Image>();
+            if (flyingOrbSprite != null)
+                orbImage.sprite = flyingOrbSprite;
+            orbImage.color = GetOrbColor(tileType);
+            orbImage.raycastTarget = false;
+
+            RectTransform orbRect = orb.GetComponent<RectTransform>();
+            orbRect.sizeDelta = new Vector2(orbSize, orbSize);
+
+            // ソース位置に配置し最前面に表示
+            orb.transform.position = sourceWorldPos;
+            orb.transform.SetAsLastSibling();
+
+            // ターゲットへ飛ばす + スケールダウン
+            Vector3 targetPos = targetRect.position;
+            Sequence seq = DOTween.Sequence();
+            seq.Append(orb.transform.DOMove(targetPos, flyingDuration).SetEase(Ease.InQuad));
+            seq.Join(orbRect.DOSizeDelta(new Vector2(orbSize * 0.5f, orbSize * 0.5f), flyingDuration));
+
+            await seq.AsyncWaitForCompletion();
+
+            if (orb != null)
+                Destroy(orb);
+        }
+
+        /// <summary>
+        /// タイル種別に応じたターゲットテキストのRectTransformを返す
+        /// </summary>
+        private RectTransform GetTargetRectForTileType(TileType tileType)
+        {
+            switch (tileType)
+            {
+                case TileType.Empty:
+                case TileType.AttackBoost:
+                    return attackPowerText?.rectTransform;
+                case TileType.Gold:
+                    return goldText?.rectTransform;
+                case TileType.Thorn:
+                case TileType.HPRecovery:
+                    return hpText?.rectTransform;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// タイル種別に応じたオーブの色を返す
+        /// </summary>
+        private Color GetOrbColor(TileType tileType)
+        {
+            switch (tileType)
+            {
+                case TileType.Empty:
+                    return new Color(1f,1f,1f,1f); // 白
+                case TileType.AttackBoost:
+                    return new Color(0f, 1f, 1f, 1f); // 水色
+                case TileType.Gold:
+                    return new Color(1f, 1f, 0f, 1f); // 黄色
+                case TileType.Thorn:
+                    return new Color(1f, 0f, 0f, 1f); // 赤
+                case TileType.HPRecovery:
+                    return new Color(1f,0f,1f,1f);//ピンク
+                default:
+                    return Color.white;
             }
         }
 

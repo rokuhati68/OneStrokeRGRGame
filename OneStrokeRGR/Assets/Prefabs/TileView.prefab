@@ -384,7 +384,7 @@ MonoBehaviour:
   emptyColor: {r: 1, g: 1, b: 1, a: 1}
   attackBoostColor: {r: 0, g: 1, b: 1, a: 1}
   hpRecoveryColor: {r: 1, g: 0, b: 1, a: 1}
-  goldColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  goldColor: {r: 1, g: 1, b: 0, a: 1}
   enemyColor: {r: 0.482353, g: 0.4078432, b: 0.9333334, a: 1}
   thornColor: {r: 1, g: 0, b: 0, a: 1}
   wallColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}

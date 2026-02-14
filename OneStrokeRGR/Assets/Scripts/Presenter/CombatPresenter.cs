@@ -44,6 +44,12 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public Action<TileType> OnTileProcessed { get; set; }
 
+        /// <summary>
+        /// タイル効果によるUI値変化時に呼ばれるコールバック
+        /// 飛ぶ光エフェクト + UI更新に使用
+        /// </summary>
+        public Func<Vector2Int, TileType, UniTask> OnTileValueEffect { get; set; }
+
         public CombatPresenter(GameState state)
         {
             gameState = state;
@@ -150,7 +156,13 @@ namespace OneStrokeRGR.Presenter
                 // タイル種別を通知（SE再生用）
                 OnTileProcessed?.Invoke(tile.Type);
 
-                // View層のUI更新通知
+                // 飛ぶ光エフェクト + UI値更新
+                if (OnTileValueEffect != null)
+                {
+                    OnTileValueEffect(pos, tile.Type);
+                }
+
+                // View層の訪問済みマーク通知
                 if (OnEffectApplied != null)
                 {
                     await OnEffectApplied();

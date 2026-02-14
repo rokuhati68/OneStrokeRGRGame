@@ -3784,6 +3784,9 @@ MonoBehaviour:
   confirmMessageText: {fileID: 0}
   confirmButton: {fileID: 0}
   cancelButton: {fileID: 0}
+  flyingOrbSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  flyingDuration: 1
+  orbSize: 50
   gameOverPanel: {fileID: 1932615355}
   gameOverText: {fileID: 0}
   restartButton: {fileID: 0}
