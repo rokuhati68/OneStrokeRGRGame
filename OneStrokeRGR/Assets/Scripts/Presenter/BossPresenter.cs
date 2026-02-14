@@ -3,11 +3,13 @@ using System.Linq;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.Config;
 
 namespace OneStrokeRGR.Presenter
 {
     /// <summary>
-    /// ボスの特殊行動を制御するPresenter
+    /// 敵の行動を制御するPresenter
+    /// ボス・通常敵問わず、行動パターンに従って行動を実行する
     /// 要件: 6.2, 6.3, 6.4, 6.5
     /// </summary>
     public class BossPresenter
@@ -20,186 +22,236 @@ namespace OneStrokeRGR.Presenter
         }
 
         /// <summary>
-        /// ボス行動を実行
-        /// 要件: 6.2, 6.3
+        /// 敵の行動を実行（行動パターンに基づく）
         /// </summary>
-        public async UniTask ExecuteBossAction(Enemy boss)
+        /// <returns>変更されたタイル位置のリスト。行動しなかった場合はnull</returns>
+        public async UniTask<List<Vector2Int>> ExecuteEnemyAction(Enemy enemy)
         {
-            if (boss == null || !boss.IsBoss)
+            if (enemy == null || !enemy.HasActionPattern)
             {
-                Debug.LogWarning("BossPresenter: ボスではありません");
-                return;
+                return null;
             }
 
-            if (!boss.ShouldPerformBossAction())
+            if (!enemy.ShouldPerformAction())
             {
-                Debug.Log($"BossPresenter: ボス行動のタイミングではありません（ターン: {boss.TurnsSinceLastAction}/{boss.BossActionInterval}）");
-                return;
+                Debug.Log($"BossPresenter: 行動のタイミングではありません（残り{enemy.TurnsUntilAction}ターン）");
+                return null;
             }
 
-            Debug.Log("BossPresenter: ボス行動実行！");
+            EnemyActionEntry action = enemy.GetCurrentAction();
+            if (action == null) return null;
 
-            // ボス行動タイプをランダム選択
-            BossActionType actionType = SelectRandomBossAction();
+            string typeLabel = enemy.IsBoss ? "ボス" : "敵";
+            Debug.Log($"BossPresenter: {typeLabel}行動実行！ タイプ={action.actionType}, 値={action.value}");
+
+            List<Vector2Int> changedPositions = new List<Vector2Int>();
 
             // 行動に応じた処理を実行
-            switch (actionType)
+            switch (action.actionType)
             {
+                case BossActionType.Attack:
+                    AttackPlayer(enemy, action.value);
+                    break;
+
                 case BossActionType.DisableAttackBoost:
-                    await DisableAttackBoostTiles();
+                    changedPositions = DisableTiles(TileType.AttackBoost, action.value);
                     break;
 
                 case BossActionType.HealSelf:
-                    await HealBoss(boss, boss.MaxHP / 4); // 最大HPの25%回復
+                    HealEnemy(enemy, action.value);
                     break;
 
                 case BossActionType.SpawnThorns:
-                    await SpawnThornTiles(3); // 3個のとげマス生成
+                    changedPositions = SpawnThornTiles(action.value);
                     break;
 
                 case BossActionType.SpawnWalls:
-                    await SpawnWallTiles(2); // 2個の壁マス生成
+                    changedPositions = SpawnWallTiles(action.value);
+                    break;
+
+                case BossActionType.DisableHeal:
+                    changedPositions = DisableTiles(TileType.HPRecovery, action.value);
+                    break;
+
+                case BossActionType.DisableGold:
+                    changedPositions = DisableTiles(TileType.Gold, action.value);
+                    break;
+
+                case BossActionType.DecreaseAttack:
+                    changedPositions = DecreaseAttackTiles(action.value);
+                    break;
+
+                case BossActionType.DecreaseGold:
+                    changedPositions = DecreaseGoldTiles(action.value);
                     break;
             }
 
-            // ボス行動カウンターをリセット
-            boss.ResetBossActionCounter();
-        }
-
-        /// <summary>
-        /// ランダムなボス行動タイプを選択
-        /// 要件: 6.3
-        /// </summary>
-        public BossActionType SelectRandomBossAction()
-        {
-            var values = System.Enum.GetValues(typeof(BossActionType));
-            int randomIndex = Random.Range(0, values.Length);
-            BossActionType selected = (BossActionType)values.GetValue(randomIndex);
-
-            Debug.Log($"BossPresenter: ボス行動選択 - {selected}");
-            return selected;
-        }
-
-        /// <summary>
-        /// 攻撃力上昇マスを無効化（効果なしマスに変換）
-        /// 要件: 6.3
-        /// </summary>
-        public async UniTask DisableAttackBoostTiles()
-        {
-            Debug.Log("BossPresenter: 攻撃力上昇マス無効化！");
-
-            int disabledCount = 0;
-
-            for (int x = 0; x < Board.BoardSize; x++)
-            {
-                for (int y = 0; y < Board.BoardSize; y++)
-                {
-                    Vector2Int pos = new Vector2Int(x, y);
-                    Tile tile = gameState.Board.GetTile(pos);
-
-                    if (tile != null && tile.Type == TileType.AttackBoost)
-                    {
-                        // 効果なしマスに置き換え
-                        EmptyTile emptyTile = new EmptyTile();
-                        gameState.Board.SetTile(pos, emptyTile);
-                        disabledCount++;
-                    }
-                }
-            }
-
-            Debug.Log($"BossPresenter: {disabledCount}個の攻撃力上昇マスを無効化しました");
-            await UniTask.Yield();
-        }
-
-        /// <summary>
-        /// ボスのHP回復
-        /// 要件: 6.3
-        /// </summary>
-        public async UniTask HealBoss(Enemy boss, int amount)
-        {
-            if (boss == null)
-            {
-                return;
-            }
-
-            Debug.Log($"BossPresenter: ボスが{amount}HP回復！");
-            boss.Heal(amount);
+            // 次の行動へ進める
+            enemy.AdvanceToNextAction();
 
             await UniTask.Yield();
+            return changedPositions;
+        }
+
+        /// <summary>
+        /// プレイヤーに攻撃
+        /// </summary>
+        private void AttackPlayer(Enemy enemy, int damage)
+        {
+            string typeLabel = enemy.IsBoss ? "ボス" : "敵";
+            Debug.Log($"BossPresenter: {typeLabel}がプレイヤーに{damage}ダメージ！");
+            gameState.Player.TakeDamage(damage);
+        }
+
+        /// <summary>
+        /// 指定タイプのタイルを無効化（効果なしマスに変換）
+        /// </summary>
+        /// <returns>変更されたタイル位置のリスト</returns>
+        private List<Vector2Int> DisableTiles(TileType targetType, int amount)
+        {
+            List<Vector2Int> changed = new List<Vector2Int>();
+            List<Vector2Int> targetTiles = FindPositions(targetType);
+
+            int changeCnt = Mathf.Min(amount, targetTiles.Count);
+            for (int i = 0; i < changeCnt; i++)
+            {
+                int randomIndex = Random.Range(0, targetTiles.Count);
+                Vector2Int pos = targetTiles[randomIndex];
+                targetTiles.RemoveAt(randomIndex);
+
+                EmptyTile emptyTile = TileFactory.CreateEmptyTile();
+                gameState.Board.SetTile(pos, emptyTile);
+                changed.Add(pos);
+            }
+
+            Debug.Log($"BossPresenter: {targetType}マスを{changed.Count}個無効化");
+            return changed;
+        }
+
+        /// <summary>
+        /// 敵のHP回復
+        /// </summary>
+        private void HealEnemy(Enemy enemy, int amount)
+        {
+            if (enemy == null) return;
+
+            string typeLabel = enemy.IsBoss ? "ボス" : "敵";
+            Debug.Log($"BossPresenter: {typeLabel}が{amount}HP回復！");
+            enemy.Heal(amount);
         }
 
         /// <summary>
         /// とげマスを生成
-        /// 要件: 6.4
         /// </summary>
-        public async UniTask SpawnThornTiles(int count)
+        /// <returns>変更されたタイル位置のリスト</returns>
+        private List<Vector2Int> SpawnThornTiles(int count)
         {
-            Debug.Log($"BossPresenter: とげマスを{count}個生成！");
-
-            List<Vector2Int> emptyPositions = FindEmptyPositions();
+            List<Vector2Int> changed = new List<Vector2Int>();
+            List<Vector2Int> emptyPositions = FindPositions(TileType.Empty);
 
             if (emptyPositions.Count == 0)
             {
                 Debug.LogWarning("BossPresenter: 空きマスがありません");
-                return;
+                return changed;
             }
 
-            // ランダムに位置を選択
             int spawnCount = Mathf.Min(count, emptyPositions.Count);
-
             for (int i = 0; i < spawnCount; i++)
             {
                 int randomIndex = Random.Range(0, emptyPositions.Count);
                 Vector2Int pos = emptyPositions[randomIndex];
                 emptyPositions.RemoveAt(randomIndex);
 
-                // とげマスを生成（ダメージ1）
                 ThornTile thornTile = TileFactory.CreateThornTile(1);
                 gameState.Board.SetTile(pos, thornTile);
+                changed.Add(pos);
             }
 
-            await UniTask.Yield();
+            Debug.Log($"BossPresenter: とげマスを{changed.Count}個生成");
+            return changed;
         }
 
         /// <summary>
         /// 壁マスを生成
-        /// 要件: 6.5
         /// </summary>
-        public async UniTask SpawnWallTiles(int count)
+        /// <returns>変更されたタイル位置のリスト</returns>
+        private List<Vector2Int> SpawnWallTiles(int count)
         {
-            Debug.Log($"BossPresenter: 壁マスを{count}個生成！");
-
-            List<Vector2Int> emptyPositions = FindEmptyPositions();
+            List<Vector2Int> changed = new List<Vector2Int>();
+            List<Vector2Int> emptyPositions = FindPositions(TileType.Empty);
 
             if (emptyPositions.Count == 0)
             {
                 Debug.LogWarning("BossPresenter: 空きマスがありません");
-                return;
+                return changed;
             }
 
-            // ランダムに位置を選択
             int spawnCount = Mathf.Min(count, emptyPositions.Count);
-
             for (int i = 0; i < spawnCount; i++)
             {
                 int randomIndex = Random.Range(0, emptyPositions.Count);
                 Vector2Int pos = emptyPositions[randomIndex];
                 emptyPositions.RemoveAt(randomIndex);
 
-                // 壁マスを生成
                 WallTile wallTile = TileFactory.CreateWallTile();
                 gameState.Board.SetTile(pos, wallTile);
+                changed.Add(pos);
             }
 
-            await UniTask.Yield();
+            Debug.Log($"BossPresenter: 壁マスを{changed.Count}個生成");
+            return changed;
         }
 
         /// <summary>
-        /// 空いている位置（効果なしマス）を検索
+        /// 攻撃力上昇マスの値を減少
         /// </summary>
-        private List<Vector2Int> FindEmptyPositions()
+        /// <returns>変更されたタイル位置のリスト</returns>
+        private List<Vector2Int> DecreaseAttackTiles(int value)
         {
-            List<Vector2Int> emptyPositions = new List<Vector2Int>();
+            List<Vector2Int> changed = new List<Vector2Int>();
+            List<Vector2Int> attackPositions = FindPositions(TileType.AttackBoost);
+
+            if (attackPositions.Count == 0) return changed;
+
+            foreach (Vector2Int pos in attackPositions)
+            {
+                var attackBoostTile = TileFactory.CreateTileByType(TileType.AttackBoost, gameState.SpawnConfig, value);
+                gameState.Board.SetTile(pos, attackBoostTile);
+                changed.Add(pos);
+            }
+
+            Debug.Log($"BossPresenter: 攻撃力マスを{changed.Count}個減少");
+            return changed;
+        }
+
+        /// <summary>
+        /// ゴールドマスの値を減少
+        /// </summary>
+        /// <returns>変更されたタイル位置のリスト</returns>
+        private List<Vector2Int> DecreaseGoldTiles(int value)
+        {
+            List<Vector2Int> changed = new List<Vector2Int>();
+            List<Vector2Int> goldPositions = FindPositions(TileType.Gold);
+
+            if (goldPositions.Count == 0) return changed;
+
+            foreach (Vector2Int pos in goldPositions)
+            {
+                var goldTile = TileFactory.CreateTileByType(TileType.Gold, gameState.SpawnConfig, value);
+                gameState.Board.SetTile(pos, goldTile);
+                changed.Add(pos);
+            }
+
+            Debug.Log($"BossPresenter: ゴールドマスを{changed.Count}個減少");
+            return changed;
+        }
+
+        /// <summary>
+        /// 指定タイプのタイル位置を検索
+        /// </summary>
+        private List<Vector2Int> FindPositions(TileType targetTile)
+        {
+            List<Vector2Int> positions = new List<Vector2Int>();
 
             for (int x = 0; x < Board.BoardSize; x++)
             {
@@ -208,15 +260,14 @@ namespace OneStrokeRGR.Presenter
                     Vector2Int pos = new Vector2Int(x, y);
                     Tile tile = gameState.Board.GetTile(pos);
 
-                    // 効果なしマスのみを対象
-                    if (tile != null && tile.Type == TileType.Empty)
+                    if (tile != null && tile.Type == targetTile)
                     {
-                        emptyPositions.Add(pos);
+                        positions.Add(pos);
                     }
                 }
             }
 
-            return emptyPositions;
+            return positions;
         }
     }
 }

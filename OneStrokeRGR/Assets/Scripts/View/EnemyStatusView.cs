@@ -127,15 +127,21 @@ namespace OneStrokeRGR.View
 
         /// <summary>
         /// 攻撃ターン表示を更新
+        /// 行動パターンを持つ全ての敵に対応
         /// </summary>
         private void UpdateTurnDisplay()
         {
             if (currentEnemy == null || turnText == null) return;
 
-            int turnsUntilAttack = currentEnemy.BossActionInterval - currentEnemy.TurnsSinceLastAction;
-            if (turnsUntilAttack < 0) turnsUntilAttack = 0;
-
-            turnText.text = $"{turnsUntilAttack}";
+            if (currentEnemy.HasActionPattern)
+            {
+                turnText.text = $"{currentEnemy.TurnsUntilAction}";
+                turnText.gameObject.SetActive(true);
+            }
+            else
+            {
+                turnText.gameObject.SetActive(false);
+            }
         }
 
         /// <summary>

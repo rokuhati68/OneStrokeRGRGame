@@ -23,6 +23,7 @@ namespace OneStrokeRGR.Sound
         public AudioClip getPowerSE;
         public AudioClip getGoldSE;
         public AudioClip getHealSE;
+        public AudioClip enemyActionSE;
 
         [Range(0f, 1f)]
         public float seVolume = 1f;
@@ -127,7 +128,10 @@ namespace OneStrokeRGR.Sound
         {
             PlaySE(getHealSE);
         }
-
+        public void PlayEnemyActionSE()
+        {
+            PlaySE(enemyActionSE);
+        }
         private void PlaySE(AudioClip clip)
         {
             if (clip == null) return;

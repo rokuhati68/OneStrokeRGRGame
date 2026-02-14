@@ -35,9 +35,6 @@ namespace OneStrokeRGR.Config
         [Tooltip("ボスが出現するステージ間隔（デフォルト: 10）")]
         public int bossStageInterval = 10;
 
-        [Tooltip("ボスの行動間隔（デフォルト: 3ターン）")]
-        public int bossActionInterval = 3;
-
         private void OnValidate()
         {
             // 出現率の合計が1.0になっているか警告

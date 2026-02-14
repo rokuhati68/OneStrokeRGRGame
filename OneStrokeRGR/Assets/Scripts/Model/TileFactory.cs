@@ -120,7 +120,7 @@ namespace OneStrokeRGR.Model
         /// <param name="type">タイルの種類</param>
         /// <param name="config">タイル生成設定（値範囲の取得に使用）</param>
         /// <returns>生成されたタイル</returns>
-        public static Tile CreateTileByType(TileType type, Config.TileSpawnConfig config)
+        public static Tile CreateTileByType(TileType type, Config.TileSpawnConfig config, int decreaseValue)
         {
             switch (type)
             {
@@ -131,6 +131,8 @@ namespace OneStrokeRGR.Model
                     int attackValue = config != null
                         ? Random.Range(config.attackBoostRange.x, config.attackBoostRange.y + 1)
                         : 1;
+                    if(decreaseValue != null)
+                        attackValue = Mathf.Max(1,attackValue - decreaseValue);
                     return new AttackBoostTile(attackValue);
 
                 case TileType.HPRecovery:
@@ -140,6 +142,8 @@ namespace OneStrokeRGR.Model
                     int goldValue = config != null
                         ? Random.Range(config.goldRange.x, config.goldRange.y + 1)
                         : 1;
+                    if(decreaseValue != null)
+                        goldValue = Mathf.Max(1,goldValue - decreaseValue);
                     return new GoldTile(goldValue);
 
                 case TileType.Thorn:

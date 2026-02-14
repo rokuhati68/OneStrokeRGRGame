@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using OneStrokeRGR.Config;
 
 namespace OneStrokeRGR.Model
 {
@@ -13,7 +15,8 @@ namespace OneStrokeRGR.Model
         private int attackPower;
         private Vector2Int position;
         private bool isBoss;
-        private int bossActionInterval = 3;
+        private List<EnemyActionEntry> actionPattern;
+        private int currentActionIndex = 0;
         private int turnsSinceLastAction = 0;
 
         /// <summary>最大HP</summary>
@@ -32,11 +35,14 @@ namespace OneStrokeRGR.Model
             set => position = value;
         }
 
-        /// <summary>ボスかどうか（要件: 6.1）</summary>
+        /// <summary>ボスかどうか（要件: 6.1、真ん中に配置用）</summary>
         public bool IsBoss => isBoss;
 
-        /// <summary>ボスの行動間隔（要件: 6.2）</summary>
-        public int BossActionInterval => bossActionInterval;
+        /// <summary>行動パターンを持っているか</summary>
+        public bool HasActionPattern => actionPattern != null && actionPattern.Count > 0;
+
+        /// <summary>現在の行動インデックス</summary>
+        public int CurrentActionIndex => currentActionIndex;
 
         /// <summary>前回の行動からのターン数</summary>
         public int TurnsSinceLastAction
@@ -45,15 +51,27 @@ namespace OneStrokeRGR.Model
             set => turnsSinceLastAction = value;
         }
 
+        /// <summary>現在の行動の発動までの残りターン数</summary>
+        public int TurnsUntilAction
+        {
+            get
+            {
+                if (!HasActionPattern) return 0;
+                var current = actionPattern[currentActionIndex];
+                int remaining = current.turnCount - turnsSinceLastAction;
+                return remaining > 0 ? remaining : 0;
+            }
+        }
+
         /// <summary>
         /// Enemyのコンストラクタ
         /// 要件: 13.1, 13.4, 13.5
         /// </summary>
         /// <param name="hp">HP</param>
         /// <param name="attack">攻撃力（1-4に制限される）</param>
-        /// <param name="boss">ボスフラグ</param>
-        /// <param name="actionInterval">ボスの行動間隔（デフォルト: 3）</param>
-        public Enemy(int hp, int attack, bool boss = false, int actionInterval = 3)
+        /// <param name="boss">ボスフラグ（真ん中配置用）</param>
+        /// <param name="actions">行動パターンリスト</param>
+        public Enemy(int hp, int attack, bool boss = false, List<EnemyActionEntry> actions = null)
         {
             maxHP = hp;
             currentHP = hp;
@@ -66,11 +84,14 @@ namespace OneStrokeRGR.Model
             }
 
             isBoss = boss;
-            bossActionInterval = actionInterval;
+            actionPattern = actions;
+            currentActionIndex = 0;
             turnsSinceLastAction = 0;
             position = Vector2Int.zero;
 
-            Debug.Log($"Enemy生成: HP={maxHP}, 攻撃={attackPower}, ボス={isBoss}");
+            string typeLabel = boss ? "ボス" : "通常敵";
+            string actionInfo = HasActionPattern ? $", 行動パターン={actionPattern.Count}個" : "";
+            Debug.Log($"Enemy生成: {typeLabel} HP={maxHP}, 攻撃={attackPower}{actionInfo}");
         }
 
         /// <summary>
@@ -99,7 +120,7 @@ namespace OneStrokeRGR.Model
         }
 
         /// <summary>
-        /// HPを回復する（ボスの自己回復用）
+        /// HPを回復する
         /// 要件: 6.3
         /// </summary>
         /// <param name="amount">回復量</param>
@@ -133,27 +154,39 @@ namespace OneStrokeRGR.Model
         }
 
         /// <summary>
-        /// ボスが特殊行動を実行すべきか判定
-        /// 要件: 6.2
+        /// 敵が行動を実行すべきか判定
+        /// 行動パターンがない場合はfalseを返す
         /// </summary>
-        /// <returns>特殊行動を実行すべき場合true</returns>
-        public bool ShouldPerformBossAction()
+        /// <returns>行動を実行すべき場合true</returns>
+        public bool ShouldPerformAction()
         {
-            if (!isBoss)
-            {
-                return false;
-            }
+            if (!HasActionPattern) return false;
 
-            return turnsSinceLastAction >= bossActionInterval;
+            var currentAction = actionPattern[currentActionIndex];
+            return turnsSinceLastAction >= currentAction.turnCount;
         }
 
         /// <summary>
-        /// ボスの行動カウンターをリセット
+        /// 現在の行動エントリを取得
         /// </summary>
-        public void ResetBossActionCounter()
+        /// <returns>現在の行動エントリ、パターンがない場合はnull</returns>
+        public EnemyActionEntry GetCurrentAction()
         {
+            if (!HasActionPattern) return null;
+            return actionPattern[currentActionIndex];
+        }
+
+        /// <summary>
+        /// 次の行動に進める（サイクル：最後まで行ったら最初に戻る）
+        /// </summary>
+        public void AdvanceToNextAction()
+        {
+            if (!HasActionPattern) return;
+
             turnsSinceLastAction = 0;
-            Debug.Log("Enemy: ボス行動カウンターをリセット");
+            currentActionIndex = (currentActionIndex + 1) % actionPattern.Count;
+
+            Debug.Log($"Enemy: 次の行動へ（{currentActionIndex + 1}/{actionPattern.Count}）");
         }
     }
 }

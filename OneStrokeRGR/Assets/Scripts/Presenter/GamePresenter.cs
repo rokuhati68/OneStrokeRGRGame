@@ -286,7 +286,7 @@ namespace OneStrokeRGR.Presenter
                 Vector2Int enemyPos = undecidedPositions[randomIndex];
 
                 // EnemyDataの設定から敵を生成
-                Enemy enemy = new Enemy(data.maxHP, data.attackPower, data.isBoss, gameConfig.bossActionInterval);
+                Enemy enemy = new Enemy(data.maxHP, data.attackPower, data.isBoss, data.actionPattern);
                 enemy.Position = enemyPos;
                 gameState.Board.AddEnemy(enemy);
 
@@ -551,11 +551,8 @@ namespace OneStrokeRGR.Presenter
                 return;
             }
 
-            // ボス行動フェーズ
-            if (gameState.IsBossStage())
-            {
-                await HandleBossActionPhase();
-            }
+            // 敵行動フェーズ（行動パターンを持つ敵がいる場合）
+            await HandleEnemyActionPhase();
 
             // ステージクリアチェック
             if (gameState.Board.GetEnemies().Count == 0)
@@ -570,25 +567,63 @@ namespace OneStrokeRGR.Presenter
         }
 
         /// <summary>
-        /// ボス行動フェーズ
-        /// 要件: 6.2, 6.3
+        /// 敵行動フェーズ
+        /// 行動パターンを持つ全ての敵のターンを進行し、行動を実行する
+        /// Board描画完了後、1秒待機してからアニメーション付きでタイルを更新する
         /// </summary>
-        public async UniTask HandleBossActionPhase()
+        public async UniTask HandleEnemyActionPhase()
         {
-            Debug.Log("GamePresenter: ボス行動フェーズ");
+            var enemies = gameState.Board.GetEnemies();
+            var actionEnemies = enemies.FindAll(e => e.HasActionPattern && e.IsAlive());
+
+            if (actionEnemies.Count == 0) return;
+
+            Debug.Log("GamePresenter: 敵行動フェーズ");
             gameState.CurrentPhase = GamePhase.BossAction;
 
-            // ボスを探す
-            var enemies = gameState.Board.GetEnemies();
-            Enemy boss = enemies.Find(e => e.IsBoss);
-
-            if (boss != null)
+            foreach (var enemy in actionEnemies)
             {
                 // ターン数を増加
-                boss.TurnsSinceLastAction++;
+                enemy.TurnsSinceLastAction++;
 
-                // ボス行動を実行
-                await bossPresenter.ExecuteBossAction(boss);
+                // 敵行動を実行（データのみ変更、UIはまだ更新しない）
+                List<Vector2Int> changedPositions = await bossPresenter.ExecuteEnemyAction(enemy);
+
+                if (changedPositions != null)
+                {
+                    // 1秒待機（新しいBoardが描画された後に演出開始）
+                    await UniTask.Delay(1000);
+
+                    // SE再生
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlayEnemyActionSE();
+                    }
+
+                    // 変更されたタイルをアニメーション付きで更新
+                    if (boardView != null && changedPositions.Count > 0)
+                    {
+                        await boardView.UpdateTiles(changedPositions, gameState.Board);
+                    }
+
+                    // プレイヤー情報を更新（攻撃でHP変化の可能性）
+                    if (uiView != null)
+                    {
+                        uiView.UpdatePlayerInfo(gameState.Player);
+                    }
+                }
+
+                // バトルUIの敵情報を更新（ターン表示含む）
+                if (battleUIView != null)
+                {
+                    battleUIView.UpdateAllEnemyDisplays();
+                }
+
+                // 行動後にプレイヤーが死亡した場合は中断
+                if (!gameState.Player.IsAlive())
+                {
+                    break;
+                }
             }
 
             await UniTask.Yield();
