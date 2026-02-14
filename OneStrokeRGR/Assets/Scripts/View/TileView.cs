@@ -212,7 +212,7 @@ namespace OneStrokeRGR.View
         public void PlayAppearAnimation()
         {
             transform.localScale = Vector3.zero;
-            transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+            transform.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutBack);
 
             var canvasGroup = GetComponent<CanvasGroup>();
             if (canvasGroup != null)
@@ -233,11 +233,11 @@ namespace OneStrokeRGR.View
             var canvasGroup = GetComponent<CanvasGroup>();
             if (canvasGroup != null)
             {
-                await canvasGroup.DOFade(0f, 0.2f).AsyncWaitForCompletion();
+                await canvasGroup.DOFade(0f, 0.4f).AsyncWaitForCompletion();
             }
             else
             {
-                await UniTask.Delay(200);
+                await UniTask.Delay(400);
             }
         }
 
