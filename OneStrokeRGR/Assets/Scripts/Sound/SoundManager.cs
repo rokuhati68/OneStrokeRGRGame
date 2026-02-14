@@ -24,6 +24,8 @@ namespace OneStrokeRGR.Sound
         public AudioClip getGoldSE;
         public AudioClip getHealSE;
         public AudioClip enemyActionSE;
+        public AudioClip takeDamage;
+        public AudioClip pushButton;
 
         [Range(0f, 1f)]
         public float seVolume = 1f;
