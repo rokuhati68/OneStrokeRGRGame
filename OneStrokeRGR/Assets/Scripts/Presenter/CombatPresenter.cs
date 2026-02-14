@@ -70,16 +70,8 @@ namespace OneStrokeRGR.Presenter
             // コンボトラッカーの初期化
             ComboTracker comboTracker = new ComboTracker();
 
-            // 移動による攻撃力増加（要件: 2.1）
-            gameState.Player.IncreaseAttackPower(path.Count);
-
-            // 一筆書きボーナスの適用（要件: 2.4）
-            if (path.Count == Board.BoardSize * Board.BoardSize)
-            {
-                ApplyOneStrokeBonus(path.Count, gameState.Player);
-            }
-
             // パス上の各マスを順次処理（要件: 1.5）
+            // 攻撃力はマスを踏むごとに加算される
             List<Vector2Int> visitedPositions = new List<Vector2Int>();
             List<Enemy> survivingEnemies = new List<Enemy>(); // 生き残った敵を記録
 
@@ -98,6 +90,19 @@ namespace OneStrokeRGR.Presenter
                 if (OnPlayerMoveTo != null)
                 {
                     await OnPlayerMoveTo(pos);
+                }
+
+                // マスに乗った時の攻撃力加算（効果なしマス: +1、攻撃マス: ApplyEffectで加算）
+                if (tile.Type == TileType.Empty)
+                {
+                    gameState.Player.IncreaseAttackPower(1);
+                }
+
+                // 一筆書きボーナス：全マスを通って最後のマスに着いた時（要件: 2.4）
+                bool isLastTile = (i == path.Count - 1);
+                if (isLastTile && path.Count == Board.BoardSize * Board.BoardSize)
+                {
+                    ApplyOneStrokeBonus(path.Count, gameState.Player);
                 }
 
                 // 敵タイルの場合、処理前に敵を記録
