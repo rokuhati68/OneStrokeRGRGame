@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using OneStrokeRGR.Model;
+using OneStrokeRGR.Config;
 
 namespace OneStrokeRGR.View
 {
@@ -26,9 +27,15 @@ namespace OneStrokeRGR.View
         [Header("ボス表示")]
         public GameObject bossIndicator;
         public TextMeshProUGUI AtkText;
+        public Image Skillimage;
+
+        [Header("行動アイコン設定")]
+        [Tooltip("BossActionType ごとのアイコンを設定した ScriptableObject")]
+        public BossActionIconConfig bossActionIconConfig;
 
         private Enemy currentEnemy;
         private float maxBarWidth;
+        private int previousTurnsUntilAction = -1;
 
         private void Awake()
         {
@@ -49,6 +56,7 @@ namespace OneStrokeRGR.View
         public void SetEnemy(Enemy enemy, Sprite enemySprite = null)
         {
             currentEnemy = enemy;
+            previousTurnsUntilAction = -1; // 新しい敵なので比較リセット
 
             // CanvasGroupのalphaをリセット（PlayDefeatAnimationで0にされるため）
             var canvasGroup = GetComponent<CanvasGroup>();
@@ -94,6 +102,7 @@ namespace OneStrokeRGR.View
 
             UpdateHPBar();
             UpdateTurnDisplay();
+            UpdateSkillImage();
         }
 
         /// <summary>
@@ -127,7 +136,7 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
-        /// 攻撃ターン表示を更新
+        /// 攻撃ターン表示を更新（値変化時にアニメーション）
         /// 行動パターンを持つ全ての敵に対応
         /// </summary>
         private void UpdateTurnDisplay()
@@ -136,12 +145,65 @@ namespace OneStrokeRGR.View
 
             if (currentEnemy.HasActionPattern)
             {
-                turnText.text = $"{currentEnemy.TurnsUntilAction}";
+                int current = currentEnemy.TurnsUntilAction;
+                turnText.text = $"{current}";
                 turnText.gameObject.SetActive(true);
+
+                if (previousTurnsUntilAction >= 0 && current != previousTurnsUntilAction)
+                {
+                    if (current < previousTurnsUntilAction)
+                    {
+                        // カウントダウン減少：黄色フラッシュ＋縮小バウンス
+                        DOTween.Kill(turnText);
+                        Color original = turnText.color;
+                        turnText.DOColor(new Color(1f, 0.8f, 0f), 0.15f)
+                            .SetLoops(2, LoopType.Yoyo)
+                            .OnComplete(() => turnText.color = original);
+                        turnText.transform.DOPunchScale(Vector3.one * 0.4f, 0.35f);
+                    }
+                    else
+                    {
+                        // 次の攻撃カウント開始：シアン→白フラッシュ＋大きくポップイン
+                        DOTween.Kill(turnText);
+                        Color original = turnText.color;
+                        turnText.DOColor(new Color(0.3f, 1f, 1f), 0.15f)
+                            .SetLoops(2, LoopType.Yoyo)
+                            .OnComplete(() => turnText.color = original);
+                        turnText.transform.DOPunchScale(Vector3.one * 0.6f, 0.4f).SetEase(Ease.OutBack);
+                    }
+                }
+
+                previousTurnsUntilAction = current;
             }
             else
             {
                 turnText.gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// 現在の行動に対応するスキル画像を更新
+        /// </summary>
+        private void UpdateSkillImage()
+        {
+            if (Skillimage == null || bossActionIconConfig == null) return;
+
+            EnemyActionEntry action = currentEnemy.GetCurrentAction();
+            if (action == null)
+            {
+                Skillimage.gameObject.SetActive(false);
+                return;
+            }
+
+            Sprite icon = bossActionIconConfig.GetIcon(action.actionType);
+            if (icon != null)
+            {
+                Skillimage.sprite = icon;
+                Skillimage.gameObject.SetActive(true);
+            }
+            else
+            {
+                Skillimage.gameObject.SetActive(false);
             }
         }
 

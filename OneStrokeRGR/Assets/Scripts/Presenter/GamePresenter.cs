@@ -625,6 +625,13 @@ namespace OneStrokeRGR.Presenter
                 // ターン数を増加
                 enemy.TurnsSinceLastAction++;
 
+                // カウントダウン減少をすぐ画面に反映
+                if (battleUIView != null)
+                {
+                    battleUIView.UpdateAllEnemyDisplays();
+                }
+                await UniTask.Delay(300);
+
                 // 敵行動を実行（データのみ変更、UIはまだ更新しない）
                 List<Vector2Int> changedPositions = await bossPresenter.ExecuteEnemyAction(enemy);
 
