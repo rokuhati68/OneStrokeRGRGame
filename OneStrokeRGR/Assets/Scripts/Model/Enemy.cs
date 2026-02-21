@@ -12,7 +12,7 @@ namespace OneStrokeRGR.Model
     {
         private int maxHP;
         private int currentHP;
-        private int attackPower;
+        public int attackPower;
         private Vector2Int position;
         private bool isBoss;
         private List<EnemyActionEntry> actionPattern;

@@ -25,6 +25,7 @@ namespace OneStrokeRGR.View
 
         [Header("ボス表示")]
         public GameObject bossIndicator;
+        public TextMeshProUGUI AtkText;
 
         private Enemy currentEnemy;
         private float maxBarWidth;
@@ -71,7 +72,7 @@ namespace OneStrokeRGR.View
                     enemyImage.enabled = true;
                 }
             }
-
+            AtkText.text = enemy.attackPower.ToString();
             // ボスインジケーター
             if (bossIndicator != null)
             {
