@@ -239,5 +239,32 @@ namespace OneStrokeRGR.View
                 battlePanel.SetActive(visible);
             }
         }
+
+        /// <summary>
+        /// 指定した敵に対応するスロットの矢印ハイライトを表示（他はクリア）
+        /// </summary>
+        public void HighlightEnemy(Enemy enemy)
+        {
+            for (int i = 0; i < enemyStatusViews.Length; i++)
+            {
+                if (enemyStatusViews[i] == null) continue;
+                bool isTarget = enemyStatusViews[i].GetEnemy() == enemy;
+                enemyStatusViews[i].SetHighlighted(isTarget);
+            }
+        }
+
+        /// <summary>
+        /// 全スロットのハイライト矢印をクリア
+        /// </summary>
+        public void ClearAllHighlights()
+        {
+            foreach (var statusView in enemyStatusViews)
+            {
+                if (statusView != null)
+                {
+                    statusView.SetHighlighted(false);
+                }
+            }
+        }
     }
 }

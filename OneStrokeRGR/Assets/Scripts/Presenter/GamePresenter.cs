@@ -169,6 +169,19 @@ namespace OneStrokeRGR.Presenter
                 pathDrawingView.Initialize(pathPresenter, gameState);
             }
 
+            // 敵タイルクリック → ハイライト
+            if (pathDrawingView != null && battleUIView != null)
+            {
+                pathDrawingView.OnEnemyTileClicked = (enemy) =>
+                {
+                    battleUIView.HighlightEnemy(enemy);
+                };
+                pathDrawingView.OnPathDrawingStarted = () =>
+                {
+                    battleUIView.ClearAllHighlights();
+                };
+            }
+
             if (rewardView != null && rewardPresenter != null)
             {
                 rewardPresenter.SetRewardView(rewardView);

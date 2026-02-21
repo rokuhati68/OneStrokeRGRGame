@@ -33,9 +33,14 @@ namespace OneStrokeRGR.View
         [Tooltip("BossActionType ごとのアイコンを設定した ScriptableObject")]
         public BossActionIconConfig bossActionIconConfig;
 
+        [Header("ハイライト矢印")]
+        [Tooltip("Hierarchy上に配置済みの矢印Imageオブジェクト")]
+        public GameObject highlightArrow;
+
         private Enemy currentEnemy;
         private float maxBarWidth;
         private int previousTurnsUntilAction = -1;
+        private Vector3 highlightArrowInitialLocalPos;
 
         private void Awake()
         {
@@ -47,6 +52,12 @@ namespace OneStrokeRGR.View
             if (bossIndicator != null)
             {
                 bossIndicator.SetActive(false);
+            }
+
+            if (highlightArrow != null)
+            {
+                highlightArrowInitialLocalPos = highlightArrow.transform.localPosition;
+                highlightArrow.SetActive(false);
             }
         }
 
@@ -249,6 +260,8 @@ namespace OneStrokeRGR.View
         /// </summary>
         public void PlayDefeatAnimation()
         {
+            SetHighlighted(false);
+
             if (enemyImage != null)
             {
                 // フェードアウト + 縮小
@@ -269,10 +282,34 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
+        /// ハイライト矢印の表示/非表示（上下ボブアニメーション付き）
+        /// </summary>
+        public void SetHighlighted(bool highlighted)
+        {
+            if (highlightArrow == null) return;
+
+            highlightArrow.transform.DOKill();
+
+            if (highlighted)
+            {
+                highlightArrow.transform.localPosition = highlightArrowInitialLocalPos;
+                highlightArrow.SetActive(true);
+                highlightArrow.transform.DOLocalMoveY(highlightArrowInitialLocalPos.y + 8f, 0.5f)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetEase(Ease.InOutSine);
+            }
+            else
+            {
+                highlightArrow.SetActive(false);
+            }
+        }
+
+        /// <summary>
         /// 表示をクリア
         /// </summary>
         public void Clear()
         {
+            SetHighlighted(false);
             currentEnemy = null;
             gameObject.SetActive(false);
         }

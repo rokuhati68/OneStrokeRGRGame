@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Model;
 using OneStrokeRGR.Presenter;
@@ -34,6 +35,12 @@ namespace OneStrokeRGR.View
         public Color validPathColor = Color.cyan;
         public Color invalidPathColor = Color.red;
         public float lineWidth = 8f;
+
+        /// <summary>敵タイルがクリックされたときのコールバック（敵オブジェクトを渡す）</summary>
+        public Action<Enemy> OnEnemyTileClicked;
+
+        /// <summary>パス描画が実際に開始されたときのコールバック</summary>
+        public Action OnPathDrawingStarted;
 
         private List<Vector2Int> currentPath = new List<Vector2Int>();
         private List<GameObject> lineSegments = new List<GameObject>();
@@ -167,6 +174,20 @@ namespace OneStrokeRGR.View
             // マウスボタンが押された
             if (Input.GetMouseButtonDown(0))
             {
+                Vector2Int? tilePos = GetTileAtMousePosition();
+
+                // 敵タイルをクリック（プレイヤー位置以外）→ ハイライトコールバック
+                if (tilePos.HasValue && tilePos.Value != playerPosition && boardView != null)
+                {
+                    TileView tileView = boardView.GetTileView(tilePos.Value);
+                    Tile tile = tileView?.GetTileData();
+                    if (tile is EnemyTile enemyTile)
+                    {
+                        OnEnemyTileClicked?.Invoke(enemyTile.Enemy);
+                        return;
+                    }
+                }
+
                 Debug.Log($"PathDrawingView: マウスクリック検出 - IsPointerOverUI: {IsPointerOverUI()}");
                 if (!IsPointerOverUI())
                 {
@@ -174,8 +195,6 @@ namespace OneStrokeRGR.View
                 }
                 else
                 {
-                    // UI要素の上なので、タイルをチェック
-                    Vector2Int? tilePos = GetTileAtMousePosition();
                     Debug.Log($"PathDrawingView: タイル位置検出 - {tilePos}");
                     if (tilePos.HasValue)
                     {
@@ -216,6 +235,7 @@ namespace OneStrokeRGR.View
                 if (tilePos.Value == playerPosition)
                 {
                     currentPath.Add(tilePos.Value);
+                    OnPathDrawingStarted?.Invoke();
                     UpdatePathVisualization();
                     Debug.Log($"PathDrawingView: パス描画開始 - {tilePos.Value}");
                 }
