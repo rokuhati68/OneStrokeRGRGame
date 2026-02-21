@@ -30,6 +30,10 @@ namespace OneStrokeRGR.View
         public float tileSpacing = 10f;
         public float tileSize = 100f;
 
+        [Header("動的生成テキスト用フォント")]
+        [Tooltip("日本語対応 TMP フォントアセットをアサインしてください")]
+        public TMP_FontAsset japaneseFont;
+
         private TileView[,] tileViews = new TileView[Board.BoardSize, Board.BoardSize];
         private GameObject playerIconObject;
 
@@ -175,6 +179,7 @@ namespace OneStrokeRGR.View
             comboObj.transform.SetParent(transform.parent, false);
 
             var text = comboObj.AddComponent<TextMeshProUGUI>();
+            if (japaneseFont != null) text.font = japaneseFont;
             text.text = $"{comboCount}Combo!";
             text.fontSize = 28;
             text.fontStyle = FontStyles.Bold;

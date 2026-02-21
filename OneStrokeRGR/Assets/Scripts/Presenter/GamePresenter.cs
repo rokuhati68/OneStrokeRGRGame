@@ -127,6 +127,17 @@ namespace OneStrokeRGR.Presenter
                 }
             };
 
+            // 一筆書きボーナス演出（バナー＋大オーブ）
+            combatPresenter.OnOneStrokeBonusAchieved = async () =>
+            {
+                if (uiView != null && boardView != null)
+                {
+                    TileView tileView = boardView.GetTileView(gameState.Player.Position);
+                    Vector3 sourcePos = tileView != null ? tileView.transform.position : Vector3.zero;
+                    await uiView.ShowOneStrokeBonusEffect(sourcePos);
+                }
+            };
+
             // タイル種別SE
             combatPresenter.OnTileProcessed = (tileType) =>
             {

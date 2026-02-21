@@ -30,6 +30,10 @@ namespace OneStrokeRGR.View
         public float flyingDuration = 0.4f;
         public float orbSize = 30f;
 
+        [Header("動的生成テキスト用フォント")]
+        [Tooltip("日本語対応 TMP フォントアセットをアサインしてください")]
+        public TMP_FontAsset japaneseFont;
+
         [Header("ゲームオーバー画面")]
         public GameObject gameOverPanel;
         public TextMeshProUGUI gameOverText;
@@ -89,7 +93,7 @@ namespace OneStrokeRGR.View
         {
             if (stageText != null)
             {
-                stageText.text = $"Stage　{stage}";
+                stageText.text = $"Stage  {stage}";
 
                 // ステージ変更時のアニメーション
                 stageText.transform.DOPunchScale(Vector3.one * 0.2f, 0.5f);
@@ -242,6 +246,95 @@ namespace OneStrokeRGR.View
                     attackPowerText.color = originalColor;
                 });
             }
+        }
+
+        /// <summary>
+        /// 一筆書きボーナス演出：バナー表示 → 大オーブがAtkへ山なり飛行
+        /// </summary>
+        public async UniTask ShowOneStrokeBonusEffect(Vector3 sourceWorldPos)
+        {
+            await ShowOneStrokeBanner();
+            await PlayBonusOrbToAtk(sourceWorldPos);
+        }
+
+        private async UniTask ShowOneStrokeBanner()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+
+            GameObject bannerObj = new GameObject("OneStrokeBanner");
+            bannerObj.transform.SetParent(canvas.transform, false);
+            bannerObj.transform.SetAsLastSibling();
+
+            var text = bannerObj.AddComponent<TextMeshProUGUI>();
+            if (japaneseFont != null) text.font = japaneseFont;
+            text.text = "一筆書きボーナス！";
+            text.fontSize = 64;
+            text.fontStyle = FontStyles.Bold;
+            text.alignment = TextAlignmentOptions.Center;
+            text.raycastTarget = false;
+            text.outlineWidth = 0.2f;
+            text.outlineColor = new Color32(0, 0, 0, 255);
+
+            var rect = bannerObj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(700f, 130f);
+            rect.anchoredPosition = Vector2.zero;
+
+            text.color = new Color(1f, 0.9f, 0.1f, 0f);
+            bannerObj.transform.localScale = Vector3.one * 0.5f;
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(text.DOFade(1f, 0.25f));
+            seq.Join(bannerObj.transform.DOScale(Vector3.one * 1.15f, 0.25f).SetEase(Ease.OutBack));
+            seq.AppendInterval(0.7f);
+            seq.Append(text.DOFade(0f, 0.25f));
+            seq.Join(bannerObj.transform.DOScale(Vector3.one * 1.4f, 0.25f).SetEase(Ease.InQuad));
+
+            await seq.AsyncWaitForCompletion();
+            if (bannerObj != null) Destroy(bannerObj);
+        }
+
+        private async UniTask PlayBonusOrbToAtk(Vector3 sourceWorldPos)
+        {
+            if (attackPowerText == null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+
+            GameObject orb = new GameObject("BonusOrb");
+            orb.transform.SetParent(canvas.transform, false);
+            orb.transform.SetAsLastSibling();
+
+            Image orbImage = orb.AddComponent<Image>();
+            if (flyingOrbSprite != null)
+                orbImage.sprite = flyingOrbSprite;
+            orbImage.color = new Color(1f, 0.75f, 0f, 1f);
+            orbImage.raycastTarget = false;
+
+            float bonusOrbSize = orbSize * 3.5f;
+            RectTransform orbRect = orb.GetComponent<RectTransform>();
+            orbRect.sizeDelta = new Vector2(bonusOrbSize, bonusOrbSize);
+            orb.transform.position = sourceWorldPos;
+
+            Vector3 start = sourceWorldPos;
+            Vector3 end = attackPowerText.rectTransform.position;
+            Vector3 control = (start + end) * 0.5f + new Vector3(0f, 280f, 0f);
+
+            float duration = flyingDuration * 3f;
+            await DOVirtual.Float(0f, 1f, duration, (t) =>
+            {
+                if (orb == null) return;
+                // 2次ベジェ曲線で山なり軌道
+                Vector3 pos = (1 - t) * (1 - t) * start
+                            + 2 * (1 - t) * t * control
+                            + t * t * end;
+                orb.transform.position = pos;
+                // 着地に向けて縮小
+                float scale = Mathf.Lerp(1f, 0.15f, t * t);
+                orb.transform.localScale = Vector3.one * scale;
+            }).AsyncWaitForCompletion();
+
+            if (orb != null) Destroy(orb);
         }
 
         /// <summary>

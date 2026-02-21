@@ -56,6 +56,12 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public Action<int> OnComboAchieved { get; set; }
 
+        /// <summary>
+        /// 一筆書きボーナス達成時に呼ばれるコールバック
+        /// バナー表示・大オーブ演出に使用
+        /// </summary>
+        public Func<UniTask> OnOneStrokeBonusAchieved { get; set; }
+
         public CombatPresenter(GameState state)
         {
             gameState = state;
@@ -114,7 +120,13 @@ namespace OneStrokeRGR.Presenter
                 bool isLastTile = (i == path.Count - 1);
                 if (isLastTile && path.Count == Board.BoardSize * Board.BoardSize)
                 {
+                    // ① ボーナス値をモデルに適用
                     ApplyOneStrokeBonus(path.Count, gameState.Player);
+                    // ② バナー＋大オーブ演出（await で敵攻撃より前に完了）
+                    if (OnOneStrokeBonusAchieved != null)
+                    {
+                        await OnOneStrokeBonusAchieved();
+                    }
                 }
 
                 // 敵タイルの場合、処理前に敵を記録
