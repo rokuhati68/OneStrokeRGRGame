@@ -24,8 +24,8 @@ namespace OneStrokeRGR.Sound
         public AudioClip getGoldSE;
         public AudioClip getHealSE;
         public AudioClip enemyActionSE;
-        public AudioClip takeDamage;
-        public AudioClip pushButton;
+        public AudioClip pushButtonSE;
+        public AudioClip takeDamageSE;
 
         [Range(0f, 1f)]
         public float seVolume = 1f;
@@ -77,7 +77,6 @@ namespace OneStrokeRGR.Sound
         {
             PlayBGM(bossBGM);
         }
-
         private void PlayBGM(AudioClip clip)
         {
             if (clip == null) return;
@@ -133,6 +132,11 @@ namespace OneStrokeRGR.Sound
         public void PlayEnemyActionSE()
         {
             PlaySE(enemyActionSE);
+        }
+
+        public void PlayTakeDamageSE()
+        {
+            PlaySE(takeDamageSE);
         }
         private void PlaySE(AudioClip clip)
         {

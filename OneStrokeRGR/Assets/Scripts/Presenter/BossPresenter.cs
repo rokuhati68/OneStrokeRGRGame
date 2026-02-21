@@ -172,34 +172,125 @@ namespace OneStrokeRGR.Presenter
         }
 
         /// <summary>
-        /// 壁マスを生成
+        /// 壁マスを生成（連結性を保ちながら1個ずつ設置）
+        /// 各壁について最大MaxAttemptsPerWall回候補を試し、すべて連結を崩す場合はスキップ
         /// </summary>
         /// <returns>変更されたタイル位置のリスト</returns>
         private List<Vector2Int> SpawnWallTiles(int count)
         {
             List<Vector2Int> changed = new List<Vector2Int>();
-            List<Vector2Int> emptyPositions = FindPositions(TileType.Empty);
+            const int MaxAttemptsPerWall = 5;
 
-            if (emptyPositions.Count == 0)
+            for (int i = 0; i < count; i++)
             {
-                Debug.LogWarning("BossPresenter: 空きマスがありません");
-                return changed;
+                // 現在の空きマス候補を取得（前の設置を反映するため毎回取得）
+                List<Vector2Int> candidates = FindPositions(TileType.Empty);
+                // プレイヤー位置は除外
+                candidates.Remove(gameState.Player.Position);
+                if (candidates.Count == 0)
+                {
+                    Debug.LogWarning("BossPresenter: 空きマスがありません");
+                    break;
+                }
+
+                // シャッフルして上位 MaxAttemptsPerWall 個を試行
+                ShuffleCandidates(candidates);
+                int attempts = Mathf.Min(MaxAttemptsPerWall, candidates.Count);
+                bool placed = false;
+
+                for (int a = 0; a < attempts; a++)
+                {
+                    Vector2Int pos = candidates[a];
+                    if (IsConnectedAfterPlacingWall(pos))
+                    {
+                        gameState.Board.SetTile(pos, TileFactory.CreateWallTile());
+                        changed.Add(pos);
+                        placed = true;
+                        break;
+                    }
+                }
+
+                if (!placed)
+                {
+                    Debug.Log($"BossPresenter: 壁マス{i + 1}個目は連結を保てないためスキップ");
+                }
             }
 
-            int spawnCount = Mathf.Min(count, emptyPositions.Count);
-            for (int i = 0; i < spawnCount; i++)
-            {
-                int randomIndex = Random.Range(0, emptyPositions.Count);
-                Vector2Int pos = emptyPositions[randomIndex];
-                emptyPositions.RemoveAt(randomIndex);
-
-                WallTile wallTile = TileFactory.CreateWallTile();
-                gameState.Board.SetTile(pos, wallTile);
-                changed.Add(pos);
-            }
-
-            Debug.Log($"BossPresenter: 壁マスを{changed.Count}個生成");
+            Debug.Log($"BossPresenter: 壁マスを{changed.Count}個生成（要求{count}個）");
             return changed;
+        }
+
+        /// <summary>
+        /// 指定位置に壁を仮置きしたとき、非壁マスが1つの連結成分になっているかBFSで確認
+        /// </summary>
+        private bool IsConnectedAfterPlacingWall(Vector2Int wallPos)
+        {
+            // 通過可能マス（Wall以外）の総数と開始点を収集
+            int totalPassable = 0;
+            Vector2Int? start = null;
+
+            for (int x = 0; x < Board.BoardSize; x++)
+            {
+                for (int y = 0; y < Board.BoardSize; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (pos == wallPos) continue; // 仮想壁として扱う
+
+                    Tile tile = gameState.Board.GetTile(pos);
+                    if (tile != null && tile.Type != TileType.Wall)
+                    {
+                        totalPassable++;
+                        if (start == null) start = pos;
+                    }
+                }
+            }
+
+            if (totalPassable == 0) return true;
+            if (start == null) return true;
+
+            // BFS で到達可能数をカウント
+            var visited = new HashSet<Vector2Int>();
+            var queue = new Queue<Vector2Int>();
+            queue.Enqueue(start.Value);
+            visited.Add(start.Value);
+
+            Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+            while (queue.Count > 0)
+            {
+                Vector2Int cur = queue.Dequeue();
+                foreach (var dir in directions)
+                {
+                    Vector2Int next = cur + dir;
+                    if (!gameState.Board.IsValidPosition(next)) continue;
+                    if (next == wallPos) continue; // 仮想壁
+                    if (visited.Contains(next)) continue;
+
+                    Tile tile = gameState.Board.GetTile(next);
+                    if (tile != null && tile.Type != TileType.Wall)
+                    {
+                        visited.Add(next);
+                        queue.Enqueue(next);
+                    }
+                }
+            }
+
+            // 到達可能数 == 全通過可能数 なら連結
+            return visited.Count == totalPassable;
+        }
+
+        /// <summary>
+        /// Fisher-Yates アルゴリズムでリストをシャッフル
+        /// </summary>
+        private void ShuffleCandidates(List<Vector2Int> list)
+        {
+            for (int i = list.Count - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                Vector2Int temp = list[i];
+                list[i] = list[j];
+                list[j] = temp;
+            }
         }
 
         /// <summary>
