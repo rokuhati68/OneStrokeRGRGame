@@ -571,7 +571,7 @@ namespace OneStrokeRGR.Presenter
 
             // 敵行動フェーズ（行動パターンを持つ敵がいる場合）
             await HandleEnemyActionPhase();
-
+            Debug.Log("EnemyTurnEnd");
             // ステージクリアチェック
             if (gameState.Board.GetEnemies().Count == 0)
             {
@@ -579,6 +579,7 @@ namespace OneStrokeRGR.Presenter
             }
             else
             {
+                Debug.Log("startddrawn");
                 // 次のターンへ
                 await HandlePathDrawingPhase();
             }
@@ -615,6 +616,7 @@ namespace OneStrokeRGR.Presenter
                     // SE再生
                     if (SoundManager.Instance != null)
                     {
+                        Debug.Log("音鳴らす");
                         SoundManager.Instance.PlayEnemyActionSE();
                     }
 
@@ -643,7 +645,7 @@ namespace OneStrokeRGR.Presenter
                     break;
                 }
             }
-
+            Debug.Log("EnemyActionEnd");
             await UniTask.Yield();
         }
 

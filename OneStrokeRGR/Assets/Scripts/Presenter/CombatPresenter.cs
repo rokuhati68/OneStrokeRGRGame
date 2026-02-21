@@ -119,7 +119,7 @@ namespace OneStrokeRGR.Presenter
 
                     // プレイヤー位置を更新
                     gameState.Player.Position = pos;
-
+                    await UniTask.Delay(200);
                     // タイル効果を処理
                     await ProcessTileEffect(tile, comboTracker);
 
@@ -192,44 +192,47 @@ namespace OneStrokeRGR.Presenter
             // 訪問したマスを再生成（要件: 7.1, 7.2）
             if (visitedPositions.Count > 0)
             {
-                gameState.Board.RegenerateTiles(visitedPositions, gameState.SpawnConfig);
+                // 再配置候補リスト（順に使用済みポジションを排除していく）
+                List<Vector2Int> remainingPositions = new List<Vector2Int>(visitedPositions);
 
-                // プレイヤーの現在位置を必ず効果なしマスにする
+                // ① プレイヤー位置を効果なしマスにし、候補から排除
                 Vector2Int playerPos = gameState.Player.Position;
-                if (visitedPositions.Contains(playerPos))
+                if (remainingPositions.Contains(playerPos))
                 {
                     Tile emptyTile = TileFactory.CreateEmptyTile();
                     gameState.Board.SetTile(playerPos, emptyTile);
+                    remainingPositions.Remove(playerPos);
                     Debug.Log($"CombatPresenter: プレイヤー位置{playerPos}を効果なしマスに設定");
                 }
 
-                // 生き残った敵をランダムな位置に再配置
+                // ② 生き残った敵を順にランダムな位置に再配置し、使用済み位置を排除
                 if (survivingEnemies.Count > 0)
                 {
-                    // プレイヤーの最終位置を除外した再配置候補を作成
-                    Vector2Int playerFinalPos = gameState.Player.Position;
-                    List<Vector2Int> availablePositions = visitedPositions.FindAll(pos => pos != playerFinalPos);
-
-                    if (availablePositions.Count == 0)
+                    Debug.Log($"CombatPresenter: {survivingEnemies.Count}体の敵を再配置");
+                    foreach (var enemy in survivingEnemies)
                     {
-                        Debug.LogWarning("CombatPresenter: 敵を再配置できる位置がありません");
-                    }
-                    else
-                    {
-                        Debug.Log($"CombatPresenter: {survivingEnemies.Count}体の敵を再配置");
-                        foreach (var enemy in survivingEnemies)
+                        if (remainingPositions.Count == 0)
                         {
-                            // ランダムな再生成マスを選択（プレイヤー位置を除く）
-                            Vector2Int newPos = availablePositions[UnityEngine.Random.Range(0, availablePositions.Count)];
-
-                            // 敵を再配置
-                            enemy.Position = newPos;
-                            EnemyTile newEnemyTile = TileFactory.CreateEnemyTile(enemy);
-                            gameState.Board.SetTile(newPos, newEnemyTile);
-
-                            Debug.Log($"CombatPresenter: 敵を再配置 {newPos} (HP: {enemy.CurrentHP}/{enemy.MaxHP})");
+                            Debug.LogWarning("CombatPresenter: 敵を再配置できる位置がありません");
+                            break;
                         }
+
+                        int idx = UnityEngine.Random.Range(0, remainingPositions.Count);
+                        Vector2Int newPos = remainingPositions[idx];
+                        remainingPositions.RemoveAt(idx);
+
+                        enemy.Position = newPos;
+                        EnemyTile newEnemyTile = TileFactory.CreateEnemyTile(enemy);
+                        gameState.Board.SetTile(newPos, newEnemyTile);
+
+                        Debug.Log($"CombatPresenter: 敵を再配置 {newPos} (HP: {enemy.CurrentHP}/{enemy.MaxHP})");
                     }
+                }
+
+                // ③ 残りのマスをランダムタイルで再生成
+                if (remainingPositions.Count > 0)
+                {
+                    gameState.Board.RegenerateTiles(remainingPositions, gameState.SpawnConfig);
                 }
             }
 
