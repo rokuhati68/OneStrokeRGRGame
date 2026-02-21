@@ -45,11 +45,8 @@ namespace OneStrokeRGR.Presenter
             // コンボ対象のタイルタイプか確認
             if (!IsComboEligibleType(currentType))
             {
-                // コンボ対象外のタイルならカウントリセット
-                if (currentType != TileType.Empty)
-                {
-                    Reset();
-                }
+                // コンボ対象外のタイル（空マス含む）ならカウントリセット
+                Reset();
                 return;
             }
 

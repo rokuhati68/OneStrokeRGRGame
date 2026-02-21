@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using OneStrokeRGR.Model;
 using OneStrokeRGR.Config;
 
@@ -160,6 +161,43 @@ namespace OneStrokeRGR.View
             {
                 playerIconObject.SetActive(visible);
             }
+        }
+
+        /// <summary>
+        /// プレイヤーの頭上にコンボテキストを表示（2コンボ以上）
+        /// </summary>
+        public void ShowComboText(int comboCount)
+        {
+            if (playerIconObject == null) return;
+
+            // コンボテキスト用GameObjectを生成
+            GameObject comboObj = new GameObject("ComboText");
+            comboObj.transform.SetParent(transform.parent, false);
+
+            var text = comboObj.AddComponent<TextMeshProUGUI>();
+            text.text = $"{comboCount}Combo!";
+            text.fontSize = 28;
+            text.fontStyle = FontStyles.Bold;
+            text.color = new Color(1f, 0.9f, 0.1f); // 黄色
+            text.alignment = TextAlignmentOptions.Center;
+            text.raycastTarget = false;
+
+            var rect = comboObj.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(150f, 50f);
+
+            // プレイヤーアイコンの頭上に配置
+            Vector3 startPos = playerIconObject.transform.position + new Vector3(0f, tileSize * 0.75f, 0f);
+            comboObj.transform.position = startPos;
+
+            // 上に浮かび上がりながらフェードアウト
+            Vector3 endPos = startPos + new Vector3(0f, tileSize * 0.6f, 0f);
+            float duration = 0.8f;
+
+            comboObj.transform.DOMove(endPos, duration).SetEase(Ease.OutQuad);
+            text.DOFade(0f, duration).SetEase(Ease.InQuad).OnComplete(() =>
+            {
+                if (comboObj != null) Destroy(comboObj);
+            });
         }
 
         /// <summary>

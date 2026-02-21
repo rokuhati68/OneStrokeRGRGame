@@ -50,6 +50,12 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public Func<Vector2Int, TileType, UniTask> OnTileValueEffect { get; set; }
 
+        /// <summary>
+        /// コンボ達成時（2コンボ以上）に呼ばれるコールバック
+        /// 引数はコンボ数
+        /// </summary>
+        public Action<int> OnComboAchieved { get; set; }
+
         public CombatPresenter(GameState state)
         {
             gameState = state;
@@ -250,16 +256,23 @@ namespace OneStrokeRGR.Presenter
                 return;
             }
 
-            // ゲームコンテキストの作成
+            // コンボトラッカーの更新（要件: 4.1）
+            // ※ UpdateCombo を先に呼ぶことで、2回目踏んだ時点で IsComboActive=true になる
+            comboTracker.UpdateCombo(tile.Type);
+
+            // 2コンボ以上でコンボテキストを表示
+            if (comboTracker.ComboCount >= 2)
+            {
+                OnComboAchieved?.Invoke(comboTracker.ComboCount);
+            }
+
+            // ゲームコンテキストの作成（UpdateCombo後に判定）
             GameContext context = new GameContext
             {
                 IsComboActive = comboTracker.IsComboActive(tile.Type),
                 CurrentStage = gameState.CurrentStage,
                 IsBossStage = gameState.IsBossStage()
             };
-
-            // コンボトラッカーの更新（要件: 4.1）
-            comboTracker.UpdateCombo(tile.Type);
 
             // タイル効果を適用
             TileEffectResult result = tile.ApplyEffect(gameState.Player, context);
@@ -274,7 +287,6 @@ namespace OneStrokeRGR.Presenter
             {
                 await ProcessEnemyDefeated(result.DefeatedEnemy);
             }
-
             // アニメーション待機
             await UniTask.Delay(50);
         }

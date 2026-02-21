@@ -118,6 +118,15 @@ namespace OneStrokeRGR.Presenter
                 }
             };
 
+            // コンボテキスト表示
+            combatPresenter.OnComboAchieved = (comboCount) =>
+            {
+                if (boardView != null)
+                {
+                    boardView.ShowComboText(comboCount);
+                }
+            };
+
             // タイル種別SE
             combatPresenter.OnTileProcessed = (tileType) =>
             {
