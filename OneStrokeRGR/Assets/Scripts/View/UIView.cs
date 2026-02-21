@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -34,6 +35,9 @@ namespace OneStrokeRGR.View
         [Tooltip("日本語対応 TMP フォントアセットをアサインしてください")]
         public TMP_FontAsset japaneseFont;
 
+        [Header("報酬レベル表示")]
+        public List<RewardLevelDisplay> rewardLevelDisplays = new List<RewardLevelDisplay>();
+
         [Header("ゲームオーバー画面")]
         public GameObject gameOverPanel;
         public TextMeshProUGUI gameOverText;
@@ -61,6 +65,20 @@ namespace OneStrokeRGR.View
 
             if (restartButton != null)
                 restartButton.onClick.AddListener(OnRestartButtonClicked);
+        }
+
+        /// <summary>
+        /// 報酬レベル表示を一括更新
+        /// </summary>
+        public void UpdateRewardLevels(Dictionary<RewardType, int> levels)
+        {
+            foreach (var display in rewardLevelDisplays)
+            {
+                if (display.levelText != null && levels.TryGetValue(display.rewardType, out int level))
+                {
+                    display.levelText.text = level.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -450,5 +468,18 @@ namespace OneStrokeRGR.View
             if (restartButton != null)
                 restartButton.onClick.RemoveListener(OnRestartButtonClicked);
         }
+    }
+
+    /// <summary>
+    /// RewardType と表示用テキストの対応を保持するクラス
+    /// </summary>
+    [System.Serializable]
+    public class RewardLevelDisplay
+    {
+        [Tooltip("対応する報酬タイプ")]
+        public RewardType rewardType;
+
+        [Tooltip("レベル数字を表示する Text")]
+        public TextMeshProUGUI levelText;
     }
 }

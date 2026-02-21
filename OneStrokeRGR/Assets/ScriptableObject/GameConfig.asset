@@ -27,7 +27,7 @@ MonoBehaviour:
     - stageNumber: 1
       enemies:
       - isBoss: 1
-        maxHP: 100
+        maxHP: 1
         attackPower: 0
         sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
         actionPattern:
@@ -35,7 +35,7 @@ MonoBehaviour:
           value: 1
           turnCount: 4
       - isBoss: 0
-        maxHP: 100
+        maxHP: 1
         attackPower: 0
         sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
         actionPattern:
@@ -46,7 +46,7 @@ MonoBehaviour:
           value: 1
           turnCount: 2
       - isBoss: 0
-        maxHP: 100
+        maxHP: 1
         attackPower: 0
         sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
         actionPattern:

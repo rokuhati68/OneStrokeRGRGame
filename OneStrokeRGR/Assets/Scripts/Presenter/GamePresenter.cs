@@ -688,6 +688,17 @@ namespace OneStrokeRGR.Presenter
             // 報酬選択フロー
             await rewardPresenter.ExecuteRewardFlow();
 
+            // 報酬取得後にレベル表示を更新
+            if (uiView != null)
+            {
+                var levels = new Dictionary<RewardType, int>();
+                foreach (RewardType type in System.Enum.GetValues(typeof(RewardType)))
+                {
+                    levels[type] = gameState.GetRewardLevel(type);
+                }
+                uiView.UpdateRewardLevels(levels);
+            }
+
             // 次のステージへ
             gameState.AdvanceToNextStage();
 
