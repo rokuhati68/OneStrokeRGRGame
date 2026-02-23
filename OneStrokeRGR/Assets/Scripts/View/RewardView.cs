@@ -259,11 +259,12 @@ namespace OneStrokeRGR.View
             if (cardObject != null)
             {
                 cardObject.transform.DOScale(originalScale * 1.1f, 0.2f).SetEase(Ease.OutQuad);
-
+                /*
                 if (selectButton != null)
                 {
                     selectButton.image.DOColor(Color.green, 0.2f);
                 }
+                */
             }
         }
 

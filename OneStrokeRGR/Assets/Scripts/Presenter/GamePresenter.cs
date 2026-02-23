@@ -257,6 +257,7 @@ namespace OneStrokeRGR.Presenter
 
             if (uiView != null)
             {
+                gameState.Player.ResetAttackPower();
                 uiView.UpdateStageNumber(gameState.CurrentStage);
                 uiView.UpdatePlayerInfo(gameState.Player);
             }
@@ -501,6 +502,11 @@ namespace OneStrokeRGR.Presenter
         {
             Debug.Log("GamePresenter: パス描画フェーズ");
             gameState.CurrentPhase = GamePhase.PathDrawing;
+
+            // ターン開始時に ATK を 0 にリセットして UI に反映
+            gameState.Player.ResetAttackPower();
+            if (uiView != null)
+                uiView.UpdatePlayerInfo(gameState.Player);
 
             // プレイヤーの開始位置をハイライト
             if (boardView != null)
