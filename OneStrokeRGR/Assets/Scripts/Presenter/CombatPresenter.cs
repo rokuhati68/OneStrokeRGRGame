@@ -63,6 +63,12 @@ namespace OneStrokeRGR.Presenter
         public Func<UniTask> OnOneStrokeBonusAchieved { get; set; }
 
         /// <summary>
+        /// 一筆書きボーナスのデータ適用後（オーブ着地後）に呼ばれるコールバック
+        /// UI更新に使用
+        /// </summary>
+        public Action OnBonusApplied { get; set; }
+
+        /// <summary>
         /// プレイヤーがダメージを受けた際に呼ばれるコールバック
         /// プレイヤーアイコン点滅 + SE再生に使用
         /// </summary>
@@ -126,13 +132,15 @@ namespace OneStrokeRGR.Presenter
                 bool isLastTile = (i == path.Count - 1);
                 if (isLastTile && path.Count == Board.BoardSize * Board.BoardSize)
                 {
-                    // ① ボーナス値をモデルに適用
-                    ApplyOneStrokeBonus(path.Count, gameState.Player);
-                    // ② バナー＋大オーブ演出（await で敵攻撃より前に完了）
+                    // ① バナー＋大オーブ演出（データ更新前に実行）
                     if (OnOneStrokeBonusAchieved != null)
                     {
                         await OnOneStrokeBonusAchieved();
                     }
+                    // ② オーブ着地後にボーナス値をモデルに適用
+                    ApplyOneStrokeBonus(path.Count, gameState.Player);
+                    // ③ UI更新を通知
+                    OnBonusApplied?.Invoke();
                 }
 
                 // 敵タイルは順序を制御して個別に処理

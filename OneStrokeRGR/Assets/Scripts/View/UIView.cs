@@ -338,7 +338,7 @@ namespace OneStrokeRGR.View
             Vector3 end = attackPowerText.rectTransform.position;
             Vector3 control = (start + end) * 0.5f + new Vector3(0f, 280f, 0f);
 
-            float duration = flyingDuration * 3f;
+            float duration = flyingDuration * 2f;
             await DOVirtual.Float(0f, 1f, duration, (t) =>
             {
                 if (orb == null) return;

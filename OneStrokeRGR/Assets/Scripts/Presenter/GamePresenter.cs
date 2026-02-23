@@ -138,6 +138,12 @@ namespace OneStrokeRGR.Presenter
                 }
             };
 
+            // オーブ着地後のボーナスデータ適用に合わせて UI 更新
+            combatPresenter.OnBonusApplied = () =>
+            {
+                uiView?.UpdatePlayerInfo(gameState.Player);
+            };
+
             // プレイヤーダメージ：アイコン点滅 + SE
             combatPresenter.OnPlayerDamaged = async () =>
             {

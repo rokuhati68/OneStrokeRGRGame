@@ -17,7 +17,7 @@ namespace OneStrokeRGR.Config
         public int initialGold = 50;
 
         [Tooltip("一筆書きボーナスの初期値（要件: 11.6）")]
-        public int initialOneStrokeBonus = 5;
+        public int initialOneStrokeBonus = 100;
 
         [Header("タイル生成設定")]
         [Tooltip("デフォルトのタイル出現率設定（要件: 12.1, 12.2）")]

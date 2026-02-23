@@ -43,7 +43,7 @@ namespace OneStrokeRGR.Model
         /// </summary>
         /// <param name="startingGold">開始時のゴールド（デフォルト: 50）</param>
         /// <param name="bonusValue">一筆書きボーナス値（デフォルト: 5）</param>
-        public void Initialize(int startingGold = 50, int bonusValue = 5)
+        public void Initialize(int startingGold = 50, int bonusValue = 100)
         {
             currentHP = maxHP;
             gold = startingGold;
