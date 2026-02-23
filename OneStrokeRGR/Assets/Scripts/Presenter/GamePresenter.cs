@@ -305,6 +305,16 @@ namespace OneStrokeRGR.Presenter
                         {
                             undecidedPositions.Add(pos);
                         }
+                        else
+                        {
+                            // 未訪問でも Wall/Thorn はボス由来の一時マスなので次ステージで再生成する
+                            Tile existingTile = gameState.Board.GetTile(pos);
+                            if (existingTile != null &&
+                                (existingTile.Type == TileType.Wall || existingTile.Type == TileType.Thorn))
+                            {
+                                undecidedPositions.Add(pos);
+                            }
+                        }
                     }
                     else
                     {
