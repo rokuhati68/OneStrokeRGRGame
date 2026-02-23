@@ -306,8 +306,9 @@ namespace OneStrokeRGR.Presenter
 
             foreach (Vector2Int pos in attackPositions)
             {
-                var attackBoostTile = TileFactory.CreateTileByType(TileType.AttackBoost, gameState.SpawnConfig, value);
-                gameState.Board.SetTile(pos, attackBoostTile);
+                int currentValue = gameState.Board.GetTile(pos) is AttackBoostTile a ? a.BoostValue : 1;
+                int newValue = Mathf.Max(1, currentValue / 2);
+                gameState.Board.SetTile(pos, new AttackBoostTile(newValue));
                 changed.Add(pos);
             }
 
@@ -328,8 +329,9 @@ namespace OneStrokeRGR.Presenter
 
             foreach (Vector2Int pos in goldPositions)
             {
-                var goldTile = TileFactory.CreateTileByType(TileType.Gold, gameState.SpawnConfig, value);
-                gameState.Board.SetTile(pos, goldTile);
+                int currentValue = gameState.Board.GetTile(pos) is GoldTile g ? g.GoldValue : 1;
+                int newValue = Mathf.Max(1, currentValue / 2);
+                gameState.Board.SetTile(pos, new GoldTile(newValue));
                 changed.Add(pos);
             }
 

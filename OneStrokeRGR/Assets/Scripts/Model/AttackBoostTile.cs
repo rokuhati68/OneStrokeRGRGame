@@ -35,7 +35,7 @@ namespace OneStrokeRGR.Model
             // コンボ中はゴールド消費なし（要件: 4.2）
             if (!context.IsComboActive)
             {
-                player.SpendGold(1);
+                player.SpendGold(BoostValue);
                 result.GoldSpent = 1;
             }
 

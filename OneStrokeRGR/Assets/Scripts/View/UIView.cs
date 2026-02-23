@@ -128,7 +128,9 @@ namespace OneStrokeRGR.View
 
             text.text = newText;
 
-            // パンチスケールアニメーション
+            // 前のアニメーションをキルしてスケールをリセットしてからパンチ
+            text.transform.DOKill();
+            text.transform.localScale = Vector3.one;
             text.transform.DOPunchScale(Vector3.one * 0.15f, 0.3f);
         }
 
