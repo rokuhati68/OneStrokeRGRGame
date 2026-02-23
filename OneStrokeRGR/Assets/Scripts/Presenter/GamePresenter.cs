@@ -23,6 +23,7 @@ namespace OneStrokeRGR.Presenter
         public PathDrawingView pathDrawingView;
         public RewardView rewardView;
         public BattleUIView battleUIView;
+        public ScorePanelView scorePanelView;
 
         private GameState gameState;
         private PathPresenter pathPresenter;
@@ -207,7 +208,7 @@ namespace OneStrokeRGR.Presenter
                 rewardPresenter.SetRewardView(rewardView);
             }
 
-            await InitializeGame();
+            // InitializeGame() はタイトルパネルのスタートボタンから呼ばれる
         }
 
         /// <summary>
@@ -748,6 +749,14 @@ namespace OneStrokeRGR.Presenter
                 uiView.UpdateRewardLevels(levels);
             }
 
+            // 最終ステージクリア判定
+            int maxStage = gameConfig.enemySpawnTable.GetMaxStage();
+            if (maxStage > 0 && gameState.CurrentStage >= maxStage)
+            {
+                scorePanelView?.Show(gameState.CurrentStage);
+                return;
+            }
+
             // 次のステージへ
             gameState.AdvanceToNextStage();
 
@@ -763,11 +772,7 @@ namespace OneStrokeRGR.Presenter
             Debug.Log("GamePresenter: ゲームオーバーフェーズ");
             gameState.SetGameOver();
 
-            // View層でゲームオーバー表示
-            if (uiView != null)
-            {
-                await uiView.ShowGameOver(gameState.CurrentStage);
-            }
+            scorePanelView?.Show(gameState.CurrentStage);
 
             await UniTask.Yield();
         }

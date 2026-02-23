@@ -49,5 +49,15 @@ namespace OneStrokeRGR.Config
             Debug.LogWarning($"EnemySpawnTable: ステージ{stage}に適したエントリーが見つかりません。最初のエントリーを使用します。");
             return entries[0];
         }
+
+        /// <summary>
+        /// テーブルに登録された最大ステージ番号を返す
+        /// エントリーがない場合は 0 を返す
+        /// </summary>
+        public int GetMaxStage()
+        {
+            if (entries == null || entries.Count == 0) return 0;
+            return entries.Max(e => e.stageNumber);
+        }
     }
 }
