@@ -29,17 +29,17 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 10
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
-          turnCount: 3
+          turnCount: 1
     - stageNumber: 2
       enemies:
       - isBoss: 1
         maxHP: 15
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 8
           value: 1
@@ -49,7 +49,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 10
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -57,7 +57,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 10
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -67,7 +67,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 15
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -75,7 +75,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 15
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 8
           value: 1
@@ -85,7 +85,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 20
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -3822193320655626840, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 7
           value: 2
@@ -102,7 +102,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 15
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -110,7 +110,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 15
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 8
           value: 1
@@ -130,7 +130,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 25
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 1
@@ -138,7 +138,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 25
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -858729328, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 1
@@ -174,7 +174,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 30
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -858729328, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 2
           value: 1
@@ -182,7 +182,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 30
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -858729328, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 1
@@ -192,7 +192,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 30
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 2
           value: 1
@@ -200,7 +200,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 30
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 2
           value: 1
@@ -208,7 +208,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 40
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -5375517466038465859, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 7
           value: 3
@@ -218,7 +218,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 30
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 1
@@ -231,7 +231,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 30
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -747770777, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 1
@@ -247,7 +247,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 40
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 896359945, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -260,7 +260,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 40
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -271,7 +271,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 40
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -281,13 +281,13 @@ MonoBehaviour:
           turnCount: 2
     - stageNumber: 15
       enemies:
-      - isBoss: 0
+      - isBoss: 1
         maxHP: 55
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 5250550550986799888, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 5
-          value: 2
+          value: 1
           turnCount: 1
         - actionType: 2
           value: 2
@@ -301,7 +301,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 40
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -858729328, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 10
@@ -318,7 +318,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 40
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -858729328, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 10
@@ -337,7 +337,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 55
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1809460457, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -354,7 +354,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 55
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1809460457, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -370,18 +370,18 @@ MonoBehaviour:
           turnCount: 2
     - stageNumber: 17
       enemies:
-      - isBoss: 1
+      - isBoss: 0
         maxHP: 60
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 2
           turnCount: 1
-      - isBoss: 1
+      - isBoss: 0
         maxHP: 55
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 30
@@ -391,7 +391,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 60
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 896359945, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -399,10 +399,10 @@ MonoBehaviour:
         - actionType: 7
           value: 5
           turnCount: 1
-      - isBoss: 1
+      - isBoss: 0
         maxHP: 60
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 896359945, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -415,7 +415,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 65
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 90066483, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -423,7 +423,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 65
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 90066483, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -433,15 +433,15 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 75
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 6468548742382035016, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
-          turnCount: 1
+          turnCount: 10
       - isBoss: 0
         maxHP: 65
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 20
@@ -449,7 +449,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 65
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 20
@@ -459,7 +459,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 90066483, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 2
@@ -467,7 +467,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -475,7 +475,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 90066483, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 3
@@ -485,7 +485,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 826682034, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -493,7 +493,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 826682034, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -501,7 +501,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 826682034, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -511,7 +511,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 75
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 826682034, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 2
           value: 2
@@ -522,7 +522,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1741720917, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -530,7 +530,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 70
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 826682034, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -540,7 +540,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 80
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1741720917, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 40
@@ -550,7 +550,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 85
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -8783271611938238453, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 4
           value: 35
@@ -558,7 +558,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 75
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -578,7 +578,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 75
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -600,7 +600,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 85
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1854186326, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 5
@@ -608,7 +608,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 85
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1854186326, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 5
@@ -618,7 +618,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 90
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1066655223, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 2
@@ -647,7 +647,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 90
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1066655223, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 2
@@ -678,7 +678,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 80
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1854186326, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 30
@@ -695,7 +695,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 80
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1066655223, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 30
@@ -712,7 +712,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 80
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1854186326, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 30
@@ -731,7 +731,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 85
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -2124059306, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 3
@@ -739,7 +739,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 85
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -2124059306, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 3
@@ -749,7 +749,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 100
         attackPower: 3
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 3901959194294736680, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 2
           value: 40
@@ -757,7 +757,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 85
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1854186326, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -765,7 +765,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 85
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1066655223, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -775,7 +775,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 100
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1565037860, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -783,7 +783,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 100
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1565037860, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -791,7 +791,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 100
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1565037860, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -801,7 +801,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 110
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 559155734, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -821,7 +821,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 110
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2037333937, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -841,7 +841,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 110
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 559155734, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 2
@@ -863,7 +863,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 115
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -15437071, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 3
@@ -871,7 +871,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 115
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1133964439, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 3
@@ -879,7 +879,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 115
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -15437071, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 3
@@ -889,7 +889,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 120
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1817150744, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 50
@@ -900,7 +900,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 120
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1502867915, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 50
@@ -913,7 +913,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 130
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1665742009842193618, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 7
           value: 5
@@ -921,7 +921,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 130
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2070126403608083541, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 8
           value: 5
@@ -929,7 +929,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 130
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 2070126403608083541, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 8
           value: 5
@@ -939,7 +939,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 130
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1590260142, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -947,7 +947,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 130
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 12560809, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 2
@@ -955,7 +955,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 130
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1590260142, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 2
           value: 2
@@ -965,7 +965,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 135
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 12560809, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -982,7 +982,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 135
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1268059000, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -999,7 +999,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 135
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 12560809, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -1018,7 +1018,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -15437071, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1026,7 +1026,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 8639404425001158626, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1034,7 +1034,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -15437071, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1044,7 +1044,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -2500655956008418449, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1052,7 +1052,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 4225344138017236428, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1060,7 +1060,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -2500655956008418449, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1070,7 +1070,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 150
         attackPower: 2
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -3543328055017769504, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -1078,7 +1078,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 135
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 12560809, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1086,7 +1086,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 135
         attackPower: 1
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1590260142, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
@@ -1096,7 +1096,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 0
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -1747153281, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -1113,7 +1113,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 140
         attackPower: 0
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -1747153281, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 5
           value: 1
@@ -1132,7 +1132,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 150
         attackPower: 0
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -1747153281, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -1140,7 +1140,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 150
         attackPower: 0
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -973206426, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -1148,7 +1148,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 150
         attackPower: 0
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -1747153281, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 6
           value: 1
@@ -1158,7 +1158,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 150
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 6591714858963293096, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 2
           value: 2
@@ -1166,7 +1166,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 150
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 6591714858963293096, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 3
           value: 2
@@ -1176,7 +1176,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 160
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -973206426, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 70
@@ -1184,7 +1184,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 160
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 8295892786027694948, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 4
           value: 70
@@ -1192,7 +1192,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 160
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -973206426, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
           value: 70
@@ -1202,7 +1202,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 180
         attackPower: 2
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 214332272687260729, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 5
           value: 5
@@ -1213,7 +1213,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 170
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 8295892786027694948, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 7
           value: 5
@@ -1221,7 +1221,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 170
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 8295892786027694948, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 8
           value: 5
@@ -1231,7 +1231,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 180
         attackPower: 2
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -8400885347767137661, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 4
           value: 70
@@ -1239,7 +1239,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 180
         attackPower: 2
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: -8400885347767137661, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 4
           value: 70
@@ -1249,7 +1249,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 240
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 8169301103292273852, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 5
           value: 5
@@ -1262,7 +1262,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 220
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 5132140411502363670, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 6
           value: 2
@@ -1279,7 +1279,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 220
         attackPower: 1
-        sprite: {fileID: 3018249573842270523, guid: 0ac122cc9e3161045854f0aef7c1a89c, type: 3}
+        sprite: {fileID: 5132140411502363670, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 6
           value: 2
@@ -1298,7 +1298,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 220
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1976385314, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 2
@@ -1306,7 +1306,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 220
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -2240095173462430689, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 3
           value: 2
@@ -1314,7 +1314,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 220
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -1976385314, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 3
           value: 2
@@ -1324,7 +1324,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 250
         attackPower: 3
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 8875396669478392549, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
         actionPattern:
         - actionType: 4
           value: 150
@@ -1332,7 +1332,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 235
         attackPower: 3
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1769589008240897712, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 5
           value: 3
@@ -1343,7 +1343,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 235
         attackPower: 3
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1769589008240897712, guid: 22dd29cf84d920e42bd9eef438862306, type: 3}
         actionPattern:
         - actionType: 5
           value: 3
