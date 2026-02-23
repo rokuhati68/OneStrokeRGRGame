@@ -168,6 +168,23 @@ namespace OneStrokeRGR.View
         }
 
         /// <summary>
+        /// プレイヤーアイコンを赤く点滅させてダメージを演出
+        /// </summary>
+        public async UniTask FlashPlayerDamage()
+        {
+            if (playerIconObject == null) return;
+
+            Image image = playerIconObject.GetComponent<Image>();
+            if (image == null) return;
+
+            Color original = image.color;
+            await image.DOColor(Color.red, 0.08f)
+                .SetLoops(4, LoopType.Yoyo)
+                .OnComplete(() => image.color = original)
+                .AsyncWaitForCompletion();
+        }
+
+        /// <summary>
         /// プレイヤーの頭上にコンボテキストを表示（2コンボ以上）
         /// </summary>
         public void ShowComboText(int comboCount)

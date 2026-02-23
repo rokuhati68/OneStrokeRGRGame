@@ -138,6 +138,19 @@ namespace OneStrokeRGR.Presenter
                 }
             };
 
+            // プレイヤーダメージ：アイコン点滅 + SE
+            combatPresenter.OnPlayerDamaged = async () =>
+            {
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlayTakeDamageSE();
+                }
+                if (boardView != null)
+                {
+                    await boardView.FlashPlayerDamage();
+                }
+            };
+
             // タイル種別SE
             combatPresenter.OnTileProcessed = (tileType) =>
             {

@@ -62,6 +62,12 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public Func<UniTask> OnOneStrokeBonusAchieved { get; set; }
 
+        /// <summary>
+        /// プレイヤーがダメージを受けた際に呼ばれるコールバック
+        /// プレイヤーアイコン点滅 + SE再生に使用
+        /// </summary>
+        public Func<UniTask> OnPlayerDamaged { get; set; }
+
         public CombatPresenter(GameState state)
         {
             gameState = state;
@@ -129,45 +135,56 @@ namespace OneStrokeRGR.Presenter
                     }
                 }
 
-                // 敵タイルの場合、処理前に敵を記録
+                // 敵タイルは順序を制御して個別に処理
                 if (tile.Type == TileType.Enemy && tile is EnemyTile enemyTile)
                 {
                     Enemy enemy = enemyTile.Enemy;
-                    int enemyHPBefore = enemy.CurrentHP;
 
                     // プレイヤー位置を更新
                     gameState.Player.Position = pos;
                     await UniTask.Delay(200);
-                    // タイル効果を処理
-                    await ProcessTileEffect(tile, comboTracker);
 
-                    // 敵がダメージを受けた場合、斬撃エフェクト+HPバー更新
-                    if (enemy.CurrentHP < enemyHPBefore)
-                    {
-                        if (OnEnemyDamaged != null)
-                        {
-                            await OnEnemyDamaged(enemy);
-                        }
-                    }
+                    // コンボ更新
+                    comboTracker.UpdateCombo(tile.Type);
+                    if (comboTracker.ComboCount >= 2)
+                        OnComboAchieved?.Invoke(comboTracker.ComboCount);
 
-                    // 敵が生き残った場合、リストに追加
-                    if (enemy.IsAlive())
+                    // ① プレイヤーが敵を攻撃
+                    int atk = gameState.Player.AttackPower;
+                    enemy.TakeDamage(atk);
+                    Debug.Log($"CombatPresenter: 敵に{atk}ダメージ。敵HP: {enemy.CurrentHP}/{enemy.MaxHP}");
+
+                    // ② 斬撃エフェクト + HPバー更新
+                    if (OnEnemyDamaged != null)
+                        await OnEnemyDamaged(enemy);
+
+                    if (!enemy.IsAlive())
                     {
-                        survivingEnemies.Add(enemy);
-                        Debug.Log($"CombatPresenter: 敵が生き残りました (HP: {enemyHPBefore} -> {enemy.CurrentHP})");
+                        // 敵撃破をバトルUIに通知してボード処理
+                        OnEnemyDefeated?.Invoke(enemy);
+                        await ProcessEnemyDefeated(enemy);
                     }
                     else
                     {
-                        // 敵撃破をバトルUIに通知
-                        OnEnemyDefeated?.Invoke(enemy);
+                        // ③ 敵の反撃
+                        int counterDmg = enemy.AttackPower;
+                        gameState.Player.TakeDamage(counterDmg);
+                        Debug.Log($"CombatPresenter: 敵の反撃！{counterDmg}ダメージ受けた");
+                        survivingEnemies.Add(enemy);
+
+                        // ④ プレイヤーダメージ演出（点滅 + SE）
+                        if (OnPlayerDamaged != null)
+                            await OnPlayerDamaged();
                     }
+
+                    await UniTask.Delay(50);
                 }
                 else
                 {
                     // プレイヤー位置を更新
                     gameState.Player.Position = pos;
 
-                    // タイル効果を処理
+                    // タイル効果を処理（Thorn 等の OnPlayerDamaged もここで発火）
                     await ProcessTileEffect(tile, comboTracker);
                 }
 
@@ -292,6 +309,12 @@ namespace OneStrokeRGR.Presenter
             if (result == null || !result.EffectApplied)
             {
                 return;
+            }
+
+            // プレイヤーがダメージを受けた場合のコールバック（敵の反撃 / Thorn）
+            if (result.DamageTaken > 0 && OnPlayerDamaged != null)
+            {
+                await OnPlayerDamaged();
             }
 
             // 敵を倒した場合の処理（要件: 5.2, 7.3）
