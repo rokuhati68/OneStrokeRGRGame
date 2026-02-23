@@ -134,6 +134,7 @@ namespace OneStrokeRGR.Presenter
                 {
                     TileView tileView = boardView.GetTileView(gameState.Player.Position);
                     Vector3 sourcePos = tileView != null ? tileView.transform.position : Vector3.zero;
+                    SoundManager.Instance.PlayOneStrokeBonusSE();
                     await uiView.ShowOneStrokeBonusEffect(sourcePos);
                 }
             };

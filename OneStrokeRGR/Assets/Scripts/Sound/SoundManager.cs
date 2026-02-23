@@ -26,6 +26,7 @@ namespace OneStrokeRGR.Sound
         public AudioClip enemyActionSE;
         public AudioClip pushButtonSE;
         public AudioClip takeDamageSE;
+        public AudioClip oneStrokeBonusSE;
 
         [Range(0f, 1f)]
         public float seVolume = 1f;
@@ -137,6 +138,11 @@ namespace OneStrokeRGR.Sound
         public void PlayTakeDamageSE()
         {
             PlaySE(takeDamageSE);
+        }
+        
+        public void PlayOneStrokeBonusSE()
+        {
+            PlaySE(oneStrokeBonusSE);
         }
         private void PlaySE(AudioClip clip)
         {

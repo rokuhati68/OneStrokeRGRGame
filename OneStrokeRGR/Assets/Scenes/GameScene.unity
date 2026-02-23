@@ -4961,8 +4961,9 @@ MonoBehaviour:
   getGoldSE: {fileID: 8300000, guid: fe8aa2bc03d60a54e9fd35a12d311f32, type: 3}
   getHealSE: {fileID: 8300000, guid: a8222422c634d284bb3aa5e66870a4cb, type: 3}
   enemyActionSE: {fileID: 8300000, guid: 90433c5ff198e4e44b63fb9ffd404860, type: 3}
-  takeDamage: {fileID: 8300000, guid: 35577cac6a38698488f662b3d37dfe36, type: 3}
-  pushButton: {fileID: 8300000, guid: 90433c5ff198e4e44b63fb9ffd404860, type: 3}
+  pushButtonSE: {fileID: 0}
+  takeDamageSE: {fileID: 8300000, guid: 967a7be7bdb79ae4096dca8219392dfd, type: 3}
+  oneStrokeBonusSE: {fileID: 8300000, guid: 0587846927ecee247a6059b9488dead9, type: 3}
   seVolume: 1
   seSourceCount: 8
 --- !u!4 &905230051
