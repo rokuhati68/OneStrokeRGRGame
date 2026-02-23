@@ -148,6 +148,7 @@ namespace OneStrokeRGR.Presenter
         {
             List<Vector2Int> changed = new List<Vector2Int>();
             List<Vector2Int> emptyPositions = FindPositions(TileType.Empty);
+            emptyPositions.Remove(gameState.Player.Position);
 
             if (emptyPositions.Count == 0)
             {
