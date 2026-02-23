@@ -28,7 +28,7 @@ MonoBehaviour:
       enemies:
       - isBoss: 1
         maxHP: 10
-        attackPower: 0
+        attackPower: 4
         sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
@@ -39,7 +39,7 @@ MonoBehaviour:
       - isBoss: 1
         maxHP: 15
         attackPower: 0
-        sprite: {fileID: 8875396669478392549, guid: 331a83094fabbfc4b87a3924e0b6080e, type: 3}
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 8
           value: 1
@@ -48,8 +48,8 @@ MonoBehaviour:
       enemies:
       - isBoss: 0
         maxHP: 10
-        attackPower: 0
-        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
+        attackPower: 1
+        sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
