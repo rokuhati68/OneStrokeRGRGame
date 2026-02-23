@@ -27,29 +27,749 @@ MonoBehaviour:
     - stageNumber: 1
       enemies:
       - isBoss: 1
-        maxHP: 1
+        maxHP: 10
         attackPower: 0
         sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
         actionPattern:
+        - actionType: 7
+          value: 1
+          turnCount: 3
+    - stageNumber: 2
+      enemies:
+      - isBoss: 1
+        maxHP: 15
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 8
+          value: 1
+          turnCount: 3
+    - stageNumber: 3
+      enemies:
+      - isBoss: 0
+        maxHP: 10
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 1
+          turnCount: 3
+      - isBoss: 0
+        maxHP: 10
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 1
+          turnCount: 3
+    - stageNumber: 4
+      enemies:
+      - isBoss: 0
+        maxHP: 15
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 1
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 15
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 8
+          value: 1
+          turnCount: 2
+    - stageNumber: 5
+      enemies:
+      - isBoss: 1
+        maxHP: 20
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 2
+          turnCount: 1
+        - actionType: 7
+          value: 1
+          turnCount: 2
+        - actionType: 7
+          value: 1
+          turnCount: 2
+        - actionType: 7
+          value: 1
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 15
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 1
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 15
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 8
+          value: 1
+          turnCount: 2
+    - stageNumber: 6
+      enemies:
+      - isBoss: 0
+        maxHP: 25
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 2
+          turnCount: 3
+    - stageNumber: 7
+      enemies:
+      - isBoss: 0
+        maxHP: 25
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 25
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 1
+          turnCount: 1
+    - stageNumber: 8
+      enemies:
+      - isBoss: 0
+        maxHP: 25
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 25
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 2
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 25
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 1
+          turnCount: 1
+    - stageNumber: 9
+      enemies:
+      - isBoss: 0
+        maxHP: 30
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 2
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 30
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 1
+          turnCount: 1
+    - stageNumber: 10
+      enemies:
+      - isBoss: 0
+        maxHP: 30
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 2
+          value: 1
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 30
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 2
+          value: 1
+          turnCount: 2
+      - isBoss: 1
+        maxHP: 40
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 3
+          turnCount: 1
+    - stageNumber: 11
+      enemies:
+      - isBoss: 0
+        maxHP: 30
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 1
+          turnCount: 2
+        - actionType: 4
+          value: 1
+          turnCount: 2
+    - stageNumber: 12
+      enemies:
+      - isBoss: 0
+        maxHP: 30
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 1
+          turnCount: 2
+        - actionType: 4
+          value: 1
+          turnCount: 2
+        - actionType: 4
+          value: 1
+          turnCount: 2
+    - stageNumber: 13
+      enemies:
+      - isBoss: 0
+        maxHP: 40
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 1
+        - actionType: 5
+          value: 1
+          turnCount: 2
+    - stageNumber: 14
+      enemies:
+      - isBoss: 0
+        maxHP: 40
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 2
+          turnCount: 1
+        - actionType: 7
+          value: 2
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 40
+        attackPower: 0
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 2
+          turnCount: 1
+        - actionType: 7
+          value: 2
+          turnCount: 2
+    - stageNumber: 15
+      enemies:
+      - isBoss: 0
+        maxHP: 55
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 2
+          turnCount: 1
+        - actionType: 2
+          value: 2
+          turnCount: 2
+        - actionType: 2
+          value: 2
+          turnCount: 2
+        - actionType: 2
+          value: 2
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 40
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 10
+          turnCount: 1
+        - actionType: 1
+          value: 2
+          turnCount: 2
+        - actionType: 1
+          value: 2
+          turnCount: 2
+        - actionType: 1
+          value: 2
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 40
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 10
+          turnCount: 1
+        - actionType: 1
+          value: 2
+          turnCount: 2
+        - actionType: 1
+          value: 2
+          turnCount: 2
+        - actionType: 1
+          value: 2
+          turnCount: 2
+    - stageNumber: 16
+      enemies:
+      - isBoss: 0
+        maxHP: 55
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 2
+          turnCount: 1
+        - actionType: 2
+          value: 2
+          turnCount: 2
+        - actionType: 2
+          value: 2
+          turnCount: 2
+        - actionType: 2
+          value: 2
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 55
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 2
+          turnCount: 1
+        - actionType: 2
+          value: 2
+          turnCount: 2
+        - actionType: 2
+          value: 2
+          turnCount: 2
+        - actionType: 2
+          value: 2
+          turnCount: 2
+    - stageNumber: 17
+      enemies:
+      - isBoss: 1
+        maxHP: 60
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
         - actionType: 6
+          value: 2
+          turnCount: 1
+      - isBoss: 1
+        maxHP: 55
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 30
+          turnCount: 2
+    - stageNumber: 18
+      enemies:
+      - isBoss: 0
+        maxHP: 60
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 6
+          value: 1
+          turnCount: 1
+        - actionType: 7
+          value: 5
+          turnCount: 1
+      - isBoss: 1
+        maxHP: 60
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 6
+          value: 1
+          turnCount: 1
+        - actionType: 7
+          value: 5
+          turnCount: 1
+    - stageNumber: 19
+      enemies:
+      - isBoss: 0
+        maxHP: 65
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 2
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 65
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 2
+          turnCount: 1
+    - stageNumber: 20
+      enemies:
+      - isBoss: 1
+        maxHP: 75
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 2
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 65
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 20
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 65
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 20
+          turnCount: 1
+    - stageNumber: 21
+      enemies:
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 3
+          value: 2
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 1
+          value: 2
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 3
+          value: 3
+          turnCount: 1
+    - stageNumber: 22
+      enemies:
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 1
+    - stageNumber: 23
+      enemies:
+      - isBoss: 0
+        maxHP: 75
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 2
+          value: 2
+          turnCount: 1
+        - actionType: 2
+          value: 2
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 70
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 1
+    - stageNumber: 24
+      enemies:
+      - isBoss: 0
+        maxHP: 80
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 40
+          turnCount: 1
+    - stageNumber: 25
+      enemies:
+      - isBoss: 1
+        maxHP: 85
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 35
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 75
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 6
+          value: 1
+          turnCount: 1
+        - actionType: 7
+          value: 5
+          turnCount: 2
+        - actionType: 7
+          value: 5
+          turnCount: 2
+        - actionType: 7
+          value: 5
+          turnCount: 2
+        - actionType: 7
+          value: 5
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 75
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 6
+          value: 1
+          turnCount: 1
+        - actionType: 7
+          value: 5
+          turnCount: 2
+        - actionType: 7
+          value: 5
+          turnCount: 2
+        - actionType: 7
+          value: 5
+          turnCount: 2
+        - actionType: 7
+          value: 5
+          turnCount: 2
+    - stageNumber: 26
+      enemies:
+      - isBoss: 0
+        maxHP: 85
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 3
           value: 5
           turnCount: 1
       - isBoss: 0
-        maxHP: 1
-        attackPower: 0
+        maxHP: 85
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 3
+          value: 5
+          turnCount: 1
+    - stageNumber: 27
+      enemies:
+      - isBoss: 0
+        maxHP: 90
+        attackPower: 1
         sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
         actionPattern:
         - actionType: 6
+          value: 2
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
           value: 5
           turnCount: 1
       - isBoss: 0
-        maxHP: 1
-        attackPower: 0
+        maxHP: 90
+        attackPower: 1
         sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
         actionPattern:
         - actionType: 6
+          value: 2
+          turnCount: 1
+        - actionType: 3
           value: 5
           turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+        - actionType: 3
+          value: 5
+          turnCount: 1
+    - stageNumber: 28
+      enemies:
+      - isBoss: 0
+        maxHP: 80
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 30
+          turnCount: 1
+        - actionType: 1
+          value: 5
+          turnCount: 2
+        - actionType: 3
+          value: 5
+          turnCount: 2
+        - actionType: 2
+          value: 5
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 80
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 30
+          turnCount: 1
+        - actionType: 1
+          value: 5
+          turnCount: 2
+        - actionType: 3
+          value: 5
+          turnCount: 2
+        - actionType: 2
+          value: 5
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 80
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 4
+          value: 30
+          turnCount: 1
+        - actionType: 1
+          value: 5
+          turnCount: 2
+        - actionType: 3
+          value: 5
+          turnCount: 2
+        - actionType: 2
+          value: 5
+          turnCount: 2
+    - stageNumber: 29
+      enemies:
+      - isBoss: 0
+        maxHP: 85
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 3
+          turnCount: 1
+      - isBoss: 0
+        maxHP: 85
+        attackPower: 2
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 7
+          value: 3
+          turnCount: 1
+    - stageNumber: 30
+      enemies:
+      - isBoss: 1
+        maxHP: 100
+        attackPower: 3
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 2
+          value: 40
+          turnCount: 3
+      - isBoss: 0
+        maxHP: 85
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 85
+        attackPower: 1
+        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        actionPattern:
+        - actionType: 5
+          value: 1
+          turnCount: 2
   rewardDataList:
   - {fileID: 11400000, guid: 86100e81b5fc25c47a4e3b3846f04551, type: 2}
   - {fileID: 11400000, guid: 48bc5a91f1e8ba543848e4e08ec859f0, type: 2}
