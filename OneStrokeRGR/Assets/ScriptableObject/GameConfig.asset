@@ -28,12 +28,12 @@ MonoBehaviour:
       enemies:
       - isBoss: 1
         maxHP: 10
-        attackPower: 4
+        attackPower: 1
         sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 7
           value: 1
-          turnCount: 1
+          turnCount: 2
     - stageNumber: 2
       enemies:
       - isBoss: 1
@@ -43,7 +43,7 @@ MonoBehaviour:
         actionPattern:
         - actionType: 8
           value: 1
-          turnCount: 3
+          turnCount: 2
     - stageNumber: 3
       enemies:
       - isBoss: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
         actionPattern:
         - actionType: 7
           value: 1
-          turnCount: 3
+          turnCount: 2
       - isBoss: 0
         maxHP: 10
         attackPower: 0

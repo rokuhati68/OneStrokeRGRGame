@@ -106,7 +106,6 @@ namespace OneStrokeRGR.View
 
                 case TileType.Thorn:
                     originalColor = thornColor;
-                    valueText.text = $"-{((ThornTile)tileData).Damage}HP";
                     break;
 
                 case TileType.Wall:

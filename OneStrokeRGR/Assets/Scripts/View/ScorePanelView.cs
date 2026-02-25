@@ -29,6 +29,7 @@ namespace OneStrokeRGR.View
         /// <param name="clearedStage">クリアしたステージ番号</param>
         public void Show(int clearedStage)
         {
+            Debug.Log("PanelShow");
             clearedStageText.text = $"{clearedStage}";
             scorePanel.SetActive(true);
         }

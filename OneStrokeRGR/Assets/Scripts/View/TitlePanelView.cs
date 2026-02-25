@@ -14,12 +14,9 @@ namespace OneStrokeRGR.View
         [SerializeField] private GameObject titlePanel;
         [SerializeField] private GamePresenter gamePresenter;
 
-        private void Awake()
-        {
-            GetComponent<Button>().onClick.AddListener(OnStartClicked);
-        }
+        
 
-        private void OnStartClicked()
+        public void OnStartClicked()
         {
             titlePanel.SetActive(false);
             gamePresenter.InitializeGame().Forget();
