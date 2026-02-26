@@ -37,7 +37,6 @@ namespace OneStrokeRGR.Presenter
         {
             if (gameConfig == null)
             {
-                Debug.LogError("GamePresenter: GameConfigが設定されていません！");
                 return;
             }
 
@@ -217,15 +216,11 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public async UniTask InitializeGame()
         {
-            Debug.Log("GamePresenter: ゲーム初期化開始");
-
             // GameStateの初期化
             gameState.Initialize(gameConfig);
 
             // 最初のステージを開始
             await StartNewStage();
-
-            Debug.Log("GamePresenter: ゲーム初期化完了");
         }
 
         /// <summary>
@@ -234,18 +229,11 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public async UniTask StartNewStage()
         {
-            Debug.Log($"GamePresenter: ステージ{gameState.CurrentStage}開始");
-
             // ステージ1の場合のみボードをクリア
             if (gameState.CurrentStage == 1)
             {
                 gameState.Board.Clear();
                 gameState.Player.Position = new Vector2Int(0, 0);
-                Debug.Log($"GamePresenter: プレイヤー位置を初期位置(0, 0)に設定");
-            }
-            else
-            {
-                Debug.Log($"GamePresenter: プレイヤー位置を前ステージの終了位置{gameState.Player.Position}から継続");
             }
 
             // 新しいマス生成システムでボードを初期化
@@ -268,6 +256,11 @@ namespace OneStrokeRGR.Presenter
                 gameState.Player.ResetAttackPower();
                 uiView.UpdateStageNumber(gameState.CurrentStage);
                 uiView.UpdatePlayerInfo(gameState.Player);
+
+                var levels = new Dictionary<RewardType, int>();
+                foreach (RewardType type in System.Enum.GetValues(typeof(RewardType)))
+                    levels[type] = gameState.GetRewardLevel(type);
+                uiView.UpdateRewardLevels(levels);
             }
 
             // バトルUIの初期化
@@ -305,7 +298,6 @@ namespace OneStrokeRGR.Presenter
             var spawnEntry = gameConfig.enemySpawnTable.GetEntryForStage(gameState.CurrentStage);
             if (spawnEntry == null || spawnEntry.enemies == null || spawnEntry.enemies.Count == 0)
             {
-                Debug.LogError($"GamePresenter: ステージ{gameState.CurrentStage}の敵データが見つかりません");
                 return;
             }
 
@@ -351,14 +343,12 @@ namespace OneStrokeRGR.Presenter
             undecidedPositions.Remove(playerPos);
             Tile playerTile = TileFactory.CreateEmptyTile();
             gameState.Board.SetTile(playerPos, playerTile);
-            Debug.Log($"GamePresenter: プレイヤー位置{playerPos}を効果なしマスに確定（残り未決定: {undecidedPositions.Count}）");
 
             // ② 各EnemyDataから敵を生成してランダムに配置
             for (int i = 0; i < enemyCount; i++)
             {
                 if (undecidedPositions.Count == 0)
                 {
-                    Debug.LogWarning("GamePresenter: 敵を配置する未決定マスがありません");
                     break;
                 }
 
@@ -381,9 +371,6 @@ namespace OneStrokeRGR.Presenter
 
                 // 未決定リストから削除
                 undecidedPositions.RemoveAt(randomIndex);
-
-                string typeLabel = data.isBoss ? "ボス" : "通常敵";
-                Debug.Log($"GamePresenter: {typeLabel}生成 {enemyPos} (HP={enemy.MaxHP}, 攻撃={enemy.AttackPower})");
             }
 
             // ③ 残りの未決定マスを出現率からランダム生成
@@ -392,8 +379,6 @@ namespace OneStrokeRGR.Presenter
                 Tile tile = TileFactory.CreateRandomTile(gameState.SpawnConfig);
                 gameState.Board.SetTile(pos, tile);
             }
-
-            Debug.Log($"GamePresenter: ボード初期化完了（未決定マス{undecidedPositions.Count}個をランダム生成）");
 
             await UniTask.Yield();
         }
@@ -411,11 +396,6 @@ namespace OneStrokeRGR.Presenter
             if (gameState.CurrentStage == 1)
             {
                 gameState.Player.Position = new Vector2Int(0, 0);
-                Debug.Log($"GamePresenter: プレイヤー位置を初期位置(0, 0)に設定");
-            }
-            else
-            {
-                Debug.Log($"GamePresenter: プレイヤー位置を前ステージの終了位置{gameState.Player.Position}から継続");
             }
 
             // プレイヤーの現在位置を最優先で効果なしマスにする（既にタイルがあっても強制的に置き換え）
@@ -508,6 +488,9 @@ namespace OneStrokeRGR.Presenter
         /// </summary>
         public async UniTask HandlePathDrawingPhase()
         {
+            // ゲームオーバー済みなら何もしない（ボス行動後の死亡などで到達した場合）
+            if (!gameState.Player.IsAlive()) return;
+
             Debug.Log("GamePresenter: パス描画フェーズ");
             gameState.CurrentPhase = GamePhase.PathDrawing;
 
@@ -642,6 +625,14 @@ namespace OneStrokeRGR.Presenter
             // 敵行動フェーズ（行動パターンを持つ敵がいる場合）
             await HandleEnemyActionPhase();
             Debug.Log("EnemyTurnEnd");
+
+            // 敵行動フェーズ後のゲームオーバーチェック
+            if (!gameState.Player.IsAlive())
+            {
+                await HandleGameOverPhase();
+                return;
+            }
+
             // ステージクリアチェック
             if (gameState.Board.GetEnemies().Count == 0)
             {
@@ -754,6 +745,7 @@ namespace OneStrokeRGR.Presenter
             if (maxStage > 0 && gameState.CurrentStage >= maxStage)
             {
                 scorePanelView?.Show(gameState.CurrentStage);
+                await UniTask.WaitUntilCanceled(destroyCancellationToken);
                 return;
             }
 
@@ -772,9 +764,11 @@ namespace OneStrokeRGR.Presenter
             Debug.Log("GamePresenter: ゲームオーバーフェーズ");
             gameState.SetGameOver();
 
-            scorePanelView?.Show(gameState.CurrentStage);
+            await UniTask.Delay(1500);
 
-            await UniTask.Yield();
+            scorePanelView?.Show(gameState.CurrentStage - 1);
+
+            await UniTask.WaitUntilCanceled(destroyCancellationToken);
         }
     }
 }

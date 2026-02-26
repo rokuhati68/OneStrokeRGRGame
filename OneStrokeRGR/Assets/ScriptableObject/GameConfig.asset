@@ -26,7 +26,7 @@ MonoBehaviour:
     entries:
     - stageNumber: 1
       enemies:
-      - isBoss: 1
+      - isBoss: 0
         maxHP: 10
         attackPower: 1
         sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
@@ -36,9 +36,9 @@ MonoBehaviour:
           turnCount: 2
     - stageNumber: 2
       enemies:
-      - isBoss: 1
+      - isBoss: 0
         maxHP: 15
-        attackPower: 0
+        attackPower: 4
         sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 8
@@ -120,7 +120,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 25
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -747770777, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 2
@@ -148,7 +148,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 25
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 1
@@ -156,7 +156,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 25
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: -747770777, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 2
           value: 1
@@ -164,7 +164,7 @@ MonoBehaviour:
       - isBoss: 0
         maxHP: 25
         attackPower: 0
-        sprite: {fileID: 3082357221321336137, guid: 5466bd907e3f58a468d29d9616066bc6, type: 3}
+        sprite: {fileID: 1890644553, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 1
           value: 1
@@ -437,7 +437,7 @@ MonoBehaviour:
         actionPattern:
         - actionType: 5
           value: 2
-          turnCount: 10
+          turnCount: 3
       - isBoss: 0
         maxHP: 65
         attackPower: 2

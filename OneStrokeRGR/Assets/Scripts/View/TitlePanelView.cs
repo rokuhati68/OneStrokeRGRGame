@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Presenter;
+using OneStrokeRGR.Sound;
 
 namespace OneStrokeRGR.View
 {
@@ -14,7 +14,10 @@ namespace OneStrokeRGR.View
         [SerializeField] private GameObject titlePanel;
         [SerializeField] private GamePresenter gamePresenter;
 
-        
+        private void Start()
+        {
+            SoundManager.Instance?.PlayTitleBGM();
+        }
 
         public void OnStartClicked()
         {

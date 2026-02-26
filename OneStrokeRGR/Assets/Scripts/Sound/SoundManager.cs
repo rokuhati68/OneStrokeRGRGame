@@ -13,6 +13,8 @@ namespace OneStrokeRGR.Sound
         [Header("BGM")]
         public AudioClip normalBGM;
         public AudioClip bossBGM;
+        public AudioClip titleBGM;
+        public AudioClip resultBGM;
 
         [Range(0f, 1f)]
         public float bgmVolume = 0.5f;
@@ -77,6 +79,14 @@ namespace OneStrokeRGR.Sound
         public void PlayBossBGM()
         {
             PlayBGM(bossBGM);
+        }
+        public void PlayTitleBGM()
+        {
+            PlayBGM(titleBGM);
+        }
+        public void PlayResultBGM()
+        {
+            PlayBGM(resultBGM);
         }
         private void PlayBGM(AudioClip clip)
         {

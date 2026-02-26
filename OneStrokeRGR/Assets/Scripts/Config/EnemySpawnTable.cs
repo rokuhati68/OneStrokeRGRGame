@@ -23,7 +23,6 @@ namespace OneStrokeRGR.Config
         {
             if (entries == null || entries.Count == 0)
             {
-                Debug.LogError("EnemySpawnTable: エントリーが設定されていません");
                 return null;
             }
 
@@ -46,7 +45,6 @@ namespace OneStrokeRGR.Config
             }
 
             // それでもない場合は最初のエントリーを返す
-            Debug.LogWarning($"EnemySpawnTable: ステージ{stage}に適したエントリーが見つかりません。最初のエントリーを使用します。");
             return entries[0];
         }
 

@@ -28,7 +28,6 @@ namespace OneStrokeRGR.Model
             // ゴールドが不足している場合は効果を適用しない（要件: 3.5）
             if (!CanApplyEffect(player))
             {
-                Debug.Log($"AttackBoostTile ({Position}): ゴールド不足のため効果なし");
                 return result;
             }
 
@@ -44,7 +43,6 @@ namespace OneStrokeRGR.Model
             result.AttackGained = BoostValue;
             result.EffectApplied = true;
 
-            Debug.Log($"AttackBoostTile ({Position}): 攻撃力+{BoostValue}（ゴールド消費: {result.GoldSpent}）");
             return result;
         }
 

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using Cysharp.Threading.Tasks;
 using OneStrokeRGR.Presenter;
+using OneStrokeRGR.Sound;
+using unityroom.Api;
 
 namespace OneStrokeRGR.View
 {
@@ -29,9 +31,10 @@ namespace OneStrokeRGR.View
         /// <param name="clearedStage">クリアしたステージ番号</param>
         public void Show(int clearedStage)
         {
-            Debug.Log("PanelShow");
             clearedStageText.text = $"{clearedStage}";
             scorePanel.SetActive(true);
+            SoundManager.Instance?.PlayResultBGM();
+            UnityroomApiClient.Instance.SendScore(1, clearedStage, ScoreboardWriteMode.HighScoreDesc);
         }
 
         /// <summary>
