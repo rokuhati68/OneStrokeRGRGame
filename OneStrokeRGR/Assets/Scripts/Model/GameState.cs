@@ -62,24 +62,16 @@ namespace OneStrokeRGR.Model
             CurrentStage = 1;
             CurrentPhase = GamePhase.PathDrawing;
 
-            // プレイヤーの初期化
-            Player.Initialize(config.initialGold, config.initialOneStrokeBonus);
+            // 訪問済みマスをクリア（ステージ跨ぎ管理のリセット）
+            VisitedPositions.Clear();
 
-            // タイル生成設定のコピー
-            SpawnConfig.emptyRate = config.defaultSpawnConfig.emptyRate;
-            SpawnConfig.attackBoostRate = config.defaultSpawnConfig.attackBoostRate;
-            SpawnConfig.hpRecoveryRate = config.defaultSpawnConfig.hpRecoveryRate;
-            SpawnConfig.goldRate = config.defaultSpawnConfig.goldRate;
-            SpawnConfig.attackBoostRange = config.defaultSpawnConfig.attackBoostRange;
-            SpawnConfig.goldRange = config.defaultSpawnConfig.goldRange;
-
-            // 報酬レベルのリセット
-            rewardLevels.Clear();
+            // HP・ゴールドのみリセット（報酬強化・oneStrokeBonusは引き継ぐ）
+            Player.ResetHPAndGold(config.initialGold);
 
             // ボードのクリア
             Board.Clear();
 
-            UnityEngine.Debug.Log($"GameState: ゲームを初期化（ステージ{CurrentStage}）");
+            // SpawnConfig・rewardLevels は引き継ぐ（強くてニューゲーム）
         }
 
         /// <summary>

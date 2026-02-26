@@ -64,11 +64,11 @@ namespace OneStrokeRGR.View
         {
             if (rewards == null || rewards.Count == 0)
             {
-                Debug.LogError("RewardView: 報酬リストが空です");
+                
                 return null;
             }
 
-            Debug.Log("RewardView: 報酬選択画面を表示");
+            
 
             // パネルを表示
             if (rewardPanel != null)
@@ -184,6 +184,7 @@ namespace OneStrokeRGR.View
         public Image iconImage;
         public TextMeshProUGUI titleText;
         public TextMeshProUGUI descriptionText;
+        public TextMeshProUGUI levelText;
         public Button selectButton;
 
         private RewardData rewardData;
@@ -199,7 +200,7 @@ namespace OneStrokeRGR.View
             var levelData = data.GetLevel(level);
             if (levelData == null)
             {
-                Debug.LogWarning($"RewardCardView: レベル{level}のデータがありません");
+                
                 return;
             }
 
@@ -208,6 +209,9 @@ namespace OneStrokeRGR.View
 
             if (descriptionText != null)
                 descriptionText.text = levelData.description;
+
+            if (levelText != null)
+                levelText.text = $"Lv.{level+1}";
 
             if (iconImage != null)
             {

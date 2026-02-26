@@ -38,7 +38,7 @@ MonoBehaviour:
       enemies:
       - isBoss: 0
         maxHP: 15
-        attackPower: 4
+        attackPower: 1
         sprite: {fileID: 138170768, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 8
@@ -384,7 +384,7 @@ MonoBehaviour:
         sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
-          value: 30
+          value: 20
           turnCount: 2
     - stageNumber: 18
       enemies:
@@ -444,16 +444,16 @@ MonoBehaviour:
         sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
-          value: 20
-          turnCount: 1
+          value: 15
+          turnCount: 2
       - isBoss: 0
         maxHP: 65
         attackPower: 2
         sprite: {fileID: 660818343, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
         actionPattern:
         - actionType: 4
-          value: 20
-          turnCount: 1
+          value: 15
+          turnCount: 2
     - stageNumber: 21
       enemies:
       - isBoss: 0
@@ -554,26 +554,6 @@ MonoBehaviour:
         actionPattern:
         - actionType: 4
           value: 35
-          turnCount: 1
-      - isBoss: 0
-        maxHP: 75
-        attackPower: 1
-        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
-        actionPattern:
-        - actionType: 6
-          value: 1
-          turnCount: 1
-        - actionType: 7
-          value: 5
-          turnCount: 2
-        - actionType: 7
-          value: 5
-          turnCount: 2
-        - actionType: 7
-          value: 5
-          turnCount: 2
-        - actionType: 7
-          value: 5
           turnCount: 2
       - isBoss: 0
         maxHP: 75
@@ -584,16 +564,36 @@ MonoBehaviour:
           value: 1
           turnCount: 1
         - actionType: 7
-          value: 5
+          value: 2
           turnCount: 2
         - actionType: 7
-          value: 5
+          value: 2
           turnCount: 2
         - actionType: 7
-          value: 5
+          value: 2
           turnCount: 2
         - actionType: 7
-          value: 5
+          value: 2
+          turnCount: 2
+      - isBoss: 0
+        maxHP: 75
+        attackPower: 1
+        sprite: {fileID: 2105820352, guid: 9b234354c7233e84e9849bf2813c7442, type: 3}
+        actionPattern:
+        - actionType: 6
+          value: 1
+          turnCount: 1
+        - actionType: 7
+          value: 2
+          turnCount: 2
+        - actionType: 7
+          value: 2
+          turnCount: 2
+        - actionType: 7
+          value: 2
+          turnCount: 2
+        - actionType: 7
+          value: 2
           turnCount: 2
     - stageNumber: 26
       enemies:

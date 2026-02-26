@@ -160,6 +160,19 @@ namespace OneStrokeRGR.Model
         }
 
         /// <summary>
+        /// HP・ゴールドのみリセット（報酬強化は引き継ぐ）
+        /// リトライ時に使用する
+        /// </summary>
+        public void ResetHPAndGold(int startingGold)
+        {
+            currentHP = maxHP;
+            gold = startingGold;
+            attackPower = 0;
+            position = Vector2Int.zero;
+            // oneStrokeBonus は保持する（報酬で強化されているため）
+        }
+
+        /// <summary>
         /// 攻撃力をリセットする（ターン開始時）
         /// 要件: 2.3
         /// </summary>
