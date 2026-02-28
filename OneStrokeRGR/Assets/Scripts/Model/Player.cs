@@ -13,7 +13,7 @@ namespace OneStrokeRGR.Model
         private int gold;
         private int attackPower;
         private Vector2Int position;
-        private int oneStrokeBonus;
+        private int oneStrokeBonus = 5;
 
         /// <summary>最大HP（要件: 11.1）</summary>
         public int MaxHP => maxHP;

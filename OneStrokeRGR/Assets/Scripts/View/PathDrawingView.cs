@@ -460,10 +460,14 @@ namespace OneStrokeRGR.View
             var rect = lineObj.GetComponent<RectTransform>();
             rect.pivot = new Vector2(0f, 0.5f);
 
-            // 位置と回転を設定
-            rect.position = start;
-            float distance = Vector3.Distance(start, end);
-            float angle = Mathf.Atan2(end.y - start.y, end.x - start.x) * Mathf.Rad2Deg;
+            // ワールド座標 → lineContainer のローカル座標に変換
+            // （Canvas の scaleFactor が変わっても正しい長さ・位置になる）
+            Vector3 localStart = lineContainer.InverseTransformPoint(start);
+            Vector3 localEnd   = lineContainer.InverseTransformPoint(end);
+
+            float distance = Vector3.Distance(localStart, localEnd);
+            float angle = Mathf.Atan2(localEnd.y - localStart.y, localEnd.x - localStart.x) * Mathf.Rad2Deg;
+            rect.localPosition = localStart;
             rect.sizeDelta = new Vector2(distance, lineWidth);
             rect.localRotation = Quaternion.Euler(0, 0, angle);
 
